@@ -1,1 +1,1 @@
-# sysprak
+# Systempraktikum LMU WS16/17
