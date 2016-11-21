@@ -16,7 +16,8 @@ void performConnection(int *fd){
       printf("positiv\n");
     }else if(strncmp(buffer, "-", 1) == 0){
       printf("negativ\n");
-      printf("Disconnecting Server...\n");
+      
+      printf("Disconnecting server...\n");
       exit(EXIT_FAILURE);
     }
 
