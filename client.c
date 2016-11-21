@@ -34,4 +34,5 @@ int main (int argc, char **argv){
       free(fd);
     }
 
+    exit(EXIT_SUCCESS);
 }
