@@ -8,7 +8,7 @@
 
 int main (int argc, char **argv){
 
-  char gameid [12];
+  char gameid [13];
   if(argc<2){                         //Test: Wird eine Game-ID übergeben
     perror("No game id");             //Keine Game-ID vorhanden
   }
