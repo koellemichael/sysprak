@@ -2,10 +2,10 @@
 //Kommentare die zur Verstaendis beitragen//
 ///////////////////////////////////////////
 
-//Kommentar das nicht in der Dokumentation vorkommmen soll
+//Kommentar der nicht in der Dokumentation vorkommmen soll
 
 
-/*Mehrzeiliges Kommentar das nicht in der 
+/*Mehrzeiliger Kommentar der nicht in der 
  *Dokumentation vorkommmen 
  *soll
  */
