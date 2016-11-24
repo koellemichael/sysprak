@@ -7,7 +7,7 @@
 #define BUFFERLENGTH 256
 
 void performConnection(int *fd){
-
+  if(*fd==1){}                                                             //TODO:Nötig da Makefile sonst meckert, austauschen durch richtige Implementierung
   char *buffer = malloc(BUFFERLENGTH*sizeof(char));                        //Speicher für Puffervariable allokalisieren
 
     do{
