@@ -12,8 +12,8 @@
  *@param to Endposition des Teilstrings als int
  *@return Teilstring von from bis to als char* oder NULL falls ein Fehler auftritt.
  */
-char *substring(char *string, int from, int to){
-  if(from>=to || to>strlen(string) || from<0){                                  //Unsinnige Eingaben abfangen
+char *substring(char *string, unsigned int from, unsigned int to){
+  if(from>=to || to>strlen(string)){                                  //Unsinnige Eingaben abfangen
     return NULL;                                                                //NULL zurückgeben falls
   }else{                                                                        //Falls sinbvolle Eingabe
     char *substring = malloc((to-from)*sizeof(char));                           //Speicher für substring allokalisieren
@@ -35,8 +35,8 @@ char *substring(char *string, int from, int to){
 void partition(char *string, int i, char **array){
   if((strcspn(string, "<")!=strlen(string))                                     //Enthält es < und >?
   &&(strcspn(string, ">")!=strlen(string))){
-    int end_part1 = strcspn(string,"<");                                        //Ende des ersten Teilstrings festlegen
-    int start_part2 = strcspn(string,">")+1;                                    //Anfang des 2. Teilstrings festlegen
+    unsigned int end_part1 = strcspn(string,"<");                                        //Ende des ersten Teilstrings festlegen
+    unsigned int start_part2 = strcspn(string,">")+1;                                    //Anfang des 2. Teilstrings festlegen
     if(end_part1>=1)                                                            //Startpunkt des Teilstrings muss >0 sein
         array[i] = substring(string,0,end_part1);                               //Speichere den Teilstring bis zum ersten Vorkommen vom n-ten '<'
     if(start_part2<strlen(string))                                              //Anfang des 2 Parts darf nicht über den String hinausgehen
