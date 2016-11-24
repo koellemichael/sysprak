@@ -19,6 +19,9 @@ git clone https://github.com/koellemichael/sysprak.git
 git status
 - Zeigt unterschiede zwischen branch und master
 
+git checkout -b <branchname>
+-branch erstellen und zu ihr wechseln
+
 git add <file>
 - Fügt die file zu den Commits hinzu
 
@@ -35,3 +38,5 @@ falls es zu Konflikten kommt, Konflikte manuell lösen und mit
 git commit -m „message“
 git push
 zum master hinzufügen
+
+weitere Commands https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html
