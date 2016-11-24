@@ -12,9 +12,11 @@
 
 /**
  * Diese Datei soll den Clienten mit dem Gameserver verbinden. Dazu wird ein Socket implementiert.
- * 
+ * Der Hostname wird in eine IP Adresse umgewandelt.
+ * Zusätzlich wird die Methode performconnetion mit dem Socket aufgerufen.
  */
 
+void performConnection(int *fd);
 
 //main wird noch umbenannt, wenn es mit den anderen Dateien verbunden wird. Nur zum Test.
 int main(){
@@ -22,9 +24,20 @@ int main(){
     
     //Diese hier wird noch geändert zu Lauras Version
     const char hostname[] = "sysprak.priv.lab.nm.ifi.lmu.de";
+    
+    /** 
+     * int sock
+     * Das ist unser Socket
+     */
     int sock;
-    char ip[100];
+    
+    /**
+     * struct hostent *he
+     * enthält Informationen über host (HOSTNAME)
+     */
     struct hostent *he;
+    
+    
     
     //SOCKET ANLEGEN 
     
@@ -40,6 +53,7 @@ int main(){
     
     //HOSTNAME in IP Adresse umwandeln
     if( (he = gethostbyname(hostname)) == NULL){
+        perror("GetHostByName fehlgeschlagen\n");
         exit(1);
     }
     
@@ -59,8 +73,10 @@ int main(){
     }
     
     //Übergabe Filedeskriptor an Funktion performConnection()
-    performConnection(sock);
+    performConnection(&sock);
     
+    
+    //Schliesst das Socket
     close(sock);
     return 0;
     
