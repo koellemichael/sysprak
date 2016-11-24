@@ -8,11 +8,15 @@
 #include <string.h>
 #include <arpa/inet.h>
 
+#define HOSTNAME "sysprak.priv.lab.nm.ifi.lmu.de"
+
 
 /**
  * Diese Datei soll den Clienten mit dem Gameserver verbinden. Dazu wird ein Socket implementiert.
- *
+ * 
  */
+
+
 
 int get_hostname_ip(char *, char *);
 
@@ -38,7 +42,7 @@ int main(){
     struct sockaddr_in server;
     server.sin_family = PF_INET;
     server.sin_port = htons(1357);
-    server.sin_addr.s_addr = get_hostname_ip("sysprak.priv.lab.nm.ifi.lmu.de", ip);
+    server.sin_addr.s_addr = get_hostname_ip(HOSTNAME, ip);
 ;
     
     
@@ -55,22 +59,25 @@ int main(){
 }
 
 
+/**
+ * Diese Funktion wandelt den Hostname in eine IP-Adresse um.
+ * @param hostname von verbindungGameserver als char*
+ * @param ip von verbindungGameserver als char*
+ * @return die IP Adresse als 
+*/
+
 int  get_hostname_ip(char *hostname, char *ip){
     struct hostent *he;
+    struct in_addr ip_addr;
     
-    if((he = gethostbyname("sysprak.priv.lab.nm.ifi.lmu.de")) == NULL){
+    if((he = gethostbyname(HOSTNAME)) == NULL){
         perror("gethostbyname fehlgeschlagen");
         return 1;
-    } else {
-        unsigned int i = 0;
-        printf("%s", he->h_name);
-        while(he -> h_addr_list[i] != NULL){
-            printf("%s", inet_ntoa( *(struct in_addr*)(he -> h_addr_list[i])));
-            i++;
-        }
-        return 0;
-    }
+    } 
     
-    return 1;
+    ip_addr = *(struct in_addr*) (he ->h_addr);
+    printf("Hostname: %s wurde umgewandelt zu: %s\n", HOSTNAME, inet_ntoa(ip_addr));
+    
+    return 0;
     
 }
