@@ -18,13 +18,12 @@
 
 
 
-int get_hostname_ip(char *, char *);
-
 int main(){
     //Variablen deklarieren
     
     int sock;
     char ip[100];
+    struct hostent *he;
     
     //SOCKET ANLEGEN 
     
@@ -39,11 +38,14 @@ int main(){
     }
     
     
+    if( (he = gethostbyname(HOSTNAME)) == NULL){
+        exit(1);
+    }
+    
     struct sockaddr_in server;
     server.sin_family = PF_INET;
     server.sin_port = htons(1357);
-    server.sin_addr.s_addr = get_hostname_ip(HOSTNAME, ip);
-;
+    memcpy(&server.sin_addr.s_addr, he->h_addr_list[0], he -> h_length);
     
     
     //CONNECT 
@@ -56,28 +58,4 @@ int main(){
     return 0;
     
   
-}
-
-
-/**
- * Diese Funktion wandelt den Hostname in eine IP-Adresse um.
- * @param hostname von verbindungGameserver als char*
- * @param ip von verbindungGameserver als char*
- * @return die IP Adresse als 
-*/
-
-int  get_hostname_ip(char *hostname, char *ip){
-    struct hostent *he;
-    struct in_addr ip_addr;
-    
-    if((he = gethostbyname(HOSTNAME)) == NULL){
-        perror("gethostbyname fehlgeschlagen");
-        return 1;
-    } 
-    
-    ip_addr = *(struct in_addr*) (he ->h_addr);
-    printf("Hostname: %s wurde umgewandelt zu: %s\n", HOSTNAME, inet_ntoa(ip_addr));
-    
-    return 0;
-    
 }
