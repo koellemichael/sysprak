@@ -6,8 +6,12 @@
 #define VERSION "2.3"
 #define PLAYERNR ""
 
-extern char *gameid;
+extern char *gameid; //!gameid. Zugriff auf Globale Variable in client.c
 
+void removeSubstring(char *s, char *toremove){
+  s = strstr(s,toremove);
+  memmove(s,s+strlen(toremove),strlen(s+strlen(toremove)));
+}
 /**
  *Die Funktion substring extrahiert einen Teilstring von from bis to aus einem
  *gegebenen String und gibt ihn als char Pointer zurück.
@@ -18,7 +22,7 @@ extern char *gameid;
  *@return Teilstring von from bis to als char* oder NULL falls ein Fehler auftritt.
  */
 char *substring(char *string, unsigned int from, unsigned int to){
-  if(from>=to || to>strlen(string)){                                  //Unsinnige Eingaben abfangen
+  if(from>=to || to>strlen(string)){                                            //Unsinnige Eingaben abfangen
     return NULL;                                                                //NULL zurückgeben falls
   }else{                                                                        //Falls sinbvolle Eingabe
     char *substring = malloc((to-from)*sizeof(char));                           //Speicher für substring allokalisieren
@@ -61,20 +65,30 @@ void partition(char *string, int i, char **array){
  *@return 0 wenn verschieden,1 wenn gleich
  */
 int rescmp(char *response, char *expectation){
+  char *res = malloc(strlen(response)*sizeof(char));
+  strcpy(res, response);
   int eq = 1;                                                                   //Variable zum Überprüfen ob einer Teilstrings Differenzen zur Response aufweist
-  int substrings = (strlen(expectation)/3)+1;                                   //Länge des zu erstellenden Arrays festlegen. Kann maximal 1/3 des zu erwartenden
+  int substrings = (strlen(expectation)/3)+1;                                         //Länge des zu erstellenden Arrays festlegen. Kann maximal 1/3 des zu erwartenden
                                                                                 //Strings sein da im Worst Case immer zwei Klammern auf ein Zwichen folgen
   char **array = malloc(substrings*sizeof(char*));                              //Speicherplatz für die Pointer des Arrays allokalisieren
   for(int i = 0; i< substrings;i++){
     array[i] = NULL;                                                            //Pointer mit NULL initialisieren
   }
 
-  partition(expectation,0,array);                                               //Alle Teilstrings in das Array laden
+  partition(expectation,0,array);                                                     //Alle Teilstrings in das Array laden
 
   for(int i = 0; i< substrings;i++){                                            //Pro Eintrag im Array vergleichen ob es Abweichungen zu Response gibt
     if(array[i]!=NULL){                                                         //Falls der Eintrag nicht NULL ist
-        if(strstr(response, array[i]) == NULL){                                 //Falls es Abweichungen gibt
+      //printf("array: %s\n", array[i]);
+      char *pos = strstr(res, array[i]);                                   //Falls array[i] in response enthalten ist, speichere die pos sonst NULL
+        if(pos == NULL){                                                        //Falls es Abweichungen gibt
             eq = 0;                                                             //Setze eq = 0
+        }else{
+          //printf("response: %s\n", res);
+          //printf("Entferne Teilstring %s\n",array[i]);
+          removeSubstring(res, array[i]);                                  //Entfernt gefundenen Teilstring aus der Server response
+                                                                                //damit jeder Teilstring der Response nur ein mal gefunden werden kann
+          //printf("response nach entfernen: %s\n", res);
         }
     }
   }
@@ -93,15 +107,15 @@ int rescmp(char *response, char *expectation){
  *@return Antwort des Clients, NULL falls keine passende Antwort
  */
 char *handle(char *response){
-  char *r = NULL;                                                               //Antwortvariable initialisieren
+  char *r = malloc(256*sizeof(char));                                                               //Antwortvariable initialisieren
     if(rescmp(response,                                                         //Wenn Anfrage des Servers übereinstimmt
       "MNM Gameserver <Gameserver Version> accepting connections")){
-      r = "VERSION 2.3\n";                                                      //setze r auf die passende Antwort
-      //strcat(r, VERSION);
+      strcpy(r,"VERSION ");                                                      //setze r auf die passende Antwort
+      strcat(r, VERSION);
     }else if(rescmp(response,
       "Client version accepted - please send Game-ID to join")){
-      r = "ID \n";
-      //strcat(r,gameid);
+      strcpy(r,"ID ");
+      strcat(r,gameid);
     }
     else if(rescmp(response,
       "PLAYING <Gamekind-Name>")){
@@ -116,13 +130,15 @@ char *handle(char *response){
      "ENDPLAYERS")){
      r = NULL;
     }else if(rescmp(response,
+      "<Game-Name>")){
+      strcpy(r,"PLAYER ");
+      strcat(r, PLAYERNR);
+    }else if(rescmp(response,
       "<Spielernummer> <Spielername> <Bereit>")){
       r = NULL;
-    }else if(rescmp(response,
-      "<Game-Name>\n")){
-      r = "PLAYER ";
-      //strcat(r, PLAYERNR);
     }
-    //strcat(r,"\n");
+    if(r!=NULL){
+      strcat(r,"\n");
+    }
     return r;                                                                   //Gibt die Antwort des Clients zurück
 }
