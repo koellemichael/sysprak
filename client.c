@@ -18,11 +18,10 @@ int main (int argc, char **argv){
       perror("Invalid game id");      //Game-ID zu kurz oder zu lang
     }
     else {                            //13-stellige Game-ID übergeben
-      for(int i=0; i<13; i++){         //for-Schleife um Game-ID auszulesen
-        gameid[i]=argv[1][i];         //speichern der Game-ID in gameid
+        strcpy(gameid, argv[1]);           //kopieren des Strings nach gameid
       }
       printf("%s\n", gameid);
     }
-  }
+
 
 }
