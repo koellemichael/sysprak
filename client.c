@@ -8,7 +8,7 @@
 
 int main (int argc, char **argv){
 
-  char gameid [13];
+  char *gameid=NULL;
   if(argc<2){                         //Test: Wird eine Game-ID übergeben
     perror("No game id");             //Keine Game-ID vorhanden
   }
@@ -18,7 +18,7 @@ int main (int argc, char **argv){
       perror("Invalid game id");      //Game-ID zu kurz oder zu lang
     }
     else {                            //13-stellige Game-ID übergeben
-        strcpy(gameid, argv[1]);           //kopieren des Strings nach gameid
+        gameid=argv[1];           //kopieren des Strings nach gameid
       }
       printf("%s\n", gameid);
     }
