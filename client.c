@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include <String.h>
+#include "connectServer.h"
 #include "performConnection.h"
 
 #define GAMEKINDNAME "Bashni"
@@ -21,17 +22,16 @@ int main (int argc, char **argv){
       exit(EXIT_FAILURE);             //Programm beenden
     }
     else {                            //13-stellige Game-ID übergeben
-        gameid=argv[1];           //kopieren des Strings nach gameid
+        gameid=argv[1];             //kopieren des Strings nach gameid
       }
       printf("%s\n", gameid);
+
+
+    if(connectServer(PORTNUMBER, HOSTNAME) != 0){
+        perror("Client failed to call 'connectServer'\n");
+        exit(EXIT_FAILURE);
     }
 
-
-    int *fd = malloc(2*sizeof(int));
-    performConnection(fd);
-    if(fd!=NULL){
-      free(fd);
-    }
-
-    exit(EXIT_SUCCESS);
+  }
+  exit(EXIT_SUCCESS);
 }
