@@ -4,9 +4,9 @@ CC = gcc
 
 LDFLAGS = -lpthread
 
-bashni: player
+bashni: play
 
-player: client.c connectServer.c
+play: client.c connectServer.c
 	$(CC) $(CFLAGS) -o player client.c connectServer.c
 
 clean:
