@@ -46,14 +46,14 @@ int connectServer(int portnumber, char *hostname){
     sock = socket(PF_INET, SOCK_STREAM, 0);
     if(sock == -1){
         perror("Could not generate socket\n");
-        return 1;
+        exit(EXIT_FAILURE);
     }
     
     
     //HOSTNAME in IP Adresse umwandeln
     if( (he = gethostbyname(hostname)) == NULL){
         perror("Function 'gethostbyname' failed to execute\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
     
     
@@ -65,7 +65,7 @@ int connectServer(int portnumber, char *hostname){
     //CONNECT 
     if(connect(sock, (struct sockaddr*)&server, sizeof(server)) < 0){
         perror("Could not connect with server\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     } else {
         printf("Successfully connected to server\n");
     }
