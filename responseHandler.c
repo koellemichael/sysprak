@@ -35,8 +35,8 @@ char *substring(char *string, unsigned int from, unsigned int to){
 void partition(char *string, int i, char **array){
   if((strcspn(string, "<")!=strlen(string))                                     //Enthält es < und >?
   &&(strcspn(string, ">")!=strlen(string))){
-    unsigned int end_part1 = strcspn(string,"<");                                        //Ende des ersten Teilstrings festlegen
-    unsigned int start_part2 = strcspn(string,">")+1;                                    //Anfang des 2. Teilstrings festlegen
+    unsigned int end_part1 = strcspn(string,"<");                               //Ende des ersten Teilstrings festlegen
+    unsigned int start_part2 = strcspn(string,">")+1;                           //Anfang des 2. Teilstrings festlegen
     if(end_part1>=1)                                                            //Startpunkt des Teilstrings muss >0 sein
         array[i] = substring(string,0,end_part1);                               //Speichere den Teilstring bis zum ersten Vorkommen vom n-ten '<'
     if(start_part2<strlen(string))                                              //Anfang des 2 Parts darf nicht über den String hinausgehen
@@ -68,6 +68,7 @@ int rescmp(char *response, char *expectation){
 
   for(int i = 0; i< substrings;i++){                                            //Pro Eintrag im Array vergleichen ob es Abweichungen zu Response gibt
     if(array[i]!=NULL){                                                         //Falls der Eintrag nicht NULL ist
+      printf("array %s\n",array[i]);
         if(strstr(response, array[i]) == NULL){                                 //Falls es Abweichungen gibt
             eq = 0;                                                             //Setze eq = 0
         }
@@ -106,11 +107,14 @@ char *handle(char *response){
       "+ YOU <Spielernummer> <Spielername>")){
       r = NULL;
     }else if(rescmp(response,
-      "+ <Spielernummer> <Spielername> <Bereit>")){
-      r = NULL;
+     "+ TEST <test>")){
+     r = "TEST RESPONSE";
     }else if(rescmp(response,
      "+ TOTAL <Spieleranzahl>")){
      r = NULL;
+    }else if(rescmp(response,
+      "+ <Spielernummer> <Spielername> <Bereit>")){
+      r = NULL;
     }
     return r;                                                                   //Gibt die Antwort des Clients zurück
 }
