@@ -2,15 +2,16 @@
 #include <stdio.h>
 #include <String.h>
 #include "connectServer.h"
-#include "performConnection.h"
 
 #define GAMEKINDNAME "Bashni"
 #define PORTNUMBER 1357
 #define HOSTNAME "sysprak.priv.lab.nm.ifi.lmu.de"
 
+char *gameid;
+
 int main (int argc, char **argv){
 
-  char *gameid=NULL;
+  gameid = NULL;
   if(argc<2){                         //Test: Wird eine Game-ID übergeben
     perror("No game id");             //Keine Game-ID vorhanden
     exit(EXIT_FAILURE);               //Programm beenden

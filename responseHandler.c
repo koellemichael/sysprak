@@ -1,7 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include <String.h>
 #include "responseHandler.h"
+
+#define VERSION "2.3"
+#define PLAYERNR ""
+
+extern char *gameid;
 
 /**
  *Die Funktion substring extrahiert einen Teilstring von from bis to aus einem
@@ -90,27 +95,34 @@ int rescmp(char *response, char *expectation){
 char *handle(char *response){
   char *r = NULL;                                                               //Antwortvariable initialisieren
     if(rescmp(response,                                                         //Wenn Anfrage des Servers übereinstimmt
-      "+ MNM Gameserver <Gameserver Version> accepting connections")){
-      r = "VERSION <Client Version>";                                           //setze r auf die passende Antwort
+      "MNM Gameserver <Gameserver Version> accepting connections")){
+      r = "VERSION 2.3\n";                                                      //setze r auf die passende Antwort
+      //strcat(r, VERSION);
     }else if(rescmp(response,
-      "+ Client version accepted - please send Game-ID to join")){
-      r = "ID <Game-ID>";                                                       //TODO gameid einbinden
+      "Client version accepted - please send Game-ID to join")){
+      r = "ID \n";
+      //strcat(r,gameid);
     }
     else if(rescmp(response,
-      "+ PLAYING <Gamekind-Name>")){
+      "PLAYING <Gamekind-Name>")){
       r = NULL;
     }else if(rescmp(response,
-      "+ Bashni")){
-      r = "PLAYER [Gewunschte Spielernummer]";
-    }else if(rescmp(response,
-      "+ YOU <Spielernummer> <Spielername>")){
+      "YOU <Spielernummer> <Spielername>")){
       r = NULL;
     }else if(rescmp(response,
-     "+ TOTAL <Spieleranzahl>")){
+     "TOTAL <Spieleranzahl>")){
      r = NULL;
     }else if(rescmp(response,
-      "+ <Spielernummer> <Spielername> <Bereit>")){
+     "ENDPLAYERS")){
+     r = NULL;
+    }else if(rescmp(response,
+      "<Spielernummer> <Spielername> <Bereit>")){
       r = NULL;
+    }else if(rescmp(response,
+      "<Game-Name>\n")){
+      r = "PLAYER ";
+      //strcat(r, PLAYERNR);
     }
+    //strcat(r,"\n");
     return r;                                                                   //Gibt die Antwort des Clients zurück
 }
