@@ -4,13 +4,10 @@ CC = gcc
 
 LDFLAGS = -lpthread
 
-bashni: client
+bashni: play
 
-client.o: client.c
-	$(CC) $(CFLAGS) -c client.c
-
-client: client.o
-	$(CC) $(CFLAGS) client.o
+play: client.c connectServer.c
+	$(CC) $(CFLAGS) -o play client.c connectServer.c
 
 clean:
 	rm -f *.o bashni

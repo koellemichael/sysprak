@@ -1,0 +1,1 @@
+int connectServer(int, char*);
