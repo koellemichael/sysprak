@@ -68,7 +68,6 @@ int rescmp(char *response, char *expectation){
 
   for(int i = 0; i< substrings;i++){                                            //Pro Eintrag im Array vergleichen ob es Abweichungen zu Response gibt
     if(array[i]!=NULL){                                                         //Falls der Eintrag nicht NULL ist
-      printf("array %s\n",array[i]);
         if(strstr(response, array[i]) == NULL){                                 //Falls es Abweichungen gibt
             eq = 0;                                                             //Setze eq = 0
         }
@@ -95,7 +94,7 @@ char *handle(char *response){
       r = "VERSION <Client Version>";                                           //setze r auf die passende Antwort
     }else if(rescmp(response,
       "+ Client version accepted - please send Game-ID to join")){
-      r = "ID <Game-ID>";
+      r = "ID <Game-ID>";                                                       //TODO gameid einbinden
     }
     else if(rescmp(response,
       "+ PLAYING <Gamekind-Name>")){
@@ -106,9 +105,6 @@ char *handle(char *response){
     }else if(rescmp(response,
       "+ YOU <Spielernummer> <Spielername>")){
       r = NULL;
-    }else if(rescmp(response,
-     "+ TEST <test>")){
-     r = "TEST RESPONSE";
     }else if(rescmp(response,
      "+ TOTAL <Spieleranzahl>")){
      r = NULL;
