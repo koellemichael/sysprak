@@ -55,6 +55,9 @@ void performConnection(int *sock){
               }
                 printf("client: %s",response);                                  //Gesendete Antwort ausgeben
             }
+            if(response!=NULL){                                                 //Speicher von response freigeben da, in handle Speicher allokalisiert wurde
+              free(response);                                                   //Response referenziert auf diesen Speicher
+            }
           }
         }else if(buffer[0]=='-'){                                               //Wenn Serveranfrage negativ ausfällt
           printf("server: Error! %s\nDisconnecting server...\n",buffer+2);      //Gebe Fehler aus
