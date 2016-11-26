@@ -3,15 +3,24 @@
 #include <String.h>
 #include "responseHandler.h"
 
-#define VERSION "2.3"
-#define PLAYERNR ""
+#define VERSION "2.3"                                                           //TODO provisorische Konstante
+#define PLAYERNR ""                                                             //TODO provisorische Konstante
 
-extern char *gameid; //!gameid. Zugriff auf Globale Variable in client.c
+extern char *gameid;                                                            //!gameid. Zugriff auf Globale Variable in client.c
+int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase
 
-void removeSubstring(char *s, char *toremove){
-  s = strstr(s,toremove);
-  memmove(s,s+strlen(toremove),strlen(s+strlen(toremove)));
+/**
+ *Die Funktion removeSubstring ertfernt einen Teilstring aus einem gegebenen String.
+ *
+ *@param string Der String aus dem der Teilsting gelöschickt werden soll
+ *@param toRemove Der zu entfernende Teilstring
+ */
+void removeSubstring(char *string, char *toRemove){
+  string = strstr(string,toRemove);                                             //Adresse des Anfangs des Teilstrings im String
+  memmove(string,string+strlen(toRemove),strlen(string+strlen(toRemove)));      //Speicherbereich so verschieben das der Teilstring überschrieben wird
+  string[strlen(string)-strlen(toRemove)] = 0;                                  //Ende des Strings festlegen
 }
+
 /**
  *Die Funktion substring extrahiert einen Teilstring von from bis to aus einem
  *gegebenen String und gibt ihn als char Pointer zurück.
@@ -25,7 +34,7 @@ char *substring(char *string, unsigned int from, unsigned int to){
   if(from>=to || to>strlen(string)){                                            //Unsinnige Eingaben abfangen
     return NULL;                                                                //NULL zurückgeben falls
   }else{                                                                        //Falls sinbvolle Eingabe
-    char *substring = malloc((to-from)*sizeof(char));                           //Speicher für substring allokalisieren
+    char *substring = malloc((to-from)*sizeof(char));                           //Speicher füresponse substring allokalisieren
     strncpy(substring,string+from,(to-from));                                   //Teilstring in substring speichern
     substring[(to-from)]=0;                                                     //Teilstringende festlegen
     return substring;                                                           //Substring zurückgeben
@@ -56,39 +65,34 @@ void partition(char *string, int i, char **array){
 }
 
 /**
- *Die Funktion rescmp (Response Comparison), vergleicht eine Antwort vom
+ *Die Funktion reqcmp (request Comparison), vergleicht eine Antwort vom
  *Server mit der Erwartung (expectation), dabei ignoriert die Funktion
  *geklammerte Ausdrücke. Bsp.: <Version>
  *
- *@param response Antwort des Servers
+ *@param request Antwort des Servers
  *@param expectation Erwartete Antwort des Servers. Variable Ausdrücke in spitzen Klammern <Ausdruck>.
  *@return 0 wenn verschieden,1 wenn gleich
  */
-int rescmp(char *response, char *expectation){
-  char *res = malloc(strlen(response)*sizeof(char));
-  strcpy(res, response);
-  int eq = 1;                                                                   //Variable zum Überprüfen ob einer Teilstrings Differenzen zur Response aufweist
-  int substrings = (strlen(expectation)/3)+1;                                         //Länge des zu erstellenden Arrays festlegen. Kann maximal 1/3 des zu erwartenden
+int reqcmp(char *request, char *expectation){
+  char *req = malloc(strlen(request)*sizeof(char));                             //Speicher anfordern
+  strcpy(req, request);                                                         //Kopieren des Requests in eine Variable damit nicht der eigentliche Request verändert wird
+  int eq = 1;                                                                   //Variable zum Überprüfen ob einer Teilstrings Differenzen zur request aufweist
+  int substrings = (strlen(expectation)/3)+1;                                   //Länge des zu erstellenden Arrays festlegen. Kann maximal 1/3 des zu erwartenden
                                                                                 //Strings sein da im Worst Case immer zwei Klammern auf ein Zwichen folgen
-  char **array = malloc(substrings*sizeof(char*));                              //Speicherplatz für die Pointer des Arrays allokalisieren
+  char **array = malloc(substrings*sizeof(char*));                              //Speicherplatz füresponse die Pointer des Arrays allokalisieren
   for(int i = 0; i< substrings;i++){
-    array[i] = NULL;                                                            //Pointer mit NULL initialisieren
+    array[i] = NULL;                                                            //Jeden String im Array mit NULL initialisieren
   }
 
-  partition(expectation,0,array);                                                     //Alle Teilstrings in das Array laden
+  partition(expectation,0,array);                                               //Alle Teilstrings in das Array laden
 
-  for(int i = 0; i< substrings;i++){                                            //Pro Eintrag im Array vergleichen ob es Abweichungen zu Response gibt
+  for(int i = 0; i< substrings;i++){                                            //Pro Eintrag im Array vergleichen ob es Abweichungen zu request gibt
     if(array[i]!=NULL){                                                         //Falls der Eintrag nicht NULL ist
-      //printf("array: %s\n", array[i]);
-      char *pos = strstr(res, array[i]);                                   //Falls array[i] in response enthalten ist, speichere die pos sonst NULL
-        if(pos == NULL){                                                        //Falls es Abweichungen gibt
+        if(strstr(req, array[i]) == NULL){                                      //Falls es Abweichungen gibt
             eq = 0;                                                             //Setze eq = 0
-        }else{
-          //printf("response: %s\n", res);
-          //printf("Entferne Teilstring %s\n",array[i]);
-          removeSubstring(res, array[i]);                                  //Entfernt gefundenen Teilstring aus der Server response
-                                                                                //damit jeder Teilstring der Response nur ein mal gefunden werden kann
-          //printf("response nach entfernen: %s\n", res);
+        }else{                                                                  //Falls nicht
+          removeSubstring(req, array[i]);                                       //Entfernt gefundenen Teilstring aus der Server request
+                                                                                //damit jeder Teilstring der request nur ein mal gefunden werden kann
         }
     }
   }
@@ -96,6 +100,11 @@ int rescmp(char *response, char *expectation){
   if(array != NULL){                                                            //Speicherplatz des Arrays freigeben
     free(array);
   }
+
+  if(req != NULL){                                                              //Speicherplatz von req freigeben
+    free(req);
+  }
+
   return eq;                                                                    //Ergebnis eq zurückgeben
 }
 
@@ -103,42 +112,52 @@ int rescmp(char *response, char *expectation){
  *Die Funktion handle verarbeitet die Anfrage des Servers zur passenden
  *Antwort des Clients, diese wird zurückgegeben.
  *
- *@param response char* auf die Anfrage/Antwort des Servers
+ *@param request char* auf die Anfrage/Antwort des Servers
  *@return Antwort des Clients, NULL falls keine passende Antwort
  */
-char *handle(char *response){
-  char *r = malloc(256*sizeof(char));                                                               //Antwortvariable initialisieren
-    if(rescmp(response,                                                         //Wenn Anfrage des Servers übereinstimmt
+char *handle(char *request){
+  char *response = malloc(256*sizeof(char));                                    //Antwortvariable initialisieren
+    if(prolog==1 && reqcmp(request,                                             //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       "MNM Gameserver <Gameserver Version> accepting connections")){
-      strcpy(r,"VERSION ");                                                      //setze r auf die passende Antwort
-      strcat(r, VERSION);
-    }else if(rescmp(response,
+      strcpy(response,"VERSION ");                                              //Setze response auf die passende Antwort
+      strcat(response, VERSION);                                                //TODO
+      prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
+    }else if(prolog==2 && reqcmp(request,                                       //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       "Client version accepted - please send Game-ID to join")){
-      strcpy(r,"ID ");
-      strcat(r,gameid);
+      strcpy(response,"ID ");                                                   //Setze response auf die passende Antwort
+      strcat(response,gameid);                                                  //Game-ID von client.c übernehmen
+      prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
     }
-    else if(rescmp(response,
+    else if(prolog==3 && reqcmp(request,                                        //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       "PLAYING <Gamekind-Name>")){
-      r = NULL;
-    }else if(rescmp(response,
-      "YOU <Spielernummer> <Spielername>")){
-      r = NULL;
-    }else if(rescmp(response,
-     "TOTAL <Spieleranzahl>")){
-     r = NULL;
-    }else if(rescmp(response,
-     "ENDPLAYERS")){
-     r = NULL;
-    }else if(rescmp(response,
+      response = NULL;                                                          //Setze response auf die passende Antwort
+      prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
+    }else if(prolog==4 && reqcmp(request,                                       //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       "<Game-Name>")){
-      strcpy(r,"PLAYER ");
-      strcat(r, PLAYERNR);
-    }else if(rescmp(response,
+      strcpy(response,"PLAYER ");                                               //Setze response auf die passende Antwort
+      strcat(response, PLAYERNR);                                               //TODO
+      prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
+    }else if(prolog==5 && reqcmp(request,                                       //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
+      "YOU <Spielernummer> <Spielername>")){
+      response = NULL;                                                          //Setze response auf die passende Antwort
+      prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
+    }else if(prolog==6 && reqcmp(request,                                       //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
+     "TOTAL <Spieleranzahl>")){
+     response = NULL;                                                           //Setze response auf die passende Antwort
+     prolog++;                                                                  //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
+    }else if(reqcmp(request,                                                    //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
+     "ENDPLAYERS")){
+     response = NULL;                                                           //Setze response auf die passende Antwort
+    }else if(prolog>=7 && reqcmp(request,                                       //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       "<Spielernummer> <Spielername> <Bereit>")){
-      r = NULL;
+      response = NULL;                                                          //Setze response auf die passende Antwort
+      prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
+    }else{                                                                      //Ansonsten unbekannte Anfrage des Servers
+      strcpy(response,"Unknown request");                                       //Setze Antwort auf "unknown request"
     }
-    if(r!=NULL){
-      strcat(r,"\n");
+
+    if(response!=NULL){                                                         //Wenn es eine passende Antwort gibt
+      strcat(response,"\n");                                                    //hänge hinten eine new Line and damit der Antwortbefehlt vollständig ist
     }
-    return r;                                                                   //Gibt die Antwort des Clients zurück
+    return response;                                                            //Gibt die Antwort des Clients zurück
 }
