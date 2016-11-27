@@ -40,6 +40,7 @@ void performConnection(int *sock){
   char **requests = malloc(BUFFERLENGTH*sizeof(char*));                         //Speicher für das Array der einzelnen Serveranfragen allokalisieren
   int end = 1;                                                                  //Variable in der gespeichert wird ob der Server das Ende des Prologs (+ ENDPLAYERS) gesendet hat
     do{
+      memset(buffer,0, BUFFERLENGTH);                                           //Puffer leeren
       recv(*sock, buffer, BUFFERLENGTH-1, 0);                                   //Warte auf Anfrage des Servers
       strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen aufeinmal schickt, werden sie hier in ein String Array eingelesen
       int x = 0;                                                                //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
