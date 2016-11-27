@@ -23,7 +23,7 @@
 
 int connectServer(int portnumber, char *hostname){
     //Variablen deklarieren
-      
+
     /**
      * int sock
      * Das ist unser Socket
@@ -69,11 +69,9 @@ int connectServer(int portnumber, char *hostname){
         exit(EXIT_FAILURE);
     } else {
         printf("Successfully connected to server\n");
+        //Übergabe Filedeskriptor an Funktion performConnection()
+        performConnection(&sock);
     }
-
-    //Übergabe Filedeskriptor an Funktion performConnection()
-    performConnection(&sock);
-
 
     //Schliesst das Socket
     close(sock);
