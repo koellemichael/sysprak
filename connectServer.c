@@ -8,6 +8,7 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include "connectServer.h"
+#include "performConnection.h"
 
 
 
@@ -22,23 +23,23 @@
 
 int connectServer(int portnumber, char *hostname){
     //Variablen deklarieren
-        
-    /** 
+
+    /**
      * int sock
      * Das ist unser Socket
      */
     int sock;
-    
+
     /**
      * struct hostent *he
      * enthält Informationen über host (HOSTNAME)
      */
     struct hostent *he;
-    
-    
-    
-    //SOCKET ANLEGEN 
-    
+
+
+
+    //SOCKET ANLEGEN
+
     /* PF_INET: Internet Protokoll Vesion 4
      * SOCK_STREAM: Typ des Sockets.(Gegensatz: SOCK_DGRAM). Stream Zuverlässiger.
      * 0: Default Transportprotokoll des Sockettyps. Von SOCK_STREAM ist dies TCP.
@@ -48,35 +49,33 @@ int connectServer(int portnumber, char *hostname){
         perror("Could not generate socket\n");
         exit(EXIT_FAILURE);
     }
-    
-    
+
+
     //HOSTNAME in IP Adresse umwandeln
     if( (he = gethostbyname(hostname)) == NULL){
         perror("Function 'gethostbyname' failed to execute\n");
         exit(EXIT_FAILURE);
     }
-    
-    
+
+
     struct sockaddr_in server;
     server.sin_family = PF_INET;
     server.sin_port = htons(portnumber);
     memcpy(&server.sin_addr.s_addr, he->h_addr_list[0], he -> h_length);
-    
-    //CONNECT 
+
+    //CONNECT
     if(connect(sock, (struct sockaddr*)&server, sizeof(server)) < 0){
         perror("Could not connect with server\n");
         exit(EXIT_FAILURE);
     } else {
         printf("Successfully connected to server\n");
+        //Übergabe Filedeskriptor an Funktion performConnection()
+        performConnection(&sock);
     }
-    
-    //Übergabe Filedeskriptor an Funktion performConnection()
-    //performConnection(&sock);
-    
-    
+
     //Schliesst das Socket
     close(sock);
     return 0;
-    
-  
+
+
 }

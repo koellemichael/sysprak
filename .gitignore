@@ -1,4 +1,9 @@
-
+*.exe
 *.out
-
 *.o
+
+*.plist
+
+play.dSYM/Contents/Resources/DWARF/play
+
+play
