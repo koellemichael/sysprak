@@ -25,7 +25,6 @@ int main (int argc, char **argv){
     else {                            //13-stellige Game-ID übergeben
         gameid=argv[1];             //kopieren des Strings nach gameid
       }
-      printf("%s\n", gameid);
 
 
     if(connectServer(PORTNUMBER, HOSTNAME) != 0){
