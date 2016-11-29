@@ -76,10 +76,10 @@ void partition(char *string, int i, char **array){
 int reqcmp(char *request, char *expectation){
   char *req = malloc(strlen(request)*sizeof(char));                             //Speicher anfordern
   strcpy(req, request);                                                         //Kopieren des Requests in eine Variable damit nicht der eigentliche Request verändert wird
-  int eq = 1;                                                                   //Variable zum Überprüfen ob einer Teilstrings Differenzen zur request aufweist
+  int eq = 1;                                                                   //Variable zum Überprüfen ob einer der Teilstrings Differenzen zur request aufweist
   int substrings = (strlen(expectation)/3)+1;                                   //Länge des zu erstellenden Arrays festlegen. Kann maximal 1/3 des zu erwartenden
                                                                                 //Strings sein da im Worst Case immer zwei Klammern auf ein Zwichen folgen
-  char **array = malloc(substrings*sizeof(char*));                              //Speicherplatz füresponse die Pointer des Arrays allokalisieren
+  char **array = malloc(substrings*sizeof(char*));                              //Speicherplatz für response die Pointer des Arrays allokalisieren
   for(int i = 0; i< substrings;i++){
     array[i] = NULL;                                                            //Jeden String im Array mit NULL initialisieren
   }

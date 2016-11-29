@@ -14,7 +14,7 @@
  *
  *@param str Der String der in Teilstrings zerlegt werden soll
  *@param seperator Der Seperator nach dem zerlegt werden soll
- *@param token Das String Array in dem die Teilstring
+ *@param token Das String Array in dem die Teilstrings gespeichert werden
  *@return Anzahl der Teilstrings als int
  */
 int strtoken(char *str, char *separator, char *token[]){
@@ -42,16 +42,16 @@ void performConnection(int *sock){
     do{
       memset(buffer,0, BUFFERLENGTH);                                           //Puffer leeren
       recv(*sock, buffer, BUFFERLENGTH-1, 0);                                   //Warte auf Anfrage des Servers
-      strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen aufeinmal schickt, werden sie hier in ein String Array eingelesen
+      strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
       int x = 0;                                                                //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
      do{
        end = !reqcmp(requests[x],"+ ENDPLAYERS");                               //Wurde +ENDPLAYERS gesendet?
         if(buffer[0]=='+'){                                                     //Wenn Serveranfrage positiv ausfällt
-          if(strlen(requests[x])>2){                                            //Leere Anfrage vom Server ignorieren
+          if(strlen(requests[x])>2){                                            //Leere Anfrage vom Server ignorieren               //TODO Fehlerbehandlung
             printf("server: %s\n",(requests[x]+2));                             //Gibt Anfrage des Servers aus
             char *response = handle(requests[x]+2);                             //Sucht die passende Anfrage auf die Serveranfrage
             if (response!=NULL){                                                //Wenn es eine Anfrage gibt
-              if(strcmp(response, "Unknown response\n")){                       //Wenn diese vom responseHandler erkannt wurde
+              if(strcmp(response, "Unknown request\n")){                        //Wenn diese vom responseHandler erkannt wurde
                 send(*sock,response,strlen(response),0);                        //Sendet dem Server die Antwort des Clients
               }
                 printf("client: %s",response);                                  //Gesendete Antwort ausgeben

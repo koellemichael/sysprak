@@ -40,7 +40,7 @@ int connectServer(int portnumber, char *hostname){
 
     //SOCKET ANLEGEN
 
-    /* PF_INET: Internet Protokoll Vesion 4
+    /* PF_INET: Internet Protokoll Version 4
      * SOCK_STREAM: Typ des Sockets.(Gegensatz: SOCK_DGRAM). Stream Zuverlässiger.
      * 0: Default Transportprotokoll des Sockettyps. Von SOCK_STREAM ist dies TCP.
      */
