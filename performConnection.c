@@ -1,4 +1,4 @@
-#include <stdlib.h>
+﻿#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -6,6 +6,7 @@
 #include "performConnection.h"
 #include "responseHandler.h"
 #include "format.h"
+#include "processRequest.h"
 
 #define BUFFERLENGTH 256                                                        //Puffergröße
 
