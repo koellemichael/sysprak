@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include "performConnection.h"
 #include "responseHandler.h"
+#include "processRequest.h"
 
 #define BUFFERLENGTH 256                                                        //Puffergröße
 
