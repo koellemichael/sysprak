@@ -3,6 +3,6 @@
 #include <string.h>
 #include "format.h"
 
-char* format (char* input){
+char *format (char *input){
 
 }

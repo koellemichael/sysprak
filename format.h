@@ -1,1 +1,1 @@
-char* format (char* input);
+char *format (char *input);
