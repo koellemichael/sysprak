@@ -18,8 +18,6 @@
  * Zusätzlich wird die Methode performconnetion mit dem Socket aufgerufen.
  */
 
-//void performConnection(int *fd);
-
 
 int connectServer(int portnumber, char *hostname){
     //Variablen deklarieren
@@ -40,7 +38,7 @@ int connectServer(int portnumber, char *hostname){
 
     //SOCKET ANLEGEN
 
-    /* PF_INET: Internet Protokoll Vesion 4
+    /* PF_INET: Internet Protokoll Version 4
      * SOCK_STREAM: Typ des Sockets.(Gegensatz: SOCK_DGRAM). Stream Zuverlässiger.
      * 0: Default Transportprotokoll des Sockettyps. Von SOCK_STREAM ist dies TCP.
      */
@@ -52,16 +50,20 @@ int connectServer(int portnumber, char *hostname){
 
 
     //HOSTNAME in IP Adresse umwandeln
-    if( (he = gethostbyname(hostname)) == NULL){
+    if( (he = gethostbyname(hostname)) == NULL){                              //Hostname von Client übergeben
         perror("Function 'gethostbyname' failed to execute\n");
         exit(EXIT_FAILURE);
     }
-
-
+    
+    /* Die Struktur enthält Informationen über Adresse, Port und Internetprotokollfamilie des Gameservers
+     * sin_family: Wird die Protokollfamilie zugewiesen (PF_INET für Internet-Protokoll Version 4)
+     * sin_port: Speichert den IP-Port (=Endpunkt, der zur Kommunikation mit Netzwerk belegt wird)
+     * sin_addr: Speichert die IP-Adresse des Gameservers
+     */
     struct sockaddr_in server;
     server.sin_family = PF_INET;
-    server.sin_port = htons(portnumber);
-    memcpy(&server.sin_addr.s_addr, he->h_addr_list[0], he -> h_length);
+    server.sin_port = htons(portnumber);                                      //Portnummer von Client übergeben
+    memcpy(&server.sin_addr.s_addr, he->h_addr_list[0], he -> h_length);    
 
     //CONNECT
     if(connect(sock, (struct sockaddr*)&server, sizeof(server)) < 0){
