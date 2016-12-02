@@ -1,16 +1,29 @@
+CC = /usr/bin/gcc
 CFLAGS = -g -Wall -Wextra -Wpedantic -Werror
-
-CC = gcc
-
 LDFLAGS = -lpthread
+OBJFILES = client.o connectServer.o performConnection.o responseHandler.o processRequest.o
 
-bashni: client
+bashni: play
 
-client.o: client.c
+
+client.o: client.c 
 	$(CC) $(CFLAGS) -c client.c
 
-client: client.o
-	$(CC) $(CFLAGS) client.o
+connectServer.o: connectServer.c connectServer.h
+	$(CC) $(CFLAGS) -c connectServer.c
+
+performConnection.o: performConnection.c performConnection.h
+	$(CC) $(CFLAGS) -c performConnection.c
+
+responseHandler.o: responseHandler.c responseHandler.h
+	$(CC) $(CFLAGS) -c responseHandler.c
+
+processRequest.o: processRequest.c processRequest.h
+	$(CC) $(CFLAGS) -c processRequest.c
+
+
+play: $(OBJFILES)
+	$(CC) $(CFLAGS) -o play $(OBJFILES)
 
 clean:
-	rm -f *.o bashni
+	rm -f $(OBJFILES) play
