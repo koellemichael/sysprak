@@ -7,3 +7,13 @@
 play.dSYM/Contents/Resources/DWARF/play
 
 play
+
+*.o
+
+client.o
+
+client
+
+client.o
+
+*.o
