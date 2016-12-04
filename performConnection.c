@@ -46,13 +46,13 @@ void performConnection(int *sock){
       strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen aufeinmal schickt, werden sie hier in ein String Array eingelesen
       int x = 0;                                                                //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
      do{
-       end = !reqcmp(requests[x],"+ ENDPLAYERS");                               //Wurde +ENDPLAYERS gesendet?
+       end = !match(requests[x]+2,"ENDPLAYERS");                                //Wurde +ENDPLAYERS gesendet?
         if(buffer[0]=='+'){                                                     //Wenn Serveranfrage positiv ausfällt
           if(strlen(requests[x])>2){                                            //Leere Anfrage vom Server ignorieren
             printf("server: %s\n",(requests[x]+2));                             //Gibt Anfrage des Servers aus
             char *response = handle(requests[x]+2);                             //Sucht die passende Anfrage auf die Serveranfrage
             if (response!=NULL){                                                //Wenn es eine Anfrage gibt
-              if(strcmp(response, "Unknown response\n")){                       //Wenn diese vom responseHandler erkannt wurde
+              if(strcmp(response, "Unknown request\n")){                        //Wenn diese vom responseHandler erkannt wurde
                 send(*sock,response,strlen(response),0);                        //Sendet dem Server die Antwort des Clients
               }
                 printf("client: %s",response);                                  //Gesendete Antwort ausgeben
