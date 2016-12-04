@@ -47,7 +47,7 @@ void performConnection(int *sock){
       strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
       int x = 0;                                                                //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
      do{
-       end = !reqcmp(requests[x],"+ ENDPLAYERS");                               //Wurde +ENDPLAYERS gesendet?
+       end = !match(requests[x]+2,"ENDPLAYERS");                                //Wurde +ENDPLAYERS gesendet?
         if(buffer[0]=='+'){                                                     //Wenn Serveranfrage positiv ausfällt
           if(strlen(requests[x])>2){                                            //Leere Anfrage vom Server ignorieren               //TODO Fehlerbehandlung
             printf("server: %s\n",(requests[x]+2));                             //Gibt Anfrage des Servers aus
