@@ -19,39 +19,39 @@ int prolog = 1;                                                                 
  */
 char *handle(char *request){
   char *response = malloc(256*sizeof(char));                                    //Antwortvariable initialisieren
-    if(prolog==1 && reqcmp(request,                                             //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
-      "MNM Gameserver <Gameserver Version> accepting connections")){
+    if(prolog==1 && match(request,                                              //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
+      "MNM Gameserver .+accepting connections")){
       strcpy(response,"VERSION ");                                              //Setze response auf die passende Antwort
       strcat(response, VERSION);                                                //TODO
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
-    }else if(prolog==2 && reqcmp(request,                                       //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
+    }else if(prolog==2 && match(request,                                        //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       "Client version accepted - please send Game-ID to join")){
       strcpy(response,"ID ");                                                   //Setze response auf die passende Antwort
       strcat(response,gameid);                                                  //Game-ID von client.c übernehmen
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
     }
-    else if(prolog==3 && reqcmp(request,                                        //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
-      "PLAYING <Gamekind-Name>")){
+    else if(prolog==3 && match(request,                                         //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
+      "PLAYING .+")){
       response = NULL;                                                          //Setze response auf die passende Antwort
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
-    }else if(prolog==4 && reqcmp(request,                                       //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
-      "<Game-Name>")){
+    }else if(prolog==4 && match(request,                                        //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
+      ".+")){
       strcpy(response,"PLAYER ");                                               //Setze response auf die passende Antwort
       strcat(response, PLAYERNR);                                               //TODO
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
-    }else if(prolog==5 && reqcmp(request,                                       //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
-      "YOU <Spielernummer> <Spielername>")){
+    }else if(prolog==5 && match(request,                                        //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
+      "YOU .+ .+")){
       response = NULL;                                                          //Setze response auf die passende Antwort
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
-    }else if(prolog==6 && reqcmp(request,                                       //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
-     "TOTAL <Spieleranzahl>")){
+    }else if(prolog==6 && match(request,                                        //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
+     "TOTAL .+")){
      response = NULL;                                                           //Setze response auf die passende Antwort
      prolog++;                                                                  //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
-    }else if(reqcmp(request,                                                    //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
+    }else if(match(request,                                                     //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
      "ENDPLAYERS")){
      response = NULL;                                                           //Setze response auf die passende Antwort
-    }else if(prolog>=7 && reqcmp(request,                                       //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
-      "<Spielernummer> <Spielername> <Bereit>")){
+   }else if(prolog>=7 && match(request,                                         //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
+      ".+ .+ .+")){
       response = NULL;                                                          //Setze response auf die passende Antwort
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
     }else{                                                                      //Ansonsten unbekannte Anfrage des Servers

@@ -28,5 +28,3 @@ play: ./client
 
 clean:
 	rm -f $(OBJFILES) play
-
-
