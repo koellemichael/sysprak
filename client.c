@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <String.h>
+#include <string.h>
 #include "connectServer.h"
 
 #define GAMEKINDNAME "Bashni"

@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <String.h>
+#include <string.h>
 #include <regex.h>
 #include "processRequest.h"
 
@@ -24,3 +24,4 @@ int match(const char *string, char *pattern){
     }
     return(1);                                                                  //Falls das Pattern passt gebe 1 zurück
 }
+

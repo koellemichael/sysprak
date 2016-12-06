@@ -1,6 +1,6 @@
 ﻿#include <stdlib.h>
 #include <stdio.h>
-#include <String.h>
+#include <string.h>
 #include "responseHandler.h"
 #include "processRequest.h"
 
