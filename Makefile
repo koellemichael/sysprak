@@ -5,8 +5,8 @@ OBJFILES = client.o connectServer.o performConnection.o responseHandler.o proces
 
 bashni: play
 
-client.o: client.c 
-	$(CC) $(CFLAGS) -c client.c 
+client.o: client.c
+	$(CC) $(CFLAGS) -c client.c
 
 connectServer.o: connectServer.c connectServer.h
 	$(CC) $(CFLAGS) -c connectServer.c
@@ -24,7 +24,7 @@ client: $(OBJFILES)
 	$(CC) $(CFLAGS) -o client $(OBJFILES)
 
 play: ./client
-	./client $(GAME_ID) 
+	./client $(GAME_ID) $(PLAYER)
 
 clean:
 	rm -f $(OBJFILES) play
