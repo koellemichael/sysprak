@@ -24,3 +24,22 @@ int match(const char *string, char *pattern){
     }
     return(1);                                                                  //Falls das Pattern passt gebe 1 zurück
 }
+/**
+ *Die Funktion substring extrahiert einen Teilstring von from bis to aus einem
+ *gegebenen String und gibt ihn als char Pointer zur¸ck.
+ *
+ *@param string Der String aus dem der Teilsting extrahiert werden soll
+ *@param from Anfangsposition des Teilstrings als int
+ *@param to Endposition des Teilstrings als int
+ *@return Teilstring von from bis to als char* oder NULL falls ein Fehler auftritt.
+ */
+char *substring(char *string, unsigned int from, unsigned int to){
+  if(from>=to || to>strlen(string)){                                            //Unsinnige Eingaben abfangen
+        return NULL;                                                            //NULL zur¸ckgeben falls
+   }else{                                                                       //Falls sinbvolle Eingabe
+     char *substring = malloc((to-from)*sizeof(char));                          //Speicher f¸response substring allokalisieren
+     strncpy(substring,string+from,(to-from));                                  //Teilstring in substring speichern
+     substring[(to-from)]=0;                                                    //Teilstringende festlegen
+     return substring;                                                          //Substring zur¸ckgeben
+   }
+}
