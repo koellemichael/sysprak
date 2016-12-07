@@ -1,4 +1,21 @@
-#ifndef connectSrv
-#define connectSrv
-int connectServer(int, char*);
+#ifndef connectSrv                                                              //Wenn das Makro noch nicht existiert
+#define connectSrv                                                              //Definiere das Makro
+
+//Bibliotheken einbinden
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <arpa/inet.h>
+
+//Module einbinden
+#include "performConnection.h"
+
+//Funktionen deklarieren
+int connectServer(int, char*);                                                  //Verbindet Client mit Server
+
 #endif
