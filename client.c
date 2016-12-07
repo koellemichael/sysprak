@@ -1,14 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <String.h>
-#include "connectServer.h"
-
-#define GAMEKINDNAME "Bashni"
-#define PORTNUMBER 1357
-#define HOSTNAME "sysprak.priv.lab.nm.ifi.lmu.de"
-
-char *gameid;
-char *player;
+#include "client.h"
 
 int main (int argc, char **argv){
 
@@ -27,7 +17,7 @@ int main (int argc, char **argv){
     else {                                                                      //13-stellige Game-ID übergeben
         gameid=argv[1];                                                         //kopieren des Strings nach gameid
     }
-    
+
     if (argv[2]!=NULL){                                                         //Wurder Player eingegeben?
       player = argv[2];
     }
