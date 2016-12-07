@@ -1,14 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <String.h>
 #include "responseHandler.h"
-#include "processRequest.h"
 
-#define VERSION "2.3"                                                           //TODO provisorische Konstante
-
-extern char *gameid;                                                            //!gameid. Zugriff auf Globale Variable in client.c
-extern char *player;                                                            //!player. Zugriff auf Globale Variable in client.c
-int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase
+int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
 
 /**
  *Die Funktion handle verarbeitet die Anfrage des Servers zur passenden
