@@ -41,13 +41,14 @@ void performConnection(int *sock){
        end = !match(requests[x]+2,"ENDPLAYERS");                                //Wurde +ENDPLAYERS gesendet?
         if(buffer[0]=='+'){                                                     //Wenn Serveranfrage positiv ausfällt
           if(strlen(requests[x])>2){                                            //Leere Anfrage vom Server ignorieren               //TODO Fehlerbehandlung
-            printf("server: %s\n",(requests[x]+2));
-            printf("format: %s\n", format(requests[x]+2));                             //Gibt Anfrage des Servers aus
+            char *out = format(requests[x]+2);
+            printf("server: %s",out);                                           //Gibt Anfrage des Servers aus
+            if(out!=NULL){                                                      //Speicher von out freigeben (wurde in format.c allokalisiert)
+              free(out);
+            }
             char *response = handle(requests[x]+2);                             //Sucht die passende Anfrage auf die Serveranfrage
             if (response!=NULL){                                                //Wenn es eine Anfrage gibt
-              if(strcmp(response, "Unknown request\n")){                        //Wenn diese vom responseHandler erkannt wurde
                 send(*sock,response,strlen(response),0);                        //Sendet dem Server die Antwort des Clients
-              }
                 printf("client: %s",response);                                  //Gesendete Antwort ausgeben
             }
             if(response!=NULL){                                                 //Speicher von response freigeben da, in handle Speicher allokalisiert wurde

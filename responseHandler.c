@@ -26,6 +26,9 @@ char *handle(char *request){
     }
     else if(prolog==3 && match(request,                                         //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       "PLAYING .+")){
+      if(response!=NULL){
+        free(response);
+      }
       response = NULL;                                                          //Setze response auf die passende Antwort
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
     }else if(prolog==4 && match(request,                                        //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
@@ -35,21 +38,36 @@ char *handle(char *request){
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
     }else if(prolog==5 && match(request,                                        //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       "YOU .+ .+")){
+      if(response!=NULL){
+        free(response);
+      }
       response = NULL;                                                          //Setze response auf die passende Antwort
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
     }else if(prolog==6 && match(request,                                        //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
      "TOTAL .+")){
+     if(response!=NULL){
+       free(response);
+     }
      response = NULL;                                                           //Setze response auf die passende Antwort
      prolog++;                                                                  //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
     }else if(match(request,                                                     //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
      "ENDPLAYERS")){
+     if(response!=NULL){
+       free(response);
+     }
      response = NULL;                                                           //Setze response auf die passende Antwort
    }else if(prolog>=7 && match(request,                                         //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       ".+ .+ .+")){
+      if(response!=NULL){
+        free(response);
+      }
       response = NULL;                                                          //Setze response auf die passende Antwort
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
     }else{                                                                      //Ansonsten unbekannte Anfrage des Servers
-      strcpy(response,"Unknown request");                                       //Setze Antwort auf "unknown request"
+      if(response!=NULL){
+        free(response);
+      }
+      response = NULL;                                                          //Setze Antwort auf "NULL"
     }
 
     if(response!=NULL){                                                         //Wenn es eine passende Antwort gibt

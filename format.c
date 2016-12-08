@@ -1,17 +1,12 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include "processRequest.h"
 #include "format.h"
 
 int pro = 1;                                                                                        //Prologvariable
 
 /*
- *Funktion format formatiert die Nahcrichten vom Server
+ *Funktion format formatiert die Nachrichten vom Server.
  *@param *input Nachricht vom Servers
  *@return out gibt formatierte Ausgabe zurrück
  */
-
 char *format(char *input){
 
   char *out = malloc(256*sizeof(char));
@@ -74,8 +69,6 @@ char *format(char *input){
       }
 
       pro++;                                                                                       // Prolog erhöhen
-
-
     }else{                                                                                         // Unbekannte Eingabe
       strcpy(out,"Unknown request");
     }
