@@ -9,6 +9,7 @@
 
 //Module einbinden
 #include "connectServer.h"
+#include "config.h"
 
 //Konstanten definieren
 #define GAMEKINDNAME "Bashni"                                                   //Konstante GAMEKINDNAME definieren
