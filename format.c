@@ -37,7 +37,7 @@ char *format(char *input){
 
 
     }else if(pro==4 && match(input, ".+")){                                                        // Stimmen Prologvariable und Text überein
-      strcpy(out, "The game's name is ");                                                          // Ausgabe The game's name is <Gamename>
+      strcpy(out, "The games name is ");                                                          // Ausgabe The game's name is <Gamename>
       strcat(out, input);                                                                          // Gamename
       pro++;                                                                                       // Prolog erhöhen
 
