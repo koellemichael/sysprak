@@ -1,14 +1,5 @@
-﻿#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include "performConnection.h"
-#include "responseHandler.h"
-#include "format.h"
-#include "processRequest.h"
+﻿#include "performConnection.h"
 
-#define BUFFERLENGTH 256                                                        //Puffergröße
 
 /**
  *Die Funktion strtoken zerteilt einen String in mehrere durch den Seperator

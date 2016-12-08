@@ -1,14 +1,7 @@
-﻿#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+﻿
 #include "responseHandler.h"
-#include "processRequest.h"
 
-#define VERSION "2.3"                                                           //TODO provisorische Konstante
-#define PLAYERNR ""                                                             //TODO provisorische Konstante
-
-extern char *gameid;                                                            //!gameid. Zugriff auf Globale Variable in client.c
-int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase
+int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
 
 
 /**
@@ -38,7 +31,7 @@ char *handle(char *request){
     }else if(prolog==4 && match(request,                                        //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       ".+")){
       strcpy(response,"PLAYER ");                                               //Setze response auf die passende Antwort
-      strcat(response, PLAYERNR);                                               //TODO
+      strcat(response, player);                                                 //Playernummer, falls vorhanden, anhängen
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
     }else if(prolog==5 && match(request,                                        //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       "YOU .+ .+")){

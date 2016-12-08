@@ -1,4 +1,4 @@
-#include <stdlib.h>
+﻿#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <regex.h>
@@ -28,12 +28,12 @@ int match(const char *string, char *pattern){
 /**
  *Die Funktion substring extrahiert einen Teilstring von from bis to aus einem
  *gegebenen String und gibt ihn als char Pointer zurück.
- *
  *@param string Der String aus dem der Teilsting extrahiert werden soll
  *@param from Anfangsposition des Teilstrings als int
  *@param to Endposition des Teilstrings als int
  *@return Teilstring von from bis to als char* oder NULL falls ein Fehler auftritt.
  */
+
 char *substring(char *string, unsigned int from, unsigned int to){
   if(from>=to || to>strlen(string)){                                            //Unsinnige Eingaben abfangen
     return NULL;                                                                //NULL zurückgeben falls
