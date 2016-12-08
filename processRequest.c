@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <String.h>
-#include <regex.h>
 #include "processRequest.h"
 
 /**
@@ -24,6 +20,7 @@ int match(const char *string, char *pattern){
     }
     return(1);                                                                  //Falls das Pattern passt gebe 1 zurück
 }
+
 /**
  *Die Funktion substring extrahiert einen Teilstring von from bis to aus einem
  *gegebenen String und gibt ihn als char Pointer zur¸ck.
