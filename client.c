@@ -2,33 +2,8 @@
 
 int main (int argc, char **argv){
     
-    // Kathis Codestück zur Konfigdatei beginnt hier 
-    
-/*
- * Hier wird geprüft, ob ein optionaler Kommandozeilenparameter mit dem flag "-f" angegeben wurde
- * Wenn nicht, dann wird die Standard Konfigurationsdatei "client.conf" verwendet
- * Wenn eine zusätzlicher Parameter als Dateipfad angegeben wurde, dann wird diese Datei verwendet
- * Danach ruft sie die Funkion readConfiguration() auf mit der gewünschten Konfigurationsdatei.
- */
-     
-    int c;                                                                                   
-    char *confile;                                                                           //Der Dateipfad der Konfigurationsdatei, 
-                                                                                             //die verwendet werden soll
-    c = getopt(argc, argv, ":f:");                                                           //Return Value von Getopt wird hier gespeichert  
-        switch(c){                                                                           // Wenn ein Argument...
-            case 'f': confile = optarg;                                                      // ..das flag f hat: ist dies die verwendete Config File
-                    printf("Specified configuration file is \"%s\".\n", confile);               
-                    break;
-            default: confile = "client.conf";                                                //..kein flag f hat: Standard Config wird verwendet
-                    printf("No configuration file specified. Using default configuration file \"client.conf\". \n"); 
-        }
-    
-    readConfiguration(confile);                                                              //Funktionsaufruf readConfiguration(confile)
-    
-    //Kathis Codestück zur Konfigdatei endet hier
-    
-    
-
+  char *confile;  
+  
   gameid = NULL;
   player = NULL;
 
@@ -51,7 +26,17 @@ int main (int argc, char **argv){
     else {                                                                      //Kein Player eingegeben
         player = "";                                                            //Player leer lassen
     }
-
+    if(argv[3]!=NULL){
+        confile = argv[3];
+        printf("Specified configuration file is \"%s\".\n", confile);  
+    }
+    else{
+        confile = "client.config";
+        printf("No configuration file specified. Using default configuration file \"client.conf\". \n"); 
+    }
+    
+     readConfiguration(confile);                                            //Funktionsaufruf readConfiguration(confile)
+      
     if(connectServer(PORTNUMBER, HOSTNAME) != 0){
         perror("Client failed to call 'connectServer'\n");
         exit(EXIT_FAILURE);
@@ -60,3 +45,4 @@ int main (int argc, char **argv){
   }
   exit(EXIT_SUCCESS);
 }
+

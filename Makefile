@@ -27,7 +27,7 @@ client: $(OBJFILES)
 	$(CC) $(CFLAGS) -o client $(OBJFILES)
 
 play: ./client
-	./client $(CONF_FL) $(GAME_ID) $(PLAYER)
+	./client $(GAME_ID) $(PLAYER) $(CONF_FL)
 
 clean:
 	rm -f $(OBJFILES) play
