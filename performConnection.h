@@ -11,6 +11,7 @@
 //Module einbinden
 #include "responseHandler.h"
 #include "processRequest.h"
+#include "format.h"
 
 //Konstanten definieren
 #define BUFFERLENGTH 256                                                        //Konstante für die Puffergröße definieren
