@@ -2,7 +2,7 @@
 
 int pro = 1;                                                                                        //Prologvariable
 
-int version;
+char *version;
 char *gamekind;
 char *gamename;
 
@@ -20,10 +20,9 @@ char *format(char *input){
   char *out = malloc(256*sizeof(char));
 
     if(pro==1 && match(input, "MNM Gameserver .+accepting connections")){                          // Stimmen Prologvariable und Text überein
-      strcpy(out, "The MNM Gameserver v");                                                         // Ausgabe The MNM Gameserver <Versionsnummer> accepted the connection
-      char *sversion = substring(input, 16,strlen(input)-22);
-      version = atoi(sversion);                                                                    //Versionsnummer in globaler Variable speichern
-      strcat(out, sversion);                                                                      // Versionsnummer
+      strcpy(out, "The MNM Gameserver version ");                                                         // Ausgabe The MNM Gameserver <Versionsnummer> accepted the connection
+      version = substring(input, 16,strlen(input)-22);
+      strcat(out, version);                                                                      // Versionsnummer
       strcat(out, " accepted the connection.");
       pro++;                                                                                       // Prolog erhöhen
     }else if(pro==2 && match(input, "Client version accepted - please send Game-ID to join")){     // Stimmen Prologvariable und Text überein
@@ -64,8 +63,7 @@ char *format(char *input){
       strcat(out," (");
       strcat(out, substring(input, 0,1));                                                          // (Playernumber)
       strcat(out,") is ");
-      printf("%i\n",atoi(substring(input, strlen(input)-2, strlen(input)-1)));                     //TODO gibt immer 0 aus
-      if(atoi(substring(input, strlen(input)-2, strlen(input)-1))==1){                              //Spieler bereit -> letzte Zahl = 1
+      if(atoi(substring(input, strlen(input)-1, strlen(input)))==1){                              //Spieler bereit -> letzte Zahl = 1
         strcat(out, "ready");
       }
       else if(atoi(substring(input, strlen(input)-2, strlen(input)-1))==0){                         //Spieler nicht bereit -> letzte Zahl = 0
