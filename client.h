@@ -19,5 +19,11 @@
 //Globale Variablen deklarieren
 char *gameid;                                                                   //Globale Variable für die Game-ID deklarieren
 char *player;                                                                   //Gloabel Variable für die PlayerNr deklarieren
+char *paramNameHost = "hostName";                                               //Parametername des Hostnamens, nachdem wir filtern
+char *paramNamePort = "portNumber";                                             //Parametername der Portnummer, nach der wir filtern
+char *paramNameGame = "gameKindName";                                           //Parametername des Spiels, nach dem wir filtern
+char *value = ""; 
+configparams cp;                                                                //Eine Instanz vom Struct configparams namens "cp"
+
 
 #endif

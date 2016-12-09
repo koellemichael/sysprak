@@ -2,7 +2,7 @@
 
 int main (int argc, char **argv){
     
-  char *confile;  
+  char *confile = NULL;  
   
   gameid = NULL;
   player = NULL;
@@ -31,11 +31,20 @@ int main (int argc, char **argv){
         printf("Specified configuration file is \"%s\".\n", confile);  
     }
     else{
-        confile = "client.config";
+        confile = "client.conf";
         printf("No configuration file specified. Using default configuration file \"client.conf\". \n"); 
     }
     
-     readConfiguration(confile);                                            //Funktionsaufruf readConfiguration(confile)
+      
+      
+  cp.hostName = readConfiguration(confile, paramNameHost);   
+  cp.portNumber = atoi(readConfiguration(confile, paramNamePort));
+  cp.gameKindName = readConfiguration(confile, paramNameGame); 
+      
+  printf("hostname: %s", cp.hostName);
+  printf("gamekindname: %s", cp.gameKindName);
+  printf("portnummer: %i", cp.portNumber);
+
       
     if(connectServer(PORTNUMBER, HOSTNAME) != 0){
         perror("Client failed to call 'connectServer'\n");
