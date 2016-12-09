@@ -2,7 +2,7 @@
 
 int pro = 1;                                                                                        //Prologvariable
 
-char *version;
+char *version;                                                                  //TODO speicher freigeben nicht vergessen
 char *gamekind;
 char *gamename;
 
@@ -26,7 +26,7 @@ char *format(char *input){
       strcat(out, " accepted the connection.");
       pro++;                                                                                       // Prolog erhöhen
     }else if(pro==2 && match(input, "Client version accepted - please send Game-ID to join")){     // Stimmen Prologvariable und Text überein
-      strcpy(out,"The client version was accepted by the Gameserver.Please send a valid Game-ID to join the game.");    // Ausgabe The client version was accepted. Now please send Game-ID to join the game
+      strcpy(out,"The client version was accepted by the Gameserver. Please send a valid Game-ID to join the game.");    // Ausgabe The client version was accepted. Now please send Game-ID to join the game
       pro++;                                                                                       // Prolog erhöhen
     }else if(pro==3 && match(input, "PLAYING .+")){                                                // Stimmen Prologvariable und Text überein
       strcpy(out, "Preparing to play the game ");                                                  // Ausgabe We are playing the game <Gamekind>
@@ -59,15 +59,15 @@ char *format(char *input){
       pro++;                                                                                       // Prolog erhöhen
       free(stotalplayers);
     }else if(match(input, "ENDPLAYERS")){                                                          // Input ENDPLAYERS
-      strcpy(out, "Starting the game");                                                                // Ausgabe ENDPLAYERS - The prolog is finished!
+      strcpy(out, "Starting the game...");                                                                // Ausgabe ENDPLAYERS - The prolog is finished!
     }else if(pro>=7 && match(input, ".+ .+ .+")){                                                  // Stimmen Prologvariable und Text überein
       char *rplayer = substring(input, 2,strlen(input)-2);
       strcpy(out, rplayer);                                                                        // Ausgabe <Player> (<Playernumber>) is ready/ not ready
       strcat(out," (");
-      char rplayernumb = substring(input, 0,1);
+      char *rplayernumb = substring(input, 0,1);
       strcat(out, rplayernumb);                                                                    // (Playernumber)
       strcat(out,") is ");
-      char playerstatus = substring(input, strlen(input)-1, strlen(input));
+      char *playerstatus = substring(input, strlen(input)-1, strlen(input));
       if(atoi(playerstatus)==1){                                                                  //Spieler bereit -> letzte Zahl = 1
         strcat(out, "ready");
       }
