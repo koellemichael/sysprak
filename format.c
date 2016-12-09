@@ -26,10 +26,10 @@ char *format(char *input){
       strcat(out, " accepted the connection.");
       pro++;                                                                                       // Prolog erhöhen
     }else if(pro==2 && match(input, "Client version accepted - please send Game-ID to join")){     // Stimmen Prologvariable und Text überein
-      strcpy(out,"The client version was accepted. Now please send Game-ID to join the game.");    // Ausgabe The client version was accepted. Now please send Game-ID to join the game
+      strcpy(out,"The client version was accepted by the Gameserver.Please send a valid Game-ID to join the game.");    // Ausgabe The client version was accepted. Now please send Game-ID to join the game
       pro++;                                                                                       // Prolog erhöhen
     }else if(pro==3 && match(input, "PLAYING .+")){                                                // Stimmen Prologvariable und Text überein
-      strcpy(out, "We are playing the game ");                                                     // Ausgabe We are playing the game <Gamekind>
+      strcpy(out, "Preparing to play the game ");                                                  // Ausgabe We are playing the game <Gamekind>
       gamekind = substring(input, 8,strlen(input));
       strcat(out, gamekind);                                                                       // Gamekind
       pro++;                                                                                       // Prolog erhöhen
@@ -46,6 +46,7 @@ char *format(char *input){
       playernumber = atoi(splayernumber);
       strcat(out, splayernumber);                                                                   // Player number
       pro++;                                                                                       // Prolog erhöhen
+      free(splayernumber);
     }else if(pro==6 && match(input, "TOTAL .+")){                                                  // Stimmen Prologvariable und Text überein
       char *stotalplayers = substring(input,6,strlen(input));
       totalplayers = atoi(stotalplayers);
@@ -56,20 +57,27 @@ char *format(char *input){
         strcat(out, " players will take part in this game.");
       }
       pro++;                                                                                       // Prolog erhöhen
+      free(stotalplayers);
     }else if(match(input, "ENDPLAYERS")){                                                          // Input ENDPLAYERS
-      strcpy(out, "End of Prolog");                                                                // Ausgabe ENDPLAYERS - The prolog is finished!
+      strcpy(out, "Starting the game");                                                                // Ausgabe ENDPLAYERS - The prolog is finished!
     }else if(pro>=7 && match(input, ".+ .+ .+")){                                                  // Stimmen Prologvariable und Text überein
-      strcpy(out, substring(input, 2,strlen(input)-2));                                            // Ausgabe <Player> (<Playernumber>) is ready/ not ready
+      char *rplayer = substring(input, 2,strlen(input)-2);
+      strcpy(out, rplayer);                                                                        // Ausgabe <Player> (<Playernumber>) is ready/ not ready
       strcat(out," (");
-      strcat(out, substring(input, 0,1));                                                          // (Playernumber)
+      char rplayernumb = substring(input, 0,1);
+      strcat(out, rplayernumb);                                                                    // (Playernumber)
       strcat(out,") is ");
-      if(atoi(substring(input, strlen(input)-1, strlen(input)))==1){                              //Spieler bereit -> letzte Zahl = 1
+      char playerstatus = substring(input, strlen(input)-1, strlen(input));
+      if(atoi(playerstatus)==1){                                                                  //Spieler bereit -> letzte Zahl = 1
         strcat(out, "ready");
       }
-      else if(atoi(substring(input, strlen(input)-2, strlen(input)-1))==0){                         //Spieler nicht bereit -> letzte Zahl = 0
+      else if(atoi(playerstatus)==0){                                                             //Spieler nicht bereit -> letzte Zahl = 0
         strcat(out, "not ready");
       }
       pro++;                                                                                       // Prolog erhöhen
+      free(rplayer);
+      free(rplayernumb);
+      free(playerstatus);
     }else{                                                                                         // Unbekannte Eingabe
       strcpy(out,"Unknown request");
     }
