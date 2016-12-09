@@ -19,10 +19,10 @@ char *format(char *input){
 
   char *out = malloc(256*sizeof(char));
 
-    if(pro==1 && match(input, "MNM Gameserver .+accepting connections")){                          // Stimmen Prologvariable und Text überein
-      strcpy(out, "The MNM Gameserver version ");                                                         // Ausgabe The MNM Gameserver <Versionsnummer> accepted the connection
+    if(pro==1 && match(input, "MNM Gameserver .+accepting connections")){                           // Stimmen Prologvariable und Text überein
+      strcpy(out, "The MNM Gameserver version ");                                                 // Ausgabe The MNM Gameserver <Versionsnummer> accepted the connection
       version = substring(input, 16,strlen(input)-22);
-      strcat(out, version);                                                                      // Versionsnummer
+      strcat(out, version);                                                                       // Versionsnummer
       strcat(out, " accepted the connection.");
       pro++;                                                                                       // Prolog erhöhen
     }else if(pro==2 && match(input, "Client version accepted - please send Game-ID to join")){     // Stimmen Prologvariable und Text überein
