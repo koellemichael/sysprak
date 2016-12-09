@@ -11,9 +11,8 @@
 //Module einbinden
 #include "responseHandler.h"
 #include "processRequest.h"
+#include "parameter.h"
 
-//Konstanten definieren
-#define BUFFERLENGTH 256                                                        //Konstante für die Puffergröße definieren
 
 //Funktionen deklarieren
 void performConnection(int *fd);                                                //Handelt den Prolog mit dem Server ab
