@@ -10,7 +10,7 @@ int prolog = 1;                                                                 
  *@return Antwort des Clients, NULL falls keine passende Antwort
  */
 char *handle(char *request){
-  char *response = malloc(256*sizeof(char));                                    //Antwortvariable initialisieren
+  char *response = malloc(BUFFERLENGTH*sizeof(char));                           //Antwortvariable initialisieren
     if(prolog==1 && match(request,                                              //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
       "MNM Gameserver .+accepting connections")){
       strcpy(response,"VERSION ");                                              //Setze response auf die passende Antwort
