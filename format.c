@@ -64,6 +64,7 @@ char *format(char *input){
       strcat(out," (");
       strcat(out, substring(input, 0,1));                                                          // (Playernumber)
       strcat(out,") is ");
+      printf("%i\n",atoi(substring(input, strlen(input)-2, strlen(input)-1)));                     //TODO gibt immer 0 aus
       if(atoi(substring(input, strlen(input)-2, strlen(input)-1))==1){                              //Spieler bereit -> letzte Zahl = 1
         strcat(out, "ready");
       }
