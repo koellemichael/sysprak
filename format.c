@@ -64,7 +64,7 @@ char *format(char *input){
       char *rplayer = substring(input, 2,strlen(input)-2);
       strcpy(out, rplayer);                                                                        // Ausgabe <Player> (<Playernumber>) is ready/ not ready
       strcat(out," (");
-      int rplayernumb = substring(input, 0,1);
+      char rplayernumb = substring(input, 0,1);
       strcat(out, rplayernumb);                                                                    // (Playernumber)
       strcat(out,") is ");
       char playerstatus = substring(input, strlen(input)-1, strlen(input));
@@ -75,7 +75,7 @@ char *format(char *input){
         strcat(out, "not ready");
       }
       pro++;                                                                                       // Prolog erhöhen
-      free(rplayernum);
+      free(rplayer);
       free(rplayernumb);
       free(playerstatus);
     }else{                                                                                         // Unbekannte Eingabe
