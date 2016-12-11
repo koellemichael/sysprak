@@ -9,11 +9,7 @@
 
 //Module einbinden
 #include "connectServer.h"
-
-//Konstanten definieren
-#define GAMEKINDNAME "Bashni"                                                   //Konstante GAMEKINDNAME definieren
-#define PORTNUMBER 1357                                                         //Konstante PORTNUMBER definieren
-#define HOSTNAME "sysprak.priv.lab.nm.ifi.lmu.de"                               //Konstante HOSTNAME definieren
+#include "parameter.h"
 
 //Globale Variablen deklarieren
 char *gameid;                                                                   //Globale Variable für die Game-ID deklarieren

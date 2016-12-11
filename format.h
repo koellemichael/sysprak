@@ -10,6 +10,8 @@
 #include "processRequest.h"
 
 //Funktionen deklarieren
-char *format(char *input);                                                //Formatiert Serveranfrage
+
+char *format (char *input);
+
 
 #endif

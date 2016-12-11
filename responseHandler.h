@@ -8,9 +8,7 @@
 
 //Module einbinden
 #include "processRequest.h"
-
-//Konstanten definieren
-#define VERSION "2.3"                                                           //TODO provisorische Konstante
+#include "parameter.h"
 
 //Externe Variablen einbinden
 extern char *gameid;                                                            //gameid. Zugriff auf Globale Variable in client.c
