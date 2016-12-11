@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include "processRequest.h"
 #include "format.h"
 
 int pro = 1;                                                                                        //Prologvariable
@@ -24,20 +20,20 @@ char *format(char *input){
 
 
     }else if(pro==2 && match(input, "Client version accepted - please send Game-ID to join")){     // Stimmen Prologvariable und Text überein
-      strcpy(out,"The client version was accepted. Now please send Game-ID to join the game.");    // Ausgabe The client version was accepted. Now please send Game-ID to join the game
+      strcpy(out,"The client version was accepted by the Gameserver. Please send a valid Game-ID to join the game.");    // Ausgabe The client version was accepted. Now please send Game-ID to join the game
       pro++;                                                                                       // Prolog erhöhen
 
 
 
     }else if(pro==3 && match(input, "PLAYING .+")){                                                // Stimmen Prologvariable und Text überein
-      strcpy(out, "We are playing the game ");                                                     // Ausgabe We are playing the game <Gamekind>
+      strcpy(out, "Preparing to play the game ");                                                     // Ausgabe We are playing the game <Gamekind>
       strcat(out, substring(input, 8,strlen(input)));                                              // Gamekind
       pro++;                                                                                       // Prolog erhöhen
 
 
 
     }else if(pro==4 && match(input, ".+")){                                                        // Stimmen Prologvariable und Text überein
-      strcpy(out, "The game's name is ");                                                          // Ausgabe The game's name is <Gamename>
+      strcpy(out, "You are entering the game ");                                                          // Ausgabe The game's name is <Gamename>
       strcat(out, input);                                                                          // Gamename
       pro++;                                                                                       // Prolog erhöhen
 
@@ -51,7 +47,7 @@ char *format(char *input){
 
     }else if(pro==6 && match(input, "TOTAL .+")){                                                  // Stimmen Prologvariable und Text überein
       strcpy(out, substring(input,6,strlen(input)));                                               // Ausgabe <Total> player will take part in this game
-      strcat(out, " player will take part in this game.");                                         // Total
+      strcat(out, " players will take part in this game.");                                         // Total
       pro++;                                                                                       // Prolog erhöhen
 
 
@@ -86,4 +82,6 @@ char *format(char *input){
       strcat(out,"\n");                                                                           // Anfügen Zeilenumbruch
     }
     return out;
+
+    free(out);
 }
