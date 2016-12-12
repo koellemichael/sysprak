@@ -11,8 +11,8 @@
 //Module einbinden
 #include "responseHandler.h"
 #include "processRequest.h"
+#include "format.h"
 #include "parameter.h"
-
 
 //Funktionen deklarieren
 void performConnection(int *fd);                                                //Handelt den Prolog mit dem Server ab

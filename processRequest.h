@@ -4,7 +4,7 @@
 //Bibliotheken einbinden
 #include <stdlib.h>
 #include <stdio.h>
-#include <String.h>
+#include <string.h>
 #include <regex.h>
 
 //Funktionen deklarieren

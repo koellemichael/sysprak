@@ -8,5 +8,4 @@
 #define BUFFERLENGTH 256                                                        //Konstante für die Puffergröße definieren
 #define VERSION "2.3"                                                           //TODO provisorische Konstante
 
-
 #endif
