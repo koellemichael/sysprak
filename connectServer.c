@@ -23,7 +23,7 @@ int connectServer(int portnumber, char *hostname){
 
     //HOSTNAME in IP Adresse umwandeln
     if( (he = gethostbyname(hostname)) == NULL){                                //Hostname von Client übergeben
-        perror("Function 'gethostbyname' failed to execute\n");
+        perror("Could not resolve Hostname\n");
         exit(EXIT_FAILURE);
     }
 
