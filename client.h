@@ -24,6 +24,7 @@ char *paramNamePort = "portNumber";                                             
 char *paramNameGame = "gameKindName";                                           //Parametername des Spiels, nach dem wir filtern
 char *value = ""; 
 configparams cp;                                                                //Eine Instanz vom Struct configparams namens "cp"
+char *confile;                                                                  //Speichert den Pfad der Konfigurationsfile, die geöffnet werden soll
 
 
 #endif

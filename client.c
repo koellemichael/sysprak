@@ -2,8 +2,7 @@
 
 int main (int argc, char **argv){
     
-  char *confile = NULL;  
-  
+  confile = NULL;      
   gameid = NULL;
   player = NULL;
 
@@ -37,9 +36,9 @@ int main (int argc, char **argv){
     
       
       
-  cp.hostName = readConfiguration(confile, paramNameHost);   
-  cp.portNumber = atoi(readConfiguration(confile, paramNamePort));
-  cp.gameKindName = readConfiguration(confile, paramNameGame); 
+  cp.hostName = readConfiguration(paramNameHost);   
+  cp.portNumber = atoi(readConfiguration(paramNamePort));
+  cp.gameKindName = readConfiguration(paramNameGame); 
       
   printf("hostname: %s", cp.hostName);
   printf("gamekindname: %s", cp.gameKindName);

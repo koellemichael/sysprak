@@ -15,8 +15,11 @@ typedef struct{
     char *gameKindName;
 }configparams;
 
+//Externe Variablen deklarieren
+extern char *confile;
+
 //Funktionen definieren
-char* readConfiguration(char *configFile, char *paramName);
+char* readConfiguration(char *paramName);
 char* findParamValue(char *string, char *delimiter, char **substring);
 
 #endif
