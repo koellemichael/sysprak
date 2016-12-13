@@ -11,7 +11,7 @@ char* readConfiguration(char* paramName){
    char *configFile = confile;    
    FILE *file = NULL;                                                           //Die gewählte Konfig Datei vom Typ FILE
    char *string = malloc(256*sizeof(char));                                     //Zeilenweise Strings, die aus der Konfig Datei gelesen werden
-   char *delimiter = "= ";                                                      //Tokens, die die Strings in verschiedene Abschnitte teilen
+   char *delimiter = "= \n";                                                    //Tokens, die die Strings in verschiedene Abschnitte teilen
    char *substring = NULL;                                                      //Substrings, die wir rauslesen wollen
           
     file = fopen(configFile, "r");                                              //Öffnen der Konfigdatei

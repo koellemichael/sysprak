@@ -40,9 +40,9 @@ int main (int argc, char **argv){
   cp.portNumber = atoi(readConfiguration(paramNamePort));
   cp.gameKindName = readConfiguration(paramNameGame); 
       
-  printf("hostname: %s", cp.hostName);
-  printf("gamekindname: %s", cp.gameKindName);
-  printf("portnummer: %i", cp.portNumber);
+  printf("hostname: %s\n", cp.hostName); 
+  printf("gamekindname: %s\n", cp.gameKindName);
+  printf("portnummer: %i\n", cp.portNumber);
 
       
     if(connectServer(PORTNUMBER, HOSTNAME) != 0){
