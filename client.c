@@ -46,7 +46,7 @@ int main (int argc, char **argv){
 
       
     if(connectServer(PORTNUMBER, HOSTNAME) != 0){
-        perror("Client failed to call 'connectServer'\n");
+        perror("Client failed to connect to server'\n");
         exit(EXIT_FAILURE);
     }
 
