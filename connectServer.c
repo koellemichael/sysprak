@@ -39,7 +39,7 @@ int connectServer(int portnumber, char *hostname){
 
     //CONNECT
     if(connect(sock, (struct sockaddr*)&server, sizeof(server)) < 0){
-        perror("Could not connect with server\n");
+        perror("Could not connect to server\n");
         exit(EXIT_FAILURE);
     } else {
         printf("Successfully connected to server\n");

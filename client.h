@@ -25,6 +25,8 @@ char *paramNameGame = "gameKindName";                                           
 char *value = ""; 
 configparams cp;                                                                //Eine Instanz vom Struct configparams namens "cp"
 char *confile;                                                                  //Speichert den Pfad der Konfigurationsfile, die geöffnet werden soll
-
+int pflag;                                                                      //Setzt ein Flag, wenn Player angegeben wurde
+int fflag;                                                                      //Setzt ein Flag, wenn Konfigdatei angegeben wurde
+int c;                                                                          //RetValue von getopt. Entweder Argument oder -1, wenn kein Argument vorhanden
 
 #endif
