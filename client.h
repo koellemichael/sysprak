@@ -10,6 +10,7 @@
 #include <sys/wait.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include "signal.h"
 
 //Module einbinden
 #include "connectServer.h"
@@ -18,10 +19,9 @@
 //Globale Variablen deklarieren
 char *gameid;                                                                   //Globale Variable für die Game-ID deklarieren
 char *player;                                                                   //Gloabel Variable für die PlayerNr deklarieren
-
+int *playerid;
 
 
 struct info *info;
-struct player **players;
 
 #endif

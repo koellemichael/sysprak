@@ -7,7 +7,6 @@ int main (int argc, char **argv){
   pid_t pid = 0;
   int shmid_info = -1;
   int playeridshm = -1;
-  int *playerid;
 
   if((shmid_info = shmget(KEY, sizeof(struct info), PERMISSION)) == -1){        //Shared Memory erstellen
       perror("Error while generating Shared Memory");                           //Fehlerbehandlung falls Fehler bei Erstellung
@@ -63,24 +62,13 @@ int main (int argc, char **argv){
       exit(EXIT_FAILURE);
     }
 
+    kill(info->pid_thinker, SIGCONT);
 
-    for(int i = 0; i<(*info).totalplayers; i++){
-      if((playerid[i] = shmget(KEY, sizeof(struct player), PERMISSION)) == -1){ //Shared Memory erstellen
-          perror("Error while generating Shared Memory for player");            //Fehlerbehandlung falls Fehler bei Erstellung
-          exit(EXIT_FAILURE);
-      }
+    printf(" gamename: %s\n clientplayernr: %i\n totalplayers: %i\n connector: %i\n thinker: %i\n",info->gamename,info->clientplayernr,info->totalplayers,info->pid_connector,info->pid_thinker);
+    for(int i = 0; i<info->totalplayers-1; i++){
+      printf("  PLAYER [%i]:\n  playernr: %i\n  playername: %s\n  isready: %i\n",i,info->players[i]->playernr,info->players[i]->playername,info->players[i]->ready);
     }
-
-    for(int i = 0; i<(*info).totalplayers; i++){
-      printf("playerid %i: %i\n",i,playerid[i]);
-      players[i] = shmat(playerid[i], 0, 0);                                    //Shared Memory anbinden
-      if(players[i] == NULL){                                                   //Fehlerbehandlung falls shmat fehlschlägt
-        perror("Error while attching Shared Memory in Thinker process");
-        exit(EXIT_FAILURE);
-      }
-    }
-
-
+    printf("\n");
 
   } else {                                                                      //Elternprozess: Prozess-ID > 0
     //THINKER
@@ -91,58 +79,46 @@ int main (int argc, char **argv){
     }
     playerid = (int*) shmat(playeridshm, 0, 0);                                 //Shared Memory anbinden
     if(playerid == NULL){                                                       //Fehlerbehandlung falls shmat fehlschlägt
-      perror("Error while attching Shared Memory in Connector process");
+      perror("Error while attching Shared Memory in Thinker process");
       exit(EXIT_FAILURE);
     }
 
-    (*info).pid_thinker = getpid();                                             //pid vom Parent im struct speichern
-    (*info).pid_connector = pid;                                                //pid vom Child im struct speichern
+    info->pid_thinker = getpid();                                             //pid vom Parent im struct speichern
+    info->pid_connector = pid;                                                //pid vom Child im struct speichern
 
+    pause();
 
+    for(int i = 0; i<info->totalplayers-1; i++){
+      info->players[i] = (struct player*) shmat(playerid[i], 0, 0);                   //Shared Memory anbinden
+      if(info->players[i] == NULL){                                                   //Fehlerbehandlung falls shmat fehlschlägt
+        perror("Error while attching Shared Memory in Thinker process");
+        exit(EXIT_FAILURE);
+      }
+    }
 
+    printf(" gamename: %s\n clientplayernr: %i\n totalplayers: %i\n connector: %i\n thinker: %i\n",info->gamename,info->clientplayernr,info->totalplayers,info->pid_connector,info->pid_thinker);
+    for(int i = 0; i<info->totalplayers-1; i++){
+      printf("  PLAYER [%i]:\n  playernr: %i\n  playername: %s\n  isready: %i\n",i,info->players[i]->playernr,info->players[i]->playername,info->players[i]->ready);
+    }
 
     if(waitpid(pid,NULL,0) != pid){
       perror("Error while waiting for childprocess");
       exit(EXIT_FAILURE);
     }
-/*
-    for(int i = 0; i<(*info).totalplayers; i++){
-      printf("playerid %i: %i\n",i,playerid[i]);
-    }
-*/
-/*
-    for(int i = 0; i<(*info).totalplayers; i++){
-      players[i] = (struct player*) shmat(playerid[i], 0, 0);                   //Shared Memory anbinden
-      if(players[i] == NULL){                                                   //Fehlerbehandlung falls shmat fehlschlägt
-        perror("Error while attching Shared Memory in Thinker process");
-        exit(EXIT_FAILURE);
-      }
-    }
-*/
-
-/*
-    for(int i = 0; i<(*info).totalplayers; i++){
-      printf("%i %s %i\n",(*players[i]).playernr,(*players[i]).playername,(*players[i]).ready);
-    }
-*/
-
-
-
-
 
 
 
     //Delete Shared Memory
-    for(int i = 0; i<(*info).totalplayers; i++){
+    for(int i = 0; i<info->totalplayers-1; i++){
       if(shmctl(playerid[i], IPC_RMID, 0)!=0){
-        perror("Error while deleting Shared Memory");
+        perror("Error while deleting Shared Memory playerid");
       }
     }
     if(shmctl(playeridshm, IPC_RMID, 0)!=0){
-      perror("Error while deleting Shared Memory");
+      perror("Error while deleting Shared Memory playeridshm");
     }
     if(shmctl(shmid_info, IPC_RMID, 0)!=0){
-      perror("Error while deleting Shared Memory");
+      perror("Error while deleting Shared Memory shm");
     }
   }
 

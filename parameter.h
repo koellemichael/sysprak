@@ -11,17 +11,18 @@
 #define KEY IPC_PRIVATE                                                         //Konstante für den Key des Shared Memory
 
 struct info{
-  char *gamename;
-  int playernr;
+  char gamename[BUFFERLENGTH];
+  int clientplayernr;
+  char clientname[BUFFERLENGTH];
   int totalplayers;
   pid_t pid_connector;
   pid_t pid_thinker;
-  int *playerid;
+  struct player *players[BUFFERLENGTH];
 };
 
 struct player{
   int playernr;
-  char *playername;
+  char playername[BUFFERLENGTH];
   int ready;
 };
 
