@@ -7,5 +7,22 @@
 #define HOSTNAME "sysprak.priv.lab.nm.ifi.lmu.de"                               //Konstante HOSTNAME definieren
 #define BUFFERLENGTH 256                                                        //Konstante für die Puffergröße definieren
 #define VERSION "2.3"                                                           //TODO provisorische Konstante
+#define PERMISSION 0644                                                         //Konstante für die Zugriffsrechte auf den Shared Memory
+#define KEY IPC_PRIVATE                                                         //Konstante für den Key des Shared Memory
+
+struct info{
+  char *gamename;
+  int playernr;
+  int totalplayers;
+  pid_t pid_connector;
+  pid_t pid_thinker;
+  int *playerid;
+};
+
+struct player{
+  int playernr;
+  char *playername;
+  int ready;
+};
 
 #endif

@@ -8,9 +8,12 @@
 
 //Module einbinden
 #include "processRequest.h"
+#include "parameter.h"
+
+//Externe Variablen
+extern struct info *info;
 
 //Funktionen deklarieren
-
 char *format (char *input);
 
 
