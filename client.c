@@ -72,13 +72,12 @@ int main (int argc, char **argv){
     }
 
     for(int i = 0; i<(*info).totalplayers; i++){
+      printf("playerid %i: %i\n",i,playerid[i]);
       players[i] = shmat(playerid[i], 0, 0);                                    //Shared Memory anbinden
       if(players[i] == NULL){                                                   //Fehlerbehandlung falls shmat fehlschlägt
         perror("Error while attching Shared Memory in Thinker process");
         exit(EXIT_FAILURE);
       }
-      printf("player\n");
-      //printf("playername %s\n",players[i]->playername);
     }
 
 
@@ -106,11 +105,11 @@ int main (int argc, char **argv){
       perror("Error while waiting for childprocess");
       exit(EXIT_FAILURE);
     }
-
+/*
     for(int i = 0; i<(*info).totalplayers; i++){
       printf("playerid %i: %i\n",i,playerid[i]);
     }
-
+*/
 /*
     for(int i = 0; i<(*info).totalplayers; i++){
       players[i] = (struct player*) shmat(playerid[i], 0, 0);                   //Shared Memory anbinden

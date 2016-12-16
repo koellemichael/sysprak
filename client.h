@@ -8,11 +8,12 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
 
 //Module einbinden
 #include "connectServer.h"
 #include "parameter.h"
-#include "sharedMemory.h"
 
 //Globale Variablen deklarieren
 char *gameid;                                                                   //Globale Variable für die Game-ID deklarieren
