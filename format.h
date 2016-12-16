@@ -11,7 +11,7 @@
 #include "parameter.h"
 
 //Externe Variablen
-extern struct info *info;
+extern struct serverinfo *serverinfo;
 
 //Funktionen deklarieren
 char *format (char *input);

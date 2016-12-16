@@ -34,7 +34,7 @@ char *format(char *input){
       pro++;                                                                                       // Prolog erhöhen
     }else if(pro==4 && match(input, ".+")){                                                        // Stimmen Prologvariable und Text überein
       strcpy(out, "The games name is ");                                                           // Ausgabe The game's name is <Gamename>
-      strcpy(info->gamename, input);                                                             //TODO Speicher freigeben
+      strcpy(serverinfo->gamename, input);                                                             //TODO Speicher freigeben
       strcat(out, input);                                                                          // Gamename
       pro++;                                                                                       // Prolog erhöhen
     }else if(pro==5 && match(input, "YOU .+ .+")){                                                 // Stimmen Prologvariable und Text überein
@@ -42,14 +42,14 @@ char *format(char *input){
       strcpy(out, player);                                                                         // Player name
       strcat(out, " you are player number ");                                                      // Ausgabe <Player name> you are player number <Player number>
       char *splayernumber = substring(input, 4, 5);
-      info->clientplayernr = atoi(splayernumber);
+      serverinfo->clientplayernr = atoi(splayernumber);
       strcat(out, splayernumber);                                                                   // Player number
       pro++;                                                                                       // Prolog erhöhen
       free(player);
       free(splayernumber);
     }else if(pro==6 && match(input, "TOTAL .+")){                                                  // Stimmen Prologvariable und Text überein
       char *stotalplayers = substring(input,6,strlen(input));
-      info->totalplayers = atoi(stotalplayers);
+      serverinfo->totalplayers = atoi(stotalplayers);
       strcpy(out, stotalplayers);                                                                  // Ausgabe <Total> player will take part in this game
       if(atoi(stotalplayers) <2){
         strcat(out, " player will take part in this game.");
@@ -60,16 +60,16 @@ char *format(char *input){
 
 
 
-      for(int i = 0; i<info->totalplayers-1; i++){
+      for(int i = 0; i<serverinfo->totalplayers-1; i++){
         if((playerid[i] = shmget(KEY, sizeof(struct player), PERMISSION)) == -1){ //Shared Memory erstellen
             perror("Error while generating Shared Memory for player");            //Fehlerbehandlung falls Fehler bei Erstellung
             exit(EXIT_FAILURE);
         }
       }
 
-      for(int i = 0; i<info->totalplayers-1; i++){
-        info->players[i] = (struct player*) shmat(playerid[i], 0, 0);                   //Shared Memory anbinden
-        if(info->players[i] == NULL){                                                   //Fehlerbehandlung falls shmat fehlschlägt
+      for(int i = 0; i<serverinfo->totalplayers-1; i++){
+        serverinfo->otherplayers[i] = (struct player*) shmat(playerid[i], 0, 0);                   //Shared Memory anbinden
+        if(serverinfo->otherplayers[i] == NULL){                                                   //Fehlerbehandlung falls shmat fehlschlägt
           perror("Error while attaching Shared Memory in Connector process");
           exit(EXIT_FAILURE);
         }
@@ -88,15 +88,15 @@ char *format(char *input){
       strcpy(out, "Starting the game...");                                                         // Ausgabe ENDPLAYERS - The prolog is finished!
     }else if(pro>=7 && match(input, ".+ .+ .+")){                                                  // Stimmen Prologvariable und Text überein
       char *rplayer = substring(input, 2,strlen(input)-2);                                         // Ausgabe <Player> (<Playernumber>) is ready/ not ready
-      strcpy(info->players[pro-7]->playername, rplayer);
+      strcpy(serverinfo->otherplayers[pro-7]->playername, rplayer);
       strcpy(out, rplayer);
       strcat(out," (");
       char *rplayernumb = substring(input, 0,1);
-      info->players[pro-7]->playernr = atoi(rplayernumb);
+      serverinfo->otherplayers[pro-7]->playernr = atoi(rplayernumb);
       strcat(out, rplayernumb);                                                                    // (Playernumber)
       strcat(out,") is ");
       char *playerstatus = substring(input, strlen(input)-1, strlen(input));
-      info->players[pro-7]->ready = atoi(playerstatus);
+      serverinfo->otherplayers[pro-7]->ready = atoi(playerstatus);
       if(atoi(playerstatus)==1){                                                                  //Spieler bereit -> letzte Zahl = 1
         strcat(out, "ready");
       }else if(atoi(playerstatus)==0){                                                             //Spieler nicht bereit -> letzte Zahl = 0

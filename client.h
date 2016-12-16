@@ -22,6 +22,6 @@ char *player;                                                                   
 int *playerid;
 
 
-struct info *info;
+struct serverinfo *serverinfo;
 
 #endif

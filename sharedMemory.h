@@ -1,14 +1,17 @@
-#ifndef para                                                                    //Wenn das Makro noch nicht existiert
-#define para                                                                    //Definiere das Makro
+#ifndef sharedMem                                                               //Wenn das Makro noch nicht existiert
+#define sharedMem                                                               //Definiere das Makro
 
-//Konstanten definieren
-#define GAMEKINDNAME "Bashni"                                                   //Konstante GAMEKINDNAME definieren
-#define PORTNUMBER 1357                                                         //Konstante PORTNUMBER definieren
-#define HOSTNAME "sysprak.priv.lab.nm.ifi.lmu.de"                               //Konstante HOSTNAME definieren
-#define BUFFERLENGTH 256                                                        //Konstante für die Puffergröße definieren
-#define VERSION "2.3"                                                           //TODO provisorische Konstante
-#define PERMISSION 0644                                                         //Konstante für die Zugriffsrechte auf den Shared Memory
-#define KEY IPC_PRIVATE                                                         //Konstante für den Key des Shared Memory
+//Bibliotheken einbinden
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+//Konstanten
+#define PERMISSION 0644                                                         //Schreib/Leserechte für User, Leserechte für Gruppen
+#define KEY IPC_PRIVATE                                                         //Private Key zur Erstellung von Shared Memory Segmenten
 
 //Stukturen deklarieren
 struct serverinfo{                                                              //Struktur für das Speichern von Serverinformationen
@@ -27,5 +30,10 @@ struct player{                                                                  
   int ready;                                                                    //0 wenn NICHT am Zug/bereit, 1 wenn am Zug/bereit
 };
 
+//Funktionen deklarieren
+int createSHM(size_t size);                                                     //Erstellt Shared Memory Segment
+void *attachSHM(int shmid);                                                     //Stellt Bindung zu einem Shared Memory Segment her
+void detachSHM(void *shm);                                                      //Löst Bindung zu einem Shared Memory Segment
+void deleteSHM(int shmid);                                                      //Löscht ein Shared Memory Segment
 
 #endif
