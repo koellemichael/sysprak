@@ -9,9 +9,11 @@
 //Module einbinden
 #include "processRequest.h"
 #include "parameter.h"
+#include "sharedMemory.h"
 
 //Externe Variablen
 extern struct serverinfo *serverinfo;
+extern int *shmid_player;
 
 //Funktionen deklarieren
 char *format (char *input);

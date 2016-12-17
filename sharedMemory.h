@@ -9,6 +9,9 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
+//Module einbinden
+#include "parameter.h"
+
 //Konstanten
 #define PERMISSION 0644                                                         //Schreib/Leserechte für User, Leserechte für Gruppen
 #define KEY IPC_PRIVATE                                                         //Private Key zur Erstellung von Shared Memory Segmenten

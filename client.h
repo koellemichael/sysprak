@@ -15,13 +15,12 @@
 //Module einbinden
 #include "connectServer.h"
 #include "parameter.h"
+#include "sharedMemory.h"
 
 //Globale Variablen deklarieren
 char *gameid;                                                                   //Globale Variable für die Game-ID deklarieren
 char *player;                                                                   //Gloabel Variable für die PlayerNr deklarieren
-int *playerid;
-
-
-struct serverinfo *serverinfo;
+int *shmid_player;                                                              //Gobales Int Array für die ShmIDs der Player Segmente
+struct serverinfo *serverinfo;                                                  //Gobales struct für die Serverinfos
 
 #endif

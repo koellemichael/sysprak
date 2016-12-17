@@ -11,16 +11,12 @@
 //Konstanten
 #define PERMISSION 0644
 #define KEY IPC_PRIVATE
-#define N 1
-
-//Globale Variablen
-int semid;
 
 //Funktionen deklarieren
-void createSEM(int value);
-void initSEM(int value);
-void waitSEM(void);
-void signalSEM(void);
-void deleteSEM(void);
+int createSEM(int n, int value);
+void initSEM(int semid, int n, int value);
+void waitSEM(int semid, int n);
+void signalSEM(int semid, int n);
+void deleteSEM(int semid, int n);
 
 #endif
