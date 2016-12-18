@@ -15,6 +15,7 @@ int connectServer(int portnumber, char *hostname){
      * SOCK_STREAM: Typ des Sockets.(Gegensatz: SOCK_DGRAM). Stream Zuverlässiger.
      * 0: Default Transportprotokoll des Sockettyps. Von SOCK_STREAM ist dies TCP.
      */
+    printf("Connecting to %s... \n", hostname);
     sock = socket(PF_INET, SOCK_STREAM, 0);
     if(sock == -1){
         perror("Could not generate socket\n");
@@ -23,7 +24,7 @@ int connectServer(int portnumber, char *hostname){
 
     //HOSTNAME in IP Adresse umwandeln
     if( (he = gethostbyname(hostname)) == NULL){                                //Hostname von Client übergeben
-        perror("Function 'gethostbyname' failed to execute\n");
+        perror("Could not resolve Hostname\n");
         exit(EXIT_FAILURE);
     }
 
