@@ -1,17 +1,26 @@
-﻿#include "client.h"
+#include "client.h"
 
 int main (int argc, char **argv){
       
   //NULL Initialisierungen verhindern das Erhalten von unbestimmten Werten
   confile = NULL;                                                   
   gameid = NULL;                                                    
-  player = NULL;   
+  player = NULL;  
+  gameid = NULL;
+  player = NULL;
+  pid_t pid = 0;
+  int shmid_serverinfo = -1;
+  int shmid_shmid_player = -1;
+    
+  shmid_serverinfo = createSHM(sizeof(struct serverinfo));                      //Shared Memory erstellen, für das Serverinformationen struct
+  shmid_shmid_player = createSHM(BUFFERLENGTH*sizeof(int));                     //Shared Memory erstellen, in diesem Segment werden die shmids der einzelnen Players
+
     
   //Flags für die optionalen Kommandozeilenargumente überprüfen, ob ein Argument für Player oder die KonfigDatei angegeben wurde
   fflag = 0;    
   pflag = 0;
 
-<<<<<<< HEAD
+
   if(argc<2){                                                        //Test: Wird eine Game-ID übergeben
     perror("No game id");                                            //Keine Game-ID vorhanden
     exit(EXIT_FAILURE);                                              //Programm beenden
@@ -41,63 +50,22 @@ int main (int argc, char **argv){
                gameid=argv[1];                                         //kopieren des Strings nach gameid
             } 
             optind++;                                                  //Der index muss hier manuell erhöht werden
-        }
-        
-=======
-  gameid = NULL;
-  player = NULL;
-  pid_t pid = 0;
-  int shmid_serverinfo = -1;
-  int shmid_shmid_player = -1;
-
-  shmid_serverinfo = createSHM(sizeof(struct serverinfo));                      //Shared Memory erstellen, für das Serverinformationen struct
-  shmid_shmid_player = createSHM(BUFFERLENGTH*sizeof(int));                     //Shared Memory erstellen, in diesem Segment werden die shmids der einzelnen Players
-
-  if(argc<2){                                                                   //Test: Wird eine Game-ID übergeben
-    perror("No game id");                                                       //Keine Game-ID vorhanden
-    exit(EXIT_FAILURE);                                                         //Programm beenden
-  }
-  else{                                                                         //Game-ID vorhanden
-    if (strlen(argv[1])!=13){                                                   //Test: Ist die Game-ID 13-stellig
-      perror("Invalid game id");                                                //Game-ID zu kurz oder zu lang
-      exit(EXIT_FAILURE);                                                       //Programm beenden
+        }  
     }
-    else {                                                                      //13-stellige Game-ID übergeben
-      gameid=argv[1];                                                           //kopieren des Strings nach gameid
->>>>>>> master
-    }
-    
       
       
     if(pflag == 0){                                                     //Wenn kein Player angegeben wurde
         player = "";                                                    
-        printf("No Player specified.");
+        printf("No Player specified.\n");
     }
-<<<<<<< HEAD
+
     if(fflag == 0){                                                     //Wenn keine Konfigdatei angegeben wurde
          confile = "client.conf";                                       //Default Konfigdatei ist client.conf
         printf("No configuration file specified. Using default configuration file \"client.conf\". \n"); 
     }
-      
-    
-  //Struct befüllen mit den Werten zur Verbindung mit dem Server
-  cp.hostName = readConfiguration(paramNameHost);   
-  cp.portNumber = atoi(readConfiguration(paramNamePort));
-  cp.gameKindName = readConfiguration(paramNameGame); 
-      
-  printf("hostname: %s\n", cp.hostName); 
-  printf("gamekindname: %s\n", cp.gameKindName);
-  printf("portnummer: %i\n", cp.portNumber);
-
-      
-    if(connectServer(PORTNUMBER, HOSTNAME) != 0){
-        perror("Client failed to connect to server'\n");
-        exit(EXIT_FAILURE);
-=======
-    else {                                                                      //Kein Player eingegeben
-      player = "";                                                              //Player leer lassen
-    }
   }
+    
+    
 
   if((pid=fork())<0){                                                           //Aufsplitten des Prozesses
     perror("Error while splitting the process!");                               //Fehler bei fork
@@ -107,11 +75,21 @@ int main (int argc, char **argv){
     //CONNECTOR
     serverinfo = attachSHM(shmid_serverinfo);                                   //Shared Memory Segment anbinden
     shmid_player = attachSHM(shmid_shmid_player);                               //Shared Memory Segment anbinden
+       
+        
+      //Struct befüllen mit den Werten zur Verbindung mit dem Server
+      cp.hostName = readConfiguration(paramNameHost);   
+      cp.portNumber = atoi(readConfiguration(paramNamePort));
+      cp.gameKindName = readConfiguration(paramNameGame); 
+
+      printf("hostname: %s\n", cp.hostName); 
+      printf("gamekindname: %s\n", cp.gameKindName);
+      printf("portnummer: %i\n", cp.portNumber);
 
     if(connectServer(PORTNUMBER, HOSTNAME) != 0){                               //Aufruf connectServer und damit performConnection
       perror("Client failed to call 'connectServer'\n");                        //Fehler bei Verbindung zum Server
       exit(EXIT_FAILURE);
->>>>>>> master
+
     }
 
     kill(serverinfo->pid_thinker, SIGCONT);                                     //Signal damit Thinker weiterarbeiten kann und somit den playershm attachen kann
