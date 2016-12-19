@@ -18,6 +18,7 @@ int main (int argc, char **argv){
     perror("No game id");                                                       //Keine Game-ID vorhanden
     exit(EXIT_FAILURE);                                                         //Programm beenden
   }else{
+    printLogo();
     while(optind < argc){                                                       //(optind = Index des Arguments) iteriert durch alle Argumente
         if((c = getopt(argc, argv, ":p:f:")) != -1){                            //Parsed die mit flag besetzten Kommandozeilenargumente, bis alle durch sind (dann retval -1)
             switch(c){
