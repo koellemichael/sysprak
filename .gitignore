@@ -9,3 +9,5 @@ play.dSYM/Contents/Resources/DWARF/play
 play
 
 client
+
+*.conf

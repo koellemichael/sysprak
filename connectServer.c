@@ -15,6 +15,7 @@ int connectServer(int portnumber, char *hostname){
      * SOCK_STREAM: Typ des Sockets.(Gegensatz: SOCK_DGRAM). Stream Zuverlässiger.
      * 0: Default Transportprotokoll des Sockettyps. Von SOCK_STREAM ist dies TCP.
      */
+    printf("Connecting to %s:%i... \n", hostname, portnumber);
     sock = socket(PF_INET, SOCK_STREAM, 0);
     if(sock == -1){
         perror("Could not generate socket\n");
@@ -39,7 +40,7 @@ int connectServer(int portnumber, char *hostname){
 
     //CONNECT
     if(connect(sock, (struct sockaddr*)&server, sizeof(server)) < 0){
-        perror("Could not connect with server\n");
+        perror("Could not connect to server\n");
         exit(EXIT_FAILURE);
     } else {
         printf("Successfully connected to server\n");

@@ -1,0 +1,6 @@
+
+portNumber = 1357
+
+gameKindName = Bashni
+
+hostName = sysprak.priv.lab.nm.ifi.lmu.de
