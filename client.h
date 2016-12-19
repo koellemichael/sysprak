@@ -33,4 +33,7 @@ int c;                                                                          
 int *shmid_player;                                                              //Gobales Int Array für die ShmIDs der Player Segmente
 struct serverinfo *serverinfo;                                                  //Gobales struct für die Serverinfos
 
+//Funktionen deklarieren
+void printLogo(void);
+
 #endif
