@@ -20,7 +20,7 @@ void printLogo(void){
   printf("/////////////////////////////////////////\n");
   printf("///            Gruppe 20              ///\n");
   printf("///  Laura Haller, Katharina Winter   ///\n");
-  printf("///         Michael Koelle            ///\n");
+  printf("///          Michael Koelle           ///\n");
   printf("/////////////////////////////////////////\n\n");
 }
 
