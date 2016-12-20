@@ -15,6 +15,6 @@
 #include "parameter.h"
 
 //Funktionen deklarieren
-void performConnection(int *fd);                                                //Handelt den Prolog mit dem Server ab
+void performConnection(int sock);                                               //Handelt den Prolog mit dem Server ab
 
 #endif

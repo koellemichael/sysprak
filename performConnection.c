@@ -27,14 +27,14 @@ int strtoken(char *str, char *separator, char *token[]){
  *
  *@param sock Filedeskriptor des Sockets
  */
-void performConnection(int *sock){
+void performConnection(int sock){
 
   char *buffer = malloc(BUFFERLENGTH*sizeof(char));                             //Speicher für Puffervariable allokalisieren
   char **requests = malloc(BUFFERLENGTH*sizeof(char*));                         //Speicher für das Array der einzelnen Serveranfragen allokalisieren
   int end = 1;                                                                  //Variable in der gespeichert wird ob der Server das Ende des Prologs (+ ENDPLAYERS) gesendet hat
     do{
       memset(buffer,0, BUFFERLENGTH);                                           //Puffer leeren
-      recv(*sock, buffer, BUFFERLENGTH-1, 0);                                   //Warte auf Anfrage des Servers
+      recv(sock, buffer, BUFFERLENGTH-1, 0);                                   //Warte auf Anfrage des Servers
       strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
       int x = 0;                                                                //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
      do{
@@ -48,7 +48,7 @@ void performConnection(int *sock){
             }
             char *response = handle(requests[x]+2);                             //Sucht die passende Anfrage auf die Serveranfrage
             if (response!=NULL){                                                //Wenn es eine Anfrage gibt
-                send(*sock,response,strlen(response),0);                        //Sendet dem Server die Antwort des Clients
+                send(sock,response,strlen(response),0);                        //Sendet dem Server die Antwort des Clients
                 printf("client: %s",response);                                  //Gesendete Antwort ausgeben
             }
             if(response!=NULL){                                                 //Speicher von response freigeben da, in handle Speicher allokalisiert wurde
