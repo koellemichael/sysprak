@@ -2,7 +2,7 @@ CC = /usr/bin/gcc
 CFLAGS = -g -Wall -Wextra -Wpedantic -Werror
 LDFLAGS = -lpthread
 
-OBJFILES = client.o parameter.o connectServer.o performConnection.o responseHandler.o processRequest.o config.o format.o sharedMemory.o
+OBJFILES = client.o parameter.o connectServer.o performConnection.o responseHandler.o processRequest.o config.o format.o sharedMemory.o processGame.o
 
 bashni: play
 
@@ -32,6 +32,9 @@ format.o: format.c format.h
 
 sharedMemory.o: sharedMemory.c sharedMemory.h
 	$(CC) $(CFLAGS)	-c sharedMemory.c
+
+processGame.o: processGame.c processGame.h
+	$(CC) $(CFLAGS)	-c processGame.c
 
 client: $(OBJFILES)
 	$(CC) $(CFLAGS) -o client $(OBJFILES)
