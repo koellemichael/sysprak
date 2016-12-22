@@ -13,6 +13,7 @@
 #include "signal.h"
 
 //Module einbinden
+#include "performConnection.h"
 #include "connectServer.h"
 #include "config.h"
 #include "parameter.h"
