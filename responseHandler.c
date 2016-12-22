@@ -66,6 +66,10 @@ char *handle(char *request){
       }
       response = NULL;                                                          //Setze response auf die passende Antwort
       prolog++;                                                                 //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
+    }else if(match(request,"WAIT")){                                            //Wenn Anfrage des Servers übereinstimmt
+      strcpy(response,"OKWAIT");
+    }else if(match(request,"MOVE .+")){                                         //Wenn Anfrage des Servers übereinstimmt
+      strcpy(response,"THINKING");
     }else{                                                                      //Ansonsten unbekannte Anfrage des Servers
       if(response!=NULL){
         free(response);

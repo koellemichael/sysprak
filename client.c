@@ -66,17 +66,17 @@ int main (int argc, char **argv){
     exit(EXIT_FAILURE);
   } else if(pid == 0){                                                          //Kindprozess: Prozess-ID == 0
       //CONNECTOR
-
+      int sock;
       //Shared Memory Segmente anbinden
       serverinfo = attachSHM(shmid_serverinfo);
       shmid_player = attachSHM(shmid_shmid_player);
 
-      if(connectServer(cp.portNumber, cp.hostName) != 0){                       //Aufruf connectServer und damit performConnection
-        perror("Client failed to call 'connectServer'\n");                      //Fehler bei Verbindung zum Server
-        exit(EXIT_FAILURE);
-      }
-      kill(serverinfo->pid_thinker, SIGCONT);                                   //Signal damit Thinker weiterarbeiten kann und somit den playershm attachen kann
+      sock = connectServer(cp.portNumber, cp.hostName);                         //Aufruf connectServer
+      performConnection(sock);                                                  //Abarbeitung der Prologphase
 
+      kill(serverinfo->pid_thinker, SIGCONT);                                   //Signal damit Thinker weiterarbeiten kann und somit den playershm attachen kann
+      //Schliesst das Socket
+      close(sock);
   } else {                                                                      //Elternprozess: Prozess-ID > 0
     //THINKER
 
