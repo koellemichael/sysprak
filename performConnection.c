@@ -21,11 +21,6 @@ void performConnection(int sock){
         if(buffer[0]=='+'){                                                     //Wenn Serveranfrage positiv ausfällt
           if(strlen(requests[x])>2){                                            //Leere Anfrage vom Server ignorieren               //TODO Fehlerbehandlung
             printf("server RAW: %s\n",requests[x]);
-            char *out = format(requests[x]+2);
-            printf("server: %s",out);                                           //Gibt Anfrage des Servers aus
-            if(out!=NULL){                                                      //Speicher von out freigeben (wurde in format.c allokalisiert)
-              free(out);
-            }
             char *response = handle(requests[x]+2);                             //Sucht die passende Anfrage auf die Serveranfrage
             if (response!=NULL){                                                //Wenn es eine Anfrage gibt
                 send(sock,response,strlen(response),0);                         //Sendet dem Server die Antwort des Clients

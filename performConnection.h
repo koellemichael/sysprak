@@ -11,7 +11,6 @@
 //Module einbinden
 #include "responseHandler.h"
 #include "processRequest.h"
-#include "format.h"
 #include "parameter.h"
 
 //Funktionen deklarieren
