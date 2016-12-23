@@ -2,7 +2,22 @@
 #include "responseHandler.h"
 
 int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
+int column = 0;
+int row = 0;
 
+int columntoint(char column){
+  switch (column){
+    case 65: return 0;
+    case 66: return 1;
+    case 67: return 2;
+    case 68: return 3;
+    case 69: return 4;
+    case 70: return 5;
+    case 71: return 6;
+    case 72: return 7;
+    default: return -1;
+  }
+}
 
 /**
  *Die Funktion handle verarbeitet die Anfrage des Servers zur passenden
@@ -139,6 +154,51 @@ char *handle(char *request){
     free(rplayernumb);
     free(playerstatus);
     prolog++;                                                                   //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
+  }else if(match(request,"PIECESLIST .+")){                                     //Wenn Anfrage des Servers übereinstimmt
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;                                                            //Setze Antwort auf "NULL"
+    //Format
+    strcpy(out, "There are ");
+    char *pieces = substring(request, 11, strlen(request));
+    strcat(out, pieces);
+    strcat(out, " pieces on the field");
+    free(pieces);
+  }else if(match(request,"b@.+")){                                              //Wenn Anfrage des Servers übereinstimmt
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;                                                            //Setze Antwort auf "NULL"
+    //Format
+    char *scolumn = substring(request, 2, 3);
+    char *srow = substring(request, 3, 4);
+
+    serverinfo->field[ROWS-(atoi(srow))][columntoint(*scolumn)] = 'b';
+
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
+    free(scolumn);
+    free(srow);
+  }else if(match(request,"w@.+")){                                              //Wenn Anfrage des Servers übereinstimmt
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;                                                            //Setze Antwort auf "NULL"
+    //Format
+    char *scolumn = substring(request, 2, 3);
+    char *srow = substring(request, 3, 4);
+
+    serverinfo->field[ROWS-(atoi(srow))][columntoint(*scolumn)] = 'w';
+
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
+    free(scolumn);
+    free(srow);
   }else if(match(request,"WAIT")){                                              //Wenn Anfrage des Servers übereinstimmt
     strcpy(response,"OKWAIT");
     strcpy(out, "Wait");
