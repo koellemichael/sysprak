@@ -146,7 +146,7 @@ char *handle(char *request){
     mflag =1;
     return response;
   }else if(match(request,"ENDPIECESLIST") && mflag ==1){
-    strcpy(response,"THINKING");
+    strcpy(response,"THINKING\n");
     strcpy(out, "Start with turn calculation");
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
