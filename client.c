@@ -1,5 +1,24 @@
 #include "client.h"
 
+void printfield(void){
+  for(int i = 0; i <ROWS; i++){
+    printf("%i| ",i);
+    for(int j = 0; j <COLUMNS; j++){
+      if((serverinfo->field[i][j]) == 0){
+        printf("  ");
+      }else{
+        printf("%c ",serverinfo->field[i][j]);
+      }
+    }
+    printf("\n");
+  }
+  printf("   ");
+  for(int j = 0; j <COLUMNS; j++){
+    printf("%c ",(65+j));
+  }
+  printf("\n");
+}
+
 int main (int argc, char **argv){
   confile = NULL;
   gameid = NULL;
@@ -92,6 +111,8 @@ int main (int argc, char **argv){
     for(int i = 0; i<serverinfo->totalplayers-1; i++){                          //Shared Memory Segment jedes Spielers attachen und im struct speichern
       serverinfo->otherplayers[i] = attachSHM(shmid_player[i]);
     }
+
+    printfield();
 
     if(waitpid(pid,NULL,0) != pid){                                             //Warten bis der Kindprozess terminiert
       perror("Error while waiting for childprocess");
