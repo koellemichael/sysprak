@@ -145,6 +145,7 @@ char *handle(char *request){
   }else if(match(request,"MOVE .+")){                                           //Wenn Anfrage des Servers übereinstimmt
     strcpy(response,"THINKING");
     strcpy(out, "Start with turn calculation");
+
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
       free(response);
