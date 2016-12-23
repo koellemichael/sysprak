@@ -1,8 +1,8 @@
-﻿
+
 #include "responseHandler.h"
 
 int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
-
+int mflag = 0;
 
 /**
  *Die Funktion handle verarbeitet die Anfrage des Servers zur passenden
@@ -143,9 +143,11 @@ char *handle(char *request){
     strcpy(response,"OKWAIT");
     strcpy(out, "Wait");
   }else if(match(request,"MOVE .+")){                                           //Wenn Anfrage des Servers übereinstimmt
+    mflag =1;
+    return response;
+  }else if(match(request,"ENDPIECESLIST") && mflag ==1){
     strcpy(response,"THINKING");
     strcpy(out, "Start with turn calculation");
-
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
       free(response);
