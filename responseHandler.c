@@ -2,7 +2,7 @@
 #include "responseHandler.h"
 
 int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
-int mflag = 0;
+int command = 0;                                                                //Flag, das nach den verschiedenen Befehlen gesetzt wird
 
 /**
  *Die Funktion handle verarbeitet die Anfrage des Servers zur passenden
@@ -143,9 +143,12 @@ char *handle(char *request){
     strcpy(response,"OKWAIT");
     strcpy(out, "Wait");
   }else if(match(request,"MOVE .+")){                                           //Wenn Anfrage des Servers übereinstimmt
-    mflag =1;
+    command = 1;
     return response;
-  }else if(match(request,"ENDPIECESLIST") && mflag ==1){
+  }else if(match(request,"OKTHINK")){ //TODO                                         
+    strcpy(response,"PLAY");
+    strcpy(out,"Make a move");
+  }else if(match(request,"ENDPIECESLIST") && command ==1){
     strcpy(response,"THINKING\n");
     strcpy(out, "Start with turn calculation");
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
