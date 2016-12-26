@@ -145,16 +145,33 @@ char *handle(char *request){
     strcpy(out, "Wait");
   }else if(match(request,"MOVE .+")){                                           //Wenn Anfrage des Servers übereinstimmt
     mflag = 1;
-    return response;
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;                                                            //Setze response auf die passende Antwort
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
   }else if(match(request,"ENDPIECESLIST") && mflag == 1){
-    strcpy(response,"THINKING\n");
+    strcpy(response,"THINKING");
     strcpy(out, "Start with turn calculation");
-    return response;
   }else if(match(request, "GAMEOVER")){
     gflag = 1;
-    return response;
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;                                                            //Setze response auf die passende Antwort
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
   }else if(match(request, "ENDPIECESLIST") && gflag == 1){
     strcpy(out, "Spiel vorbei!");
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;                                                            //Setze response auf die passende Antwort
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
       free(response);
