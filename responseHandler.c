@@ -2,8 +2,7 @@
 #include "responseHandler.h"
 
 int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
-int mflag = 0;
-int gflag = 0;
+int command = 0;                                                                //Flag, das nach den verschiedenen Befehlen gesetzt wird
 
 /**
  *Die Funktion handle verarbeitet die Anfrage des Servers zur passenden
@@ -140,21 +139,49 @@ char *handle(char *request){
     free(rplayernumb);
     free(playerstatus);
     prolog++;                                                                   //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
-  }else if(match(request,"WAIT")){                                              //Wenn Anfrage des Servers übereinstimmt
+  
+  }else if(match(request,"WAIT")){                                              //Übereinstimmung mit WAIT
     strcpy(response,"OKWAIT");
     strcpy(out, "Wait");
-  }else if(match(request,"MOVE .+")){                                           //Wenn Anfrage des Servers übereinstimmt
-    mflag = 1;
+  
+  }else if(match(request,"MOVE .+")){                                           //Übereinstimmung mit MOVE
+    command = 1;
+    response = NULL;
     return response;
-  }else if(match(request,"ENDPIECESLIST") && mflag == 1){
-    strcpy(response,"THINKING\n");
+  }else if(match(request,"OKTHINK")){
+    char* play = malloc(sizeof(char)*buffersize);
+    playmove = strcpy(play, "PLAY ");
+    playmove = strcat(play, nextmove);
+    strcpy(response, playmove);
+    strcpy(out,"Make a move");
+  }else if(match(request,"ENDPIECESLIST") && command == 1){
+    strcpy(response,"THINKING");
     strcpy(out, "Start with turn calculation");
-    return response;
-  }else if(match(request, "GAMEOVER")){
-    gflag = 1;
-    return response;
-  }else if(match(request, "ENDPIECESLIST") && gflag == 1){
-    strcpy(out, "Spiel vorbei!");
+
+  }else if(match(request,"PLAYER0WON .+")){                                     //Hat Spieler 0 gewonnen
+    char *wonzero = substring(request, 11, strlen(request));
+    if (!strcmp(wonzero, "Yes")){
+      *won0 = 1;
+    }
+    else won0 = 0;
+    free(wonzero);
+  }else if(match(request,"PLAYER0WON .+")){                                     //Hat Spieler 1 gewonnen
+    char *wonone = substring(request, 11, strlen(request));
+    if (!strcmp(wonone, "Yes")){
+      *won1 = 1;
+    }
+    else won1 = 0;
+    free(wonone);
+  }else if (match(request, "QUIT")){                                            //Ausgabe Gewinner
+    if(*won0==1 && *won1==0){
+      strcpy(out, "Player 0 won the game!");                                    //Spieler 0 hat gewonnen
+    } else if(*won0==0 && *won1==1){
+      strcpy(out, "Player 1 won the game!");                                    //Spieler 1 hat gewonnen
+    } else {
+      strcpy(out, "The game ended in a draw.");                                 //Unentschieden
+    }
+    free(won0);
+    free(won1);
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
       free(response);

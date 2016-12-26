@@ -13,9 +13,16 @@
 
 //Externe Variablen
 extern struct serverinfo *serverinfo;
-extern int *shmid_player;
-extern char *gameid;                                                            //gameid. Zugriff auf Globale Variable in client.c
-extern char *player;                                                            //player. Zugriff auf Globale Variable in client.c
+extern int* shmid_player;
+extern char* gameid;                                                            //gameid. Zugriff auf Globale Variable in client.c
+extern char* player;                                                            //player. Zugriff auf Globale Variable in client.c
+extern char* nextmove;
+extern int buffersize;
+char* playmove;
+int prolog;                                                                     //!Variable für den Fortschritt der Prologphase
+int command;                                                                    //Flag für den Befehl MOVE
+int* won0;
+int* won1; 
 
 //Funktionen deklarieren
 char *handle(char *request);
