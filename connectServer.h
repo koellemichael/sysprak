@@ -12,9 +12,6 @@
 #include <string.h>
 #include <arpa/inet.h>
 
-//Module einbinden
-#include "performConnection.h"
-
 //Funktionen deklarieren
 int connectServer(int, char*);                                                  //Verbindet Client mit Server
 

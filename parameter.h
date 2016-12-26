@@ -8,7 +8,7 @@
 #define GAMEKINDNAME "Bashni"                                                   //Konstante GAMEKINDNAME definieren
 #define PORTNUMBER 1357                                                         //Konstante PORTNUMBER definieren
 #define HOSTNAME "sysprak.priv.lab.nm.ifi.lmu.de"                               //Konstante HOSTNAME definieren
-#define BUFFERLENGTH 256                                                        //Konstante für die Puffergröße definieren
+#define BUFFERLENGTH 1024                                                       //Konstante für die Puffergröße definieren
 #define VERSION "2.3"                                                           //TODO provisorische Konstante
 
 //Funktionen definieren

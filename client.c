@@ -62,21 +62,21 @@ int main (int argc, char **argv){
   }
 
   if((pid=fork())<0){                                                           //Aufsplitten des Prozesses
-    perror("Error while splitting the process");                               //Fehler bei fork
+    perror("Error while splitting the process");                                //Fehler bei fork
     exit(EXIT_FAILURE);
   } else if(pid == 0){                                                          //Kindprozess: Prozess-ID == 0
       //CONNECTOR
-
+      int sock;
       //Shared Memory Segmente anbinden
       serverinfo = attachSHM(shmid_serverinfo);
       shmid_player = attachSHM(shmid_shmid_player);
 
-      if(connectServer(cp.portNumber, cp.hostName) != 0){                       //Aufruf connectServer und damit performConnection
-        perror("Client failed to call 'connectServer'\n");                      //Fehler bei Verbindung zum Server
-        exit(EXIT_FAILURE);
-      }
-      kill(serverinfo->pid_thinker, SIGCONT);                                   //Signal damit Thinker weiterarbeiten kann und somit den playershm attachen kann
+      sock = connectServer(cp.portNumber, cp.hostName);                         //Aufruf connectServer
+      performConnection(sock);                                                  //Abarbeitung der Prologphase
 
+      kill(serverinfo->pid_thinker, SIGCONT);                                   //Signal damit Thinker weiterarbeiten kann und somit den playershm attachen kann
+      //Schliesst das Socket
+      close(sock);
   } else {                                                                      //Elternprozess: Prozess-ID > 0
     //THINKER
 
@@ -89,7 +89,7 @@ int main (int argc, char **argv){
 
     pause();                                                                    //Pause bis Signal kommt
 
-    for(int i = 0; i<serverinfo->totalplayers-1; i++){                          //Shared Memory Segment jedes Spielers attachen und im struc speichern
+    for(int i = 0; i<serverinfo->totalplayers-1; i++){                          //Shared Memory Segment jedes Spielers attachen und im struct speichern
       serverinfo->otherplayers[i] = attachSHM(shmid_player[i]);
     }
 

@@ -10,5 +10,6 @@
 //Funktionen deklarieren
 int match(const char *string, char *pattern);                                   //Vergleicht einen String mit einem Regex Pattern
 char *substring(char *string, unsigned int from, unsigned int to);              //Extrahiert einen Substring aus einem String
+int strtoken(char *str, char *separator, char *token[]);                        //Zerlegt einen String anhand eines Seperators
 
 #endif

@@ -40,3 +40,22 @@ char *substring(char *string, unsigned int from, unsigned int to){
     return substring;                                                           //Substring zurückgeben
   }
 }
+
+/**
+ *Die Funktion strtoken zerteilt einen String in mehrere durch den Seperator
+ *getrennte Teilstrings und speichert diese ein einem array.
+ *
+ *@param str Der String der in Teilstrings zerlegt werden soll
+ *@param seperator Der Seperator nach dem zerlegt werden soll
+ *@param token Das String Array in dem die Teilstrings gespeichert werden
+ *@return Anzahl der Teilstrings als int
+ */
+int strtoken(char *str, char *separator, char *token[]){
+  int i = 0;                                                                    //Zählvariable/Laufvariable für die Anzahl
+  token[0] = strtok(str, separator);                                            //strtok initialisieren und ersten Eintrag in das String Array
+  while (token[i]){                                                             //Solange der vorherige Eintrag nicht NULL ist
+    i++;                                                                        //Zählvariable hochzählen
+    token[i] = strtok(NULL, separator);                                         //Da strtok schon initialisiert wurde, kann man mit NULL den restlichen Teilstring zerlegen, speichert ihn im Array
+  }
+  return i;                                                                     //Gibt Anzahl zurück
+}

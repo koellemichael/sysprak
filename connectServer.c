@@ -18,13 +18,13 @@ int connectServer(int portnumber, char *hostname){
     printf("Connecting to %s:%i... \n", hostname, portnumber);
     sock = socket(PF_INET, SOCK_STREAM, 0);
     if(sock == -1){
-        perror("Could not generate socket\n");
+        perror("Could not generate socket");
         exit(EXIT_FAILURE);
     }
 
     //HOSTNAME in IP Adresse umwandeln
     if( (he = gethostbyname(hostname)) == NULL){                                //Hostname von Client übergeben
-        perror("Could not resolve Hostname\n");
+        perror("Could not resolve Hostname");
         exit(EXIT_FAILURE);
     }
 
@@ -40,15 +40,11 @@ int connectServer(int portnumber, char *hostname){
 
     //CONNECT
     if(connect(sock, (struct sockaddr*)&server, sizeof(server)) < 0){
-        perror("Could not connect to server\n");
+        perror("Could not connect to server");
         exit(EXIT_FAILURE);
     } else {
-        printf("Successfully connected to server\n");
-        //Übergabe Filedeskriptor an Funktion performConnection()
-        performConnection(&sock);
+        printf("Successfully connected to server");
     }
 
-    //Schliesst das Socket
-    close(sock);
-    return 0;
+    return sock;
 }
