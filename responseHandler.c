@@ -1,4 +1,4 @@
-
+﻿
 #include "responseHandler.h"
 
 int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
@@ -182,6 +182,7 @@ char *handle(char *request){
     }
     free(won0);
     free(won1);
+
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
       free(response);
