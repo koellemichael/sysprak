@@ -9,6 +9,9 @@ int main (int argc, char **argv){
   fflag = 0;                                                                    //Flags für die optionalen Kommandozeilenargumente überprüfen, ob ein Argument für Player oder die KonfigDatei angegeben wurde
   pflag = 0;
   pid_t pid = 0;
+  int fd[2];
+  buffersize = 256;
+  nextmove = malloc(sizeof(char) * buffersize); 
   int shmid_serverinfo = -1;
   int shmid_shmid_player = -1;
   shmid_serverinfo = createSHM(sizeof(struct serverinfo));                      //Shared Memory erstellen, für das Serverinformationen struct
@@ -60,6 +63,14 @@ int main (int argc, char **argv){
     cp.portNumber = atoi(readConfiguration(paramNamePort));
     cp.gameKindName = readConfiguration(paramNameGame);
   }
+    
+    
+  //Unnamed Pipe einrichten, die zwischen Connector und Thinker laufen soll    
+  if(pipe(fd) < 0){
+      perror("Error establishing an unnamed pipe");
+      exit(EXIT_FAILURE);
+  }
+   
 
   if((pid=fork())<0){                                                           //Aufsplitten des Prozesses
     perror("Error while splitting the process");                                //Fehler bei fork
@@ -67,6 +78,15 @@ int main (int argc, char **argv){
   } else if(pid == 0){                                                          //Kindprozess: Prozess-ID == 0
       //CONNECTOR
       int sock;
+      
+      //Schreibeseite der Pipe schließen
+      close(fd[1]);
+
+      //Aus der Pipe lesen
+      if((read(fd[0],nextmove, buffersize)) < 0){
+          perror("Couldn't read from pipe");
+      }
+    
       //Shared Memory Segmente anbinden
       serverinfo = attachSHM(shmid_serverinfo);
       shmid_player = attachSHM(shmid_shmid_player);
@@ -80,6 +100,16 @@ int main (int argc, char **argv){
   } else {                                                                      //Elternprozess: Prozess-ID > 0
     //THINKER
 
+    //Leseseite der Pipe schließen
+    close(fd[0]);  
+  
+      
+    //Think Methode aufrufen
+    if(think(fd) != 1){
+        perror("Error thinking of the next move");
+    }  
+      
+      
     //Shared Memory Segmente anbinden
     serverinfo = attachSHM(shmid_serverinfo);
     shmid_player = attachSHM(shmid_shmid_player);

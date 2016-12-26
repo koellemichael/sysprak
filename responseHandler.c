@@ -1,4 +1,4 @@
-
+﻿
 #include "responseHandler.h"
 
 int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
@@ -153,6 +153,7 @@ char *handle(char *request){
     playmove = strcat(play, nextmove);
     strcpy(response, playmove);
     strcpy(out,"Make a move");
+    free(play);
   }else if(match(request,"ENDPIECESLIST") && command == 1){
     strcpy(response,"THINKING");
     strcpy(out, "Start with turn calculation");
@@ -180,7 +181,6 @@ char *handle(char *request){
     }
     free(won0);
     free(won1);
-
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
       free(response);
@@ -199,6 +199,6 @@ char *handle(char *request){
     printf("server: %s\n",out);
     free(out);
   }
-
+  
   return response;                                                              //Gibt die Antwort des Clients zurück
 }

@@ -11,6 +11,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include "signal.h"
+#include "think.h"
 
 //Module einbinden
 #include "performConnection.h"
@@ -18,6 +19,7 @@
 #include "config.h"
 #include "parameter.h"
 #include "sharedMemory.h"
+#include "responseHandler.h"
 
 //Globale Variablen deklarieren
 char *gameid;                                                                   //Globale Variable für die Game-ID deklarieren
@@ -31,6 +33,8 @@ char *confile;                                                                  
 int pflag;                                                                      //Setzt ein Flag, wenn Player angegeben wurde
 int fflag;                                                                      //Setzt ein Flag, wenn Konfigdatei angegeben wurde
 int c;                                                                          //RetValue von getopt. Entweder Argument oder -1, wenn kein Argument vorhanden
+char* nextmove;
+int buffersize;
 int *shmid_player;                                                              //Gobales Int Array für die ShmIDs der Player Segmente
 struct serverinfo *serverinfo;                                                  //Gobales struct für die Serverinfos
 
