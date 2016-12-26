@@ -1,4 +1,4 @@
-﻿
+
 #include "responseHandler.h"
 
 int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
@@ -143,7 +143,6 @@ char *handle(char *request){
   }else if(match(request,"WAIT")){                                              //Übereinstimmung mit WAIT
     strcpy(response,"OKWAIT");
     strcpy(out, "Wait");
-  
   }else if(match(request,"MOVE .+")){                                           //Übereinstimmung mit MOVE
     command = 1;
     response = NULL;
@@ -157,7 +156,6 @@ char *handle(char *request){
   }else if(match(request,"ENDPIECESLIST") && command == 1){
     strcpy(response,"THINKING");
     strcpy(out, "Start with turn calculation");
-
   }else if(match(request,"PLAYER0WON .+")){                                     //Hat Spieler 0 gewonnen
     char *wonzero = substring(request, 11, strlen(request));
     if (!strcmp(wonzero, "Yes")){
