@@ -1,4 +1,4 @@
-#ifndef responseHdl                                                             //Wenn das Makro noch nicht existiert
+﻿#ifndef responseHdl                                                             //Wenn das Makro noch nicht existiert
 #define responseHdl                                                             //Definiere das Makro
 
 //Bibliotheken einbinden
