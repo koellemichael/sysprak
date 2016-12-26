@@ -10,8 +10,8 @@ int main (int argc, char **argv){
   pflag = 0;
   pid_t pid = 0;
   int fd[2];
-  int buffersize = 256;
-  char* string = malloc(sizeof(char) * buffersize); 
+  buffersize = 256;
+  nextmove = malloc(sizeof(char) * buffersize); 
   int shmid_serverinfo = -1;
   int shmid_shmid_player = -1;
   shmid_serverinfo = createSHM(sizeof(struct serverinfo));                      //Shared Memory erstellen, für das Serverinformationen struct
@@ -83,7 +83,7 @@ int main (int argc, char **argv){
       close(fd[1]);
 
       //Aus der Pipe lesen
-      if((read(fd[0],string, buffersize)) < 0){
+      if((read(fd[0],nextmove, buffersize)) < 0){
           perror("Couldn't read from pipe");
       }
     

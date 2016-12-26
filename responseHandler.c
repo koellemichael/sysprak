@@ -145,11 +145,14 @@ char *handle(char *request){
   }else if(match(request,"MOVE .+")){                                           //Wenn Anfrage des Servers übereinstimmt
     command = 1;
     return response;
-  }else if(match(request,"OKTHINK")){ //TODO                                         
-    strcpy(response,"PLAY");
+  }else if(match(request,"OKTHINK")){  
+    char* play = malloc(sizeof(char)*buffersize);
+    playmove = strcat(play, "PLAY ");
+    playmove = strcat(play, nextmove);
+    strcpy(response, playmove);
     strcpy(out,"Make a move");
   }else if(match(request,"ENDPIECESLIST") && command ==1){
-    strcpy(response,"THINKING\n");
+    strcpy(response,"THINKING");
     strcpy(out, "Start with turn calculation");
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){

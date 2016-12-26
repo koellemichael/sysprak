@@ -8,7 +8,7 @@
 #include <unistd.h>
 
 //Variablen einbinden
-char* string;
+char* move;
 
 //Funktionen deklarieren
 int think(int* fd);
