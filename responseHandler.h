@@ -19,8 +19,6 @@ extern char* player;                                                            
 extern char* nextmove;
 extern int buffersize;
 char* playmove;
-int prolog;                                                                     //!Variable für den Fortschritt der Prologphase
-int command;                                                                    //Flag für den Befehl MOVE
 
 //Funktionen deklarieren
 char *handle(char *request);
