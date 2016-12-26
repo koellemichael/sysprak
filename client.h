@@ -11,6 +11,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include "signal.h"
+#include "think.h"
 
 //Module einbinden
 #include "performConnection.h"
