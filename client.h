@@ -19,7 +19,7 @@
 #include "config.h"
 #include "parameter.h"
 #include "sharedMemory.h"
-#include "responsehandler.h"
+#include "responseHandler.h"
 
 //Globale Variablen deklarieren
 char *gameid;                                                                   //Globale Variable für die Game-ID deklarieren

@@ -153,7 +153,7 @@ char *handle(char *request){
     strcpy(out,"Make a move");
     free(play);
   }else if(match(request,"ENDPIECESLIST") && command ==1){
-    strcpy(response,"THINKING");
+    response = NULL;
     strcpy(out, "Start with turn calculation");
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
