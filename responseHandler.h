@@ -1,4 +1,4 @@
-#ifndef responseHdl                                                             //Wenn das Makro noch nicht existiert
+﻿#ifndef responseHdl                                                             //Wenn das Makro noch nicht existiert
 #define responseHdl                                                             //Definiere das Makro
 
 //Bibliotheken einbinden
@@ -19,6 +19,10 @@ extern char* player;                                                            
 extern char* nextmove;
 extern int buffersize;
 char* playmove;
+int prolog;                                                                     //!Variable für den Fortschritt der Prologphase
+int command;                                                                    //Flag für den Befehl MOVE
+int* won0;
+int* won1; 
 
 //Funktionen deklarieren
 char *handle(char *request);
