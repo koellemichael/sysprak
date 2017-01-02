@@ -2,7 +2,7 @@ CC = /usr/bin/gcc
 CFLAGS = -g -Wall -Wextra -Wpedantic -Werror
 LDFLAGS = -lpthread
 
-OBJFILES = client.o parameter.o connectServer.o performConnection.o responseHandler.o processRequest.o config.o sharedMemory.o
+OBJFILES = client.o parameter.o connectServer.o performConnection.o responseHandler.o processRequest.o config.o sharedMemory.o thinker.o
 
 bashni: play
 
@@ -29,6 +29,9 @@ config.o: config.c config.h
 
 sharedMemory.o: sharedMemory.c sharedMemory.h
 	$(CC) $(CFLAGS)	-c sharedMemory.c
+
+thinker.o: thinker.c thinker.h
+	$(CC) $(CFLAGS)	-c thinker.c
 
 client: $(OBJFILES)
 	$(CC) $(CFLAGS) -o client $(OBJFILES)

@@ -1,9 +1,26 @@
-﻿
-#include "responseHandler.h"
+﻿#include "responseHandler.h"
 
 int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
-int column = 0;
-int row = 0;
+int playercount = 0;
+
+void printfield(void){
+  for(int i = 0; i <ROWS; i++){
+    printf("%i| ",i);
+    for(int j = 0; j <COLUMNS; j++){
+      if((serverinfo->field[i][j]) == 0){
+        printf("  ");
+      }else{
+        printf("%c ",serverinfo->field[i][j]);
+      }
+    }
+    printf("\n");
+  }
+  printf("   ");
+  for(int j = 0; j <COLUMNS; j++){
+    printf("%c ",(65+j));
+  }
+  printf("\n");
+}
 
 int columntoint(char column){
   switch (column){
@@ -29,6 +46,7 @@ int columntoint(char column){
 char *handle(char *request){
   char *response;                                                               //Antwortvariable initialisieren
   char *out;
+
   if((response = malloc(BUFFERLENGTH*sizeof(char)))==NULL){
     perror("Not enough Memory for variables");
   }
@@ -75,8 +93,8 @@ char *handle(char *request){
     strcat(response, player);                                                   //Playernummer, falls vorhanden, anhängen
     //Format
     strcpy(out, "The games name is ");                                          //Ausgabe The game's name is <Gamename>
-    strcpy(serverinfo->gamename, request);                                        //Spielname im struct speichern
-    strcat(out, request);                                                         //Gamename
+    strcpy(serverinfo->gamename, request);                                      //Spielname im struct speichern
+    strcat(out, request);                                                       //Gamename
     prolog++;                                                                   //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
   }else if(prolog==5 && match(request,                                          //Wenn Anfrage des Servers übereinstimmt und der Prologfortschritt passt
     "YOU .+ .+")){
@@ -124,6 +142,7 @@ char *handle(char *request){
      free(response);
     }
     response = NULL;                                                            //Setze response auf die passende Antwort
+    kill(serverinfo->pid_thinker, SIGUSR2);
 
     //Format
     strcpy(out, "Starting the game...");                                        //Ausgabe ENDPLAYERS - The prolog is finished!
@@ -135,15 +154,15 @@ char *handle(char *request){
     response = NULL;                                                            //Setze response auf die passende Antwort
     //Format
     char *rplayer = substring(request, 2,strlen(request)-2);                        //Ausgabe <Player> (<Playernumber>) is ready/ not ready
-    strcpy(serverinfo->otherplayers[prolog-7]->playername, rplayer);
+    strcpy(serverinfo->otherplayers[playercount]->playername, rplayer);
     strcpy(out, rplayer);
     strcat(out," (");
     char *rplayernumb = substring(request, 0,1);
-    serverinfo->otherplayers[prolog-7]->playernr = atoi(rplayernumb);
+    serverinfo->otherplayers[playercount]->playernr = atoi(rplayernumb);
     strcat(out, rplayernumb);                                                   //(Playernumber)
     strcat(out,") is ");
     char *playerstatus = substring(request, strlen(request)-1, strlen(request));
-    serverinfo->otherplayers[prolog-7]->ready = atoi(playerstatus);
+    serverinfo->otherplayers[playercount]->ready = atoi(playerstatus);
     if(atoi(playerstatus)==1){                                                  //Spieler bereit -> letzte Zahl = 1
       strcat(out, "ready");
     }else if(atoi(playerstatus)==0){                                            //Spieler nicht bereit -> letzte Zahl = 0
@@ -154,6 +173,7 @@ char *handle(char *request){
     free(rplayernumb);
     free(playerstatus);
     prolog++;                                                                   //Prologfortschritt erhöhen, da ein Schritt des Prologs fertig gestellt wurde
+    playercount++;                                                              //Player Laufvariable hochzählen, damit der nächste im shm gespeichert werden kann
   }else if(match(request,"PIECESLIST .+")){                                     //Wenn Anfrage des Servers übereinstimmt
     if(response!=NULL){
       free(response);
@@ -205,6 +225,20 @@ char *handle(char *request){
   }else if(match(request,"MOVE .+")){                                           //Wenn Anfrage des Servers übereinstimmt
     strcpy(response,"THINKING");
     strcpy(out, "Start with turn calculation");
+  }else if(match(request,"ENDPIECESLIST")){                                     //Wenn Anfrage des Servers übereinstimmt
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;
+
+    printfield();
+
+    serverinfo->startcalc = 1;
+    kill(serverinfo->pid_thinker, SIGUSR1);
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
       free(response);

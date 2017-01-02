@@ -1,22 +1,10 @@
 #include "client.h"
 
-void printfield(void){
-  for(int i = 0; i <ROWS; i++){
-    printf("%i| ",i);
-    for(int j = 0; j <COLUMNS; j++){
-      if((serverinfo->field[i][j]) == 0){
-        printf("  ");
-      }else{
-        printf("%c ",serverinfo->field[i][j]);
-      }
-    }
-    printf("\n");
+void attachPlayers(int sig){
+  sig = 0;
+  for(int i = 0; i<serverinfo->totalplayers-1; i++){                          //Shared Memory Segment jedes Spielers attachen und im struct speichern
+    serverinfo->otherplayers[i] = attachSHM(shmid_player[i]);
   }
-  printf("   ");
-  for(int j = 0; j <COLUMNS; j++){
-    printf("%c ",(65+j));
-  }
-  printf("\n");
 }
 
 int main (int argc, char **argv){
@@ -32,6 +20,8 @@ int main (int argc, char **argv){
   int shmid_shmid_player = -1;
   shmid_serverinfo = createSHM(sizeof(struct serverinfo));                      //Shared Memory erstellen, für das Serverinformationen struct
   shmid_shmid_player = createSHM(BUFFERLENGTH*sizeof(int));                     //Shared Memory erstellen, in diesem Segment werden die shmids der einzelnen Players
+  signal(SIGUSR1, think);
+  signal(SIGUSR2, attachPlayers);
 
   if(argc<2){                                                                   //Test: Wird eine Game-ID übergeben
     perror("No game id");                                                       //Keine Game-ID vorhanden
@@ -93,12 +83,10 @@ int main (int argc, char **argv){
       sock = connectServer(cp.portNumber, cp.hostName);                         //Aufruf connectServer
       performConnection(sock);                                                  //Abarbeitung der Prologphase
 
-      kill(serverinfo->pid_thinker, SIGCONT);                                   //Signal damit Thinker weiterarbeiten kann und somit den playershm attachen kann
       //Schliesst das Socket
       close(sock);
   } else {                                                                      //Elternprozess: Prozess-ID > 0
     //THINKER
-
     //Shared Memory Segmente anbinden
     serverinfo = attachSHM(shmid_serverinfo);
     shmid_player = attachSHM(shmid_shmid_player);
@@ -106,23 +94,18 @@ int main (int argc, char **argv){
     serverinfo->pid_thinker = getpid();                                         //pid vom Parent im struct speichern
     serverinfo->pid_connector = pid;                                            //pid vom Child im struct speichern
 
-    pause();                                                                    //Pause bis Signal kommt
-
-    for(int i = 0; i<serverinfo->totalplayers-1; i++){                          //Shared Memory Segment jedes Spielers attachen und im struct speichern
-      serverinfo->otherplayers[i] = attachSHM(shmid_player[i]);
-    }
-
-    printfield();
-
     if(waitpid(pid,NULL,0) != pid){                                             //Warten bis der Kindprozess terminiert
       perror("Error while waiting for childprocess");
       exit(EXIT_FAILURE);
     }
 
     //Löschen der Shared Memory Segmente
-    for(int i = 0; i<serverinfo->totalplayers-1; i++){
-      deleteSHM(shmid_player[i]);
+    if(shmid_player != 0){
+      for(int i = 0; i<serverinfo->totalplayers-1; i++){
+        deleteSHM(shmid_player[i]);
+      }
     }
+    //Löschen der Shared Memory Segmente
     deleteSHM(shmid_shmid_player);
     deleteSHM(shmid_serverinfo);
   }

@@ -10,7 +10,7 @@
 #include <sys/wait.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include "signal.h"
+#include <signal.h>
 
 //Module einbinden
 #include "performConnection.h"
@@ -18,6 +18,7 @@
 #include "config.h"
 #include "parameter.h"
 #include "sharedMemory.h"
+#include "thinker.h"
 
 //Globale Variablen deklarieren
 char *gameid;                                                                   //Globale Variable für die Game-ID deklarieren

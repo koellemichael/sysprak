@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 
 //Module einbinden
 #include "processRequest.h"
@@ -19,5 +20,6 @@ extern char *player;                                                            
 
 //Funktionen deklarieren
 char *handle(char *request);
+void printfield(void);
 
 #endif
