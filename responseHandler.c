@@ -234,16 +234,18 @@ char *handle(char *request){
     strcpy(response, playmove);
     strcpy(out,"Make a move");
     free(play);
-  }else if(match(request,"ENDPIECESLIST") && command == 1){                                     //Wenn Anfrage des Servers übereinstimmt
-    if(response!=NULL){
-      free(response);
-    }
-    response = NULL;
-
+  }else if(match(request,"ENDPIECESLIST") && command == 1){                     //Wenn Anfrage des Servers übereinstimmt
     printfield();
 
     serverinfo->startcalc = 1;
     kill(serverinfo->pid_thinker, SIGUSR1);
+
+    //Aus der Pipe lesen
+    if((read(fd[0],response, BUFFERLENGTH)) < 0){
+        perror("Couldn't read from pipe");
+        exit(EXIT_FAILURE);
+    }
+
     if(out!=NULL){
       free(out);
     }

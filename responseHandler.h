@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
+#include <unistd.h>
 
 //Module einbinden
 #include "processRequest.h"
@@ -13,6 +14,7 @@
 #include "sharedMemory.h"
 
 //Externe Variablen
+extern int fd[2];
 extern struct serverinfo *serverinfo;
 extern int* shmid_player;
 extern char* gameid;                                                            //gameid. Zugriff auf Globale Variable in client.c
@@ -23,7 +25,7 @@ char* playmove;
 int prolog;                                                                     //!Variable für den Fortschritt der Prologphase
 int command;                                                                    //Flag für den Befehl MOVE
 int* won0;
-int* won1; 
+int* won1;
 
 //Funktionen deklarieren
 char *handle(char *request);

@@ -20,11 +20,8 @@
 #include "config.h"
 #include "parameter.h"
 #include "sharedMemory.h"
-<<<<<<< HEAD
 #include "think.h"
-=======
 #include "responseHandler.h"
->>>>>>> master
 
 //Globale Variablen deklarieren
 char *gameid;                                                                   //Globale Variable für die Game-ID deklarieren
@@ -42,5 +39,6 @@ char* nextmove;
 int buffersize;
 int *shmid_player;                                                              //Gobales Int Array für die ShmIDs der Player Segmente
 struct serverinfo *serverinfo;                                                  //Gobales struct für die Serverinfos
+int fd[2];
 
 #endif
