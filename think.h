@@ -19,6 +19,6 @@ extern struct serverinfo *serverinfo;                                           
 
 //Funktionen deklarieren
 void think(int sig);
-void printServerInfo(void);
+void printfield(void);
 
 #endif
