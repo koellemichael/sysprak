@@ -4,25 +4,9 @@ int prolog = 1;                                                                 
 int command = 0;                                                                //Flag, das nach den verschiedenen Befehlen gesetzt wird
 int playercount = 0;
 
-void printfield(void){
-  for(int i = 0; i <ROWS; i++){
-    printf("%i| ",i);
-    for(int j = 0; j <COLUMNS; j++){
-      if((serverinfo->field[i][j]) == 0){
-        printf("  ");
-      }else{
-        printf("%c ",serverinfo->field[i][j]);
-      }
-    }
-    printf("\n");
-  }
-  printf("   ");
-  for(int j = 0; j <COLUMNS; j++){
-    printf("%c ",(65+j));
-  }
-  printf("\n");
-}
-
+/**
+ * Rechnet die A-H Indizes in Zahlen um.
+ */
 int columntoint(char column){
   switch (column){
     case 65: return 0;
@@ -225,26 +209,31 @@ char *handle(char *request){
     strcpy(out, "Wait");
   }else if(match(request,"MOVE .+")){                                           //Übereinstimmung mit MOVE
     command = 1;
+    if(response!=NULL){
+      free(response);
+    }
     response = NULL;
     return response;
   }else if(match(request,"OKTHINK")){
-    char* play = malloc(sizeof(char)*buffersize);
+    char* playmove;
+    char* nextmove = malloc(sizeof(char)*BUFFERLENGTH);
+                                                                                //TODO FEhler wenn spielzugberechnung länger dauert als der server okthink schickt
+    //Aus der Pipe lesen
+    if((read(fd[0],nextmove, BUFFERLENGTH)) < 0){
+        perror("Couldn't read from pipe");
+        exit(EXIT_FAILURE);
+    }
+    char* play = malloc(sizeof(char)*BUFFERLENGTH);
     playmove = strcpy(play, "PLAY ");
     playmove = strcat(play, nextmove);
     strcpy(response, playmove);
     strcpy(out,"Make a move");
-    free(play);
+    free(play);                                                                 //Setze Antwort auf "NULL"
+    free (nextmove);
   }else if(match(request,"ENDPIECESLIST") && command == 1){                     //Wenn Anfrage des Servers übereinstimmt
-    printfield();
-
+    strcpy(response,"THINKING");
     serverinfo->startcalc = 1;
     kill(serverinfo->pid_thinker, SIGUSR1);
-
-    //Aus der Pipe lesen
-    if((read(fd[0],response, BUFFERLENGTH)) < 0){
-        perror("Couldn't read from pipe");
-        exit(EXIT_FAILURE);
-    }
 
     if(out!=NULL){
       free(out);
