@@ -25,6 +25,8 @@ struct serverinfo{                                                              
   pid_t pid_connector;                                                          //Prozess-ID des Connector Prozesses
   pid_t pid_thinker;                                                            //Prozess-ID des Thinker Prozesses
   struct player *otherplayers[BUFFERLENGTH];                                    //Array mit Informationen zu den anderen Spielern
+  char field[ROWS][COLUMNS];                                                    //Array mit dem Spielfeld
+  int startcalc;                                                                //Boolean Wert ob der Connector das Signal zum starten der Berechnung gesendet hat
 };
 
 struct player{                                                                  //Struktur für das Speichern von Informationen über einen Spieler

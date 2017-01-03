@@ -1,4 +1,4 @@
-#include "connectServer.h"
+﻿#include "connectServer.h"
 
 /**
  * connectServer soll den Client mit dem Gameserver verbinden.
@@ -43,7 +43,7 @@ int connectServer(int portnumber, char *hostname){
         perror("Could not connect to server");
         exit(EXIT_FAILURE);
     } else {
-        printf("Successfully connected to server\n");
+        printf("Successfully connected to server\n\n");
     }
 
     return sock;

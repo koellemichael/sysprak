@@ -4,6 +4,7 @@ LDFLAGS = -lpthread
 
 OBJFILES = client.o parameter.o connectServer.o performConnection.o responseHandler.o processRequest.o config.o sharedMemory.o think.o print.o
 
+
 bashni: play
 
 client.o: client.c client.h
