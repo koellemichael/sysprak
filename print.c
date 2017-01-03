@@ -1,6 +1,6 @@
 #include "print.h"
 
-int print(void){
+int print(){
 
     char** test = malloc(sizeof(char)*96);
     int x = 0;
@@ -82,15 +82,4 @@ int print(void){
 
 free(test);
 return 0;
-}
-
-char *substring(char *string, unsigned int from, unsigned int to){
-  if(from>=to || to>strlen(string)){                                            //Unsinnige Eingaben abfangen
-    return NULL;                                                                //NULL zurückgeben falls
-  }else{                                                                        //Falls sinbvolle Eingabe
-    char *substring = malloc((to-from)*sizeof(char));                           //Speicher füresponse substring allokalisieren
-    strncpy(substring,string+from,(to-from));                                   //Teilstring in substring speichern
-    substring[(to-from)]=0;                                                     //Teilstringende festlegen
-    return substring;                                                           //Substring zurückgeben
-  }
 }

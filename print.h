@@ -6,11 +6,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include "processRequest.h"
 
 //Variablen einbinden
 
 //Funktionen deklarieren
-int main();
+int print();
 char *substring(char *string, unsigned int from, unsigned int to);
 
 #endif
