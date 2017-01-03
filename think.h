@@ -3,9 +3,9 @@
 
 //Bibliotheken einbinden
 #include <stdlib.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "print.h"
 
 //Variablen einbinden
 char* move;
