@@ -170,38 +170,23 @@ char *handle(char *request){
     strcat(out, pieces);
     strcat(out, " pieces on the field");
     free(pieces);
-  }else if(match(request,"b@.+")){                                              //Wenn Anfrage des Servers übereinstimmt
+  }else if(match(request,".+@.+")){                                             //Wenn Anfrage des Servers übereinstimmt
     if(response!=NULL){
       free(response);
     }
     response = NULL;                                                            //Setze Antwort auf "NULL"
-    //Format
-    char *scolumn = substring(request, 2, 3);
-    char *srow = substring(request, 3, 4);
 
-    serverinfo->field[ROWS-(atoi(srow))][columntoint(*scolumn)] = 'b';
+    char *scolumn = substring(request, strlen(request)-2, strlen(request)-1);
+    char *srow = substring(request, strlen(request)-1, strlen(request));
+    char *content = substring(request, 0, strlen(request)-3);
+
+    strcpy(serverinfo->field[ROWS-(atoi(srow))][columntoint(*scolumn)],content);
 
     if(out!=NULL){
       free(out);
     }
     out = NULL;
-    free(scolumn);
-    free(srow);
-  }else if(match(request,"w@.+")){                                              //Wenn Anfrage des Servers übereinstimmt
-    if(response!=NULL){
-      free(response);
-    }
-    response = NULL;                                                            //Setze Antwort auf "NULL"
-    //Format
-    char *scolumn = substring(request, 2, 3);
-    char *srow = substring(request, 3, 4);
-
-    serverinfo->field[ROWS-(atoi(srow))][columntoint(*scolumn)] = 'w';
-
-    if(out!=NULL){
-      free(out);
-    }
-    out = NULL;
+    free(content);
     free(scolumn);
     free(srow);
   }else if(match(request,"WAIT")){                                              //Wenn Anfrage des Servers übereinstimmt
