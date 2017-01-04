@@ -4,14 +4,19 @@
 //Bibliotheken einbinden
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
+#include <signal.h>
+#include <unistd.h>
+
+//Module einbinden
+#include "parameter.h"
+#include "sharedMemory.h"
+#include "responseHandler.h"
 #include "processRequest.h"
 
 //Variablen einbinden
 
 //Funktionen deklarieren
-int print();
-char *substring(char *string, unsigned int from, unsigned int to);
+int printfield();
 
 #endif

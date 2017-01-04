@@ -20,7 +20,6 @@ int columntoint(char column){
     default: return -1;
   }
 }
-
 /**
  *Die Funktion handle verarbeitet die Anfrage des Servers zur passenden
  *Antwort des Clients, diese wird zurückgegeben.
@@ -164,6 +163,11 @@ char *handle(char *request){
       free(response);
     }
     response = NULL;                                                            //Setze Antwort auf "NULL"
+    for(int i = 0; i<ROWS; i++){
+      for(int j = 0; j<COLUMNS; j++){ 
+        memset(serverinfo->field[i][j],0,BUFFERLENGTH);
+      }
+    }
     //Format
     strcpy(out, "There are ");
     char *pieces = substring(request, 11, strlen(request));
