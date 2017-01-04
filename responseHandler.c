@@ -262,7 +262,7 @@ char *handle(char *request){
       strcpy(out, "The game ended in a draw.");                                 //Unentschieden
     }
     free(won0);
-    free(won1);
+    free(won1);                                                                 //TODO Verbindung zum Server beenden!
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
       free(response);

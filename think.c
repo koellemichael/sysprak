@@ -21,9 +21,10 @@ void printfield(void){   //TODO besser: alles mit strcat zu einem string zusamme
 
 void think(int sig){
   sig = 0;
+  printf("%i\n", sig);
   if(serverinfo->startcalc == 1){
     printf("Thinker\n");
-    printfield();
+    //printfield();
     move = "A3:B4";
     if((write (fd[1], move, 5)) != 5){
         perror("Error trying to write into the pipe");

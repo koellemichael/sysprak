@@ -2,6 +2,7 @@
 
 void attachPlayers(int sig){
   sig = 0;
+  printf("%i\n", sig);
   for(int i = 0; i<serverinfo->totalplayers-1; i++){                          //Shared Memory Segment jedes Spielers attachen und im struct speichern
     serverinfo->otherplayers[i] = attachSHM(shmid_player[i]);
   }
