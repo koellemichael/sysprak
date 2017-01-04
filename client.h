@@ -37,6 +37,8 @@ int fflag;                                                                      
 int c;                                                                          //RetValue von getopt. Entweder Argument oder -1, wenn kein Argument vorhanden
 int buffersize;
 int *shmid_player;                                                              //Gobales Int Array für die ShmIDs der Player Segmente
+int shmid_serverinfo;
+int shmid_shmid_player;
 struct serverinfo *serverinfo;                                                  //Gobales struct für die Serverinfos
 int fd[2];
 
