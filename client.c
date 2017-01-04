@@ -1,5 +1,21 @@
 #include "client.h"
 
+static void exit_handler(void){
+      //Löschen der Shared Memory Segmente
+      if(shmid_player != 0){
+        for(int i = 0; i<serverinfo->totalplayers-1; i++){
+          if(shmid_player[i]!=0)
+            shmid_player[i] = deleteSHM(shmid_player[i]);
+        }
+      }
+      //Löschen der Shared Memory Segmente
+      if(shmid_shmid_player!=0)
+        shmid_shmid_player = deleteSHM(shmid_shmid_player);
+
+      if(shmid_serverinfo!=0)
+        shmid_serverinfo = deleteSHM(shmid_serverinfo);
+}
+
 void attachPlayers(int sig){
   sig = 0;
   for(int i = 0; i<serverinfo->totalplayers-1; i++){                          //Shared Memory Segment jedes Spielers attachen und im struct speichern
@@ -16,8 +32,6 @@ int main (int argc, char **argv){
   fflag = 0;                                                                    //Flags für die optionalen Kommandozeilenargumente überprüfen, ob ein Argument für Player oder die KonfigDatei angegeben wurde
   pflag = 0;
   pid_t pid = 0;
-  int shmid_serverinfo = -1;
-  int shmid_shmid_player = -1;
   shmid_serverinfo = createSHM(sizeof(struct serverinfo));                      //Shared Memory erstellen, für das Serverinformationen struct
   shmid_shmid_player = createSHM(BUFFERLENGTH*sizeof(int));                     //Shared Memory erstellen, in diesem Segment werden die shmids der einzelnen Players
   signal(SIGUSR1, think);
@@ -93,12 +107,14 @@ int main (int argc, char **argv){
       shmid_player = attachSHM(shmid_shmid_player);
 
       sock = connectServer(cp.portNumber, cp.hostName);                         //Aufruf connectServer
-      performConnection(sock);                                                  //Abarbeitung der Prologphase
+      performConnection(sock);
+      printf("%s\n",serverinfo->field[2][2]);
 
       //Schliesst das Socket
       close(sock);
   } else {                                                                      //Elternprozess: Prozess-ID > 0
     //THINKER
+    atexit(exit_handler);
     //Leseseite der Pipe schließen
     close(fd[0]);
 
@@ -114,15 +130,6 @@ int main (int argc, char **argv){
       exit(EXIT_FAILURE);
     }
 
-    //Löschen der Shared Memory Segmente
-    if(shmid_player != 0){
-      for(int i = 0; i<serverinfo->totalplayers-1; i++){
-        deleteSHM(shmid_player[i]);
-      }
-    }
-    //Löschen der Shared Memory Segmente
-    deleteSHM(shmid_shmid_player);
-    deleteSHM(shmid_serverinfo);
   }
   exit(EXIT_SUCCESS);
 }

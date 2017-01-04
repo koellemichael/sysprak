@@ -4,10 +4,10 @@ void printfield(void){   //TODO besser: alles mit strcat zu einem string zusamme
   for(int i = 0; i <ROWS; i++){
     printf("%i| ",i);
     for(int j = 0; j <COLUMNS; j++){
-      if((serverinfo->field[i][j]) == 0){
+      if((serverinfo->field[i][j]) == NULL){
         printf("  ");
       }else{
-        printf("%c ",serverinfo->field[i][j]);
+        printf("%s ",serverinfo->field[i][j]);
       }
     }
     printf("\n");
@@ -24,7 +24,8 @@ void think(int sig){
   if(serverinfo->startcalc == 1){
     printf("Thinker\n");
     printfield();
-    move = "A3:B4";
+    //move = "A3:B4";
+    move = "";
     if((write (fd[1], move, 5)) != 5){
         perror("Error trying to write into the pipe");
         exit (EXIT_FAILURE);
