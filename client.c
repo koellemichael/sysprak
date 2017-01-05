@@ -17,9 +17,8 @@ static void exit_handler(void){
 }
 
 void attachPlayers(int sig){
-  sig = 0;
-  printf("%i\n", sig);
-  for(int i = 0; i<serverinfo->totalplayers-1; i++){                          //Shared Memory Segment jedes Spielers attachen und im struct speichern
+  (void)sig;
+  for(int i = 0; i<serverinfo->totalplayers-1; i++){                            //Shared Memory Segment jedes Spielers attachen und im struct speichern
     serverinfo->otherplayers[i] = attachSHM(shmid_player[i]);
   }
 }
@@ -110,7 +109,6 @@ int main (int argc, char **argv){
 
       sock = connectServer(cp.portNumber, cp.hostName);                         //Aufruf connectServer
       performConnection(sock);
-      printf("%s\n",serverinfo->field[2][2]);
 
       //Schliesst das Socket
       close(sock);
