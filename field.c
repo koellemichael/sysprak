@@ -55,7 +55,7 @@ void printfield(void){
       }else if((!strcmp(serverinfo->field[i][j],""))&&((i%2==1&&j%2==0)||(i%2==0&&j%2==1))){          //Spielfeld-Quadrate als Striche
         strcat(out," -");
       }else{
-        if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='w'){                         //Weißer Stein wenn 'w' im Array
+        /*if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='w'){                       //Weißer Stein wenn 'w' im Array
           strcat(out, " \u26C0");
         }else if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='W'){                   //Weiße Dame wenn 'W' im Array
           strcat(out, " \u26C1");
@@ -63,7 +63,9 @@ void printfield(void){
           strcat(out, " \u26C2");
         }else if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='B'){                   //Schwarze Dame wenn 'B' im Array
           strcat(out, " \u26C3");
-        }
+        }*/
+        sprintf(buf," %c",serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1]);                //Steine funktionieren unter Mac wohl nicht, deswegen wieder Buchstaben
+-       strcat(out,buf);
       }
 
     }
