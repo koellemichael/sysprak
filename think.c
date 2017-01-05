@@ -1,6 +1,5 @@
 #include "think.h"
 
-
 void think(int sig){
   sig = 0;
   printf("%i\n", sig);
