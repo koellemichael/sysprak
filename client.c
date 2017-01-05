@@ -98,6 +98,7 @@ int main (int argc, char **argv){
     exit(EXIT_FAILURE);
   } else if(pid == 0){                                                          //Kindprozess: Prozess-ID == 0
       //CONNECTOR
+      atexit(exit_handler);
       int sock;
 
       //Schreibeseite der Pipe schließen
@@ -115,7 +116,6 @@ int main (int argc, char **argv){
       close(sock);
   } else {                                                                      //Elternprozess: Prozess-ID > 0
     //THINKER
-    atexit(exit_handler);
     //Leseseite der Pipe schließen
     close(fd[0]);
 
