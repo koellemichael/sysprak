@@ -1,47 +1,21 @@
 CC = /usr/bin/gcc
-CFLAGS = -g -Wall -Wextra -Wpedantic -Werror
+CFLAGS = -c -g -Wall -Wextra -Wpedantic -Werror
 LDFLAGS = -lpthread
+SOURCES = client.c parameter.c connectServer.c performConnection.c responseHandler.c processRequest.c config.c sharedMemory.c think.c printField.c
+OBJFILES = $(SOURCES:.c=.o)
+EXECUTABLE = client
 
-OBJFILES = client.o parameter.o connectServer.o performConnection.o responseHandler.o processRequest.o config.o sharedMemory.o think.o print.o
+play: $(EXECUTABLE) clean bashni
 
+.c.o:
+	$(CC) $(CFLAGS) $< -o $@
 
-bashni: play
+$(EXECUTABLE): $(OBJFILES)
+	$(CC) $(LDFLAGS) $(OBJFILES) -o $@
 
-client.o: client.c client.h
-	$(CC) $(CFLAGS) -c client.c
+bashni: ./$(EXECUTABLE)
+	./$(EXECUTABLE) $(GAME_ID) $(PLAYER) $(CONF_FL)
 
-parameter.o: parameter.c parameter.h
-	$(CC) $(CFLAGS) -c parameter.c
-
-connectServer.o: connectServer.c connectServer.h
-	$(CC) $(CFLAGS) -c connectServer.c
-
-performConnection.o: performConnection.c performConnection.h
-	$(CC) $(CFLAGS) -c performConnection.c
-
-responseHandler.o: responseHandler.c responseHandler.h
-	$(CC) $(CFLAGS) -c responseHandler.c
-
-processRequest.o: processRequest.c processRequest.h
-	$(CC) $(CFLAGS) -c processRequest.c
-
-config.o: config.c config.h
-	$(CC) $(CFLAGS) -c config.c
-
-sharedMemory.o: sharedMemory.c sharedMemory.h
-	$(CC) $(CFLAGS)	-c sharedMemory.c
-
-think.o: think.c think.h
-	$(CC) $(CFLAGS) -c think.c
-
-print.o: print.c print.h
-	$(CC) $(CFLAGS) -c print.c
-
-client: $(OBJFILES)
-	$(CC) $(CFLAGS) -o client $(OBJFILES)
-
-play: ./client
-	./client $(GAME_ID) $(PLAYER) $(CONF_FL)
-
+.PHONY: clean
 clean:
-	rm -f $(OBJFILES) play
+	rm -f *.o

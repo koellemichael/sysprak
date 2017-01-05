@@ -164,7 +164,7 @@ char *handle(char *request){
     }
     response = NULL;                                                            //Setze Antwort auf "NULL"
     for(int i = 0; i<ROWS; i++){
-      for(int j = 0; j<COLUMNS; j++){ 
+      for(int j = 0; j<COLUMNS; j++){
         memset(serverinfo->field[i][j],0,BUFFERLENGTH);
       }
     }
