@@ -4,7 +4,7 @@ void printfield(void){   //TODO besser: alles mit strcat zu einem string zusamme
   for(int i = 0; i <ROWS; i++){
     printf("%i| ",i);
     for(int j = 0; j <COLUMNS; j++){
-      if((serverinfo->field[i][j]) == NULL){
+      if(!strcmp(serverinfo->field[i][j], "")){
         printf("  ");
       }else{
         printf("%s ",serverinfo->field[i][j]);
