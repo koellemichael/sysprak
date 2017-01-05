@@ -1,5 +1,7 @@
 #include "printField.h"
 
+//TODO Bitte Variablen auf Englisch
+
 int print(){
 
     char** test = malloc(sizeof(char)*96);
@@ -8,7 +10,7 @@ int print(){
     test[0]="W@E5";
     test[1]="b@A4";
 
-    //int feld[8][8]={0};
+    int feld[8][8]={{0}};
 
     for(int a=0; a<2; a++){
 
