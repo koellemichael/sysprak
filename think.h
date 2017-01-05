@@ -10,7 +10,7 @@
 #include "parameter.h"
 #include "sharedMemory.h"
 #include "responseHandler.h"
-#include "printField.h"
+#include "field.h"
 
 //Variablen einbinden
 char* move;
@@ -21,6 +21,5 @@ extern struct serverinfo *serverinfo;                                           
 
 //Funktionen deklarieren
 void think(int sig);
-//void printfield(void);
 
 #endif

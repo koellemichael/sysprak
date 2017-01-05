@@ -5,22 +5,6 @@ int command = 0;                                                                
 int playercount = 0;
 
 /**
- * Rechnet die A-H Indizes in Zahlen um.
- */
-int columntoint(char column){
-  switch (column){
-    case 65: return 0;
-    case 66: return 1;
-    case 67: return 2;
-    case 68: return 3;
-    case 69: return 4;
-    case 70: return 5;
-    case 71: return 6;
-    case 72: return 7;
-    default: return -1;
-  }
-}
-/**
  *Die Funktion handle verarbeitet die Anfrage des Servers zur passenden
  *Antwort des Clients, diese wird zurückgegeben.
  *
