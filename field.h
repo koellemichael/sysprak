@@ -1,5 +1,5 @@
-#ifndef printing
-#define printing
+#ifndef fieldutil
+#define fieldutil
 
 //Bibliotheken einbinden
 #include <stdlib.h>
@@ -15,6 +15,7 @@
 #include "processRequest.h"
 
 //Funktionen deklarieren
+int columntoint(char column);
 char inttocolumn(int col);
 void printfield(void);
 
