@@ -1,6 +1,6 @@
 #include "printField.h"
 
-//TODO Bitte Variablen auf Englisch
+//TODO Bitte Variablen auf Englisch, ich hab nur den Namen der Datei geändert, da print manchmal probleme (auf mac) gibt
 
 int print(){
 
