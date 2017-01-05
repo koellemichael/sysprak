@@ -19,13 +19,15 @@ char inttocolumn(int col){
 
 int printfield(){
 
-  printf("\n");
+  //char out[BUFFERLENGTH];
+  //strcat(out, "\n\n")
+  printf("\n\n");
   printf("    A B C D E F G H\n");
   printf("  +-----------------+\n");
 
   for(int i=0; i<ROWS; i++){
     printf(" %i|", 8-i);
-    for(int j = 0; j<COLUMNS; j++){ 
+    for(int j = 0; j<COLUMNS; j++){
       if((!strcmp(serverinfo->field[i][j],""))&&((i%2==0&&j%2==0)||(i%2==1&&j%2==1))){
         printf(" .");
       }else if((!strcmp(serverinfo->field[i][j],""))&&((i%2==1&&j%2==0)||(i%2==0&&j%2==1))){
@@ -33,23 +35,23 @@ int printfield(){
       }else{
         printf(" %c",serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1]);
       }
-    
+
     }
     printf(" |%i\n", 8-i);
   }
-  
+
 	printf("  +-----------------+\n");
   printf("    A B C D E F G H\n");
   printf("\n\n");
 
   printf("White Towers\n");
   printf("============\n");
-  for (int a = ROWS; a > 0; a--)
-  {
-    for (int b = 0; b < COLUMNS; b++)
-    {
+
+  for (int a = ROWS-1; a >= 0; a--){
+    for (int b = 0; b < COLUMNS; b++){
       if((serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='w')||(serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='w')){
         printf("%c%i: %s\n", inttocolumn(b), 8-a, serverinfo->field[a][b]);
+
       }
     }
   }
@@ -57,10 +59,8 @@ int printfield(){
 
   printf("Black Towers\n");
   printf("============\n");
-  for (int a = ROWS; a >= 0; a--)
-  {
-    for (int b = 0; b < COLUMNS; b++)
-    {
+  for (int a = ROWS-1; a >= 0; a--){
+    for (int b = 0; b < COLUMNS; b++){
       if((serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='b')||(serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='B')){
         printf("%c%i: %s\n", inttocolumn(b), 8-a, serverinfo->field[a][b]);
       }

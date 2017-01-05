@@ -6,7 +6,8 @@ void think(int sig){
   if(serverinfo->startcalc == 1){
     printf("Thinker\n");
     printfield();
-    move = "A3:B4\0";
+    //move = "A3:B4\0";
+    move = "\0";
     if((write (fd[1], move, 5)) != 5){
         perror("Error trying to write into the pipe");
         exit (EXIT_FAILURE);
