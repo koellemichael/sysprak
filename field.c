@@ -43,6 +43,13 @@ void printfield(void){
   char out[BUFFERLENGTH];
   char buf[BUFFERLENGTH];
 
+  char w[] = " \u26C0";
+  char W[] = " \u26C1";
+  char b[] = " \u26C2";
+  char B[] = " \u26C3";
+  char bField[] = " \u25FC";
+  char wField[] = " \u25FB";
+
   strcat(out, "\n");
   strcat(out,"    A B C D E F G H\n");                                                                //Spielfeld Beschriftung oben
   strcat(out,"  +-----------------+\n");
@@ -51,21 +58,19 @@ void printfield(void){
     strcat(out,buf);
     for(int j = 0; j<COLUMNS; j++){
       if((!strcmp(serverinfo->field[i][j],""))&&((i%2==0&&j%2==0)||(i%2==1&&j%2==1))){                //Spielfeld-Quadrate als Punkte
-        strcat(out," .");
+        strcat(out,wField);
       }else if((!strcmp(serverinfo->field[i][j],""))&&((i%2==1&&j%2==0)||(i%2==0&&j%2==1))){          //Spielfeld-Quadrate als Striche
-        strcat(out," -");
+        strcat(out,bField);
       }else{
-        /*if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='w'){                       //Weißer Stein wenn 'w' im Array
-          strcat(out, " \u26C0");
+        if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='w'){                       //Weißer Stein wenn 'w' im Array
+          strcat(out, w);
         }else if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='W'){                   //Weiße Dame wenn 'W' im Array
-          strcat(out, " \u26C1");
+          strcat(out, W);
         }else if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='b'){                   //Schwarzer Stein wenn 'b' im Array
-          strcat(out, " \u26C2");
+          strcat(out, b);
         }else if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='B'){                   //Schwarze Dame wenn 'B' im Array
-          strcat(out, " \u26C3");
-        }*/
-        sprintf(buf," %c",serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1]);                //Steine funktionieren unter Mac wohl nicht, deswegen wieder Buchstaben
--       strcat(out,buf);
+          strcat(out, B);
+        }
       }
 
     }
