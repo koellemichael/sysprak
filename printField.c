@@ -1,4 +1,4 @@
-#include "print.h"
+#include "printField.h"
 
 int print(){
 
@@ -7,8 +7,8 @@ int print(){
     int y = 0;
     test[0]="W@E5";
     test[1]="b@A4";
-    
-    int feld[8][8]={0};
+
+    //int feld[8][8]={0};
 
     for(int a=0; a<2; a++){
 
@@ -33,7 +33,7 @@ int print(){
       }else if(*buchstabe == 'H'){
         x = 7;
       }
-    
+
       y = atoi(substring(test[a], strlen(test[a])-1, strlen(test[a])))-1;
 
       if(*figur =='w'){
