@@ -33,8 +33,15 @@ void printfield(void){
       }else if((!strcmp(serverinfo->field[i][j],""))&&((i%2==1&&j%2==0)||(i%2==0&&j%2==1))){
         strcat(out," -");
       }else{
-        sprintf(buf," %c",serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1]);
-        strcat(out,buf);
+        if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='w'){
+          strcat(out, " \u26C0");
+        }else if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='W'){
+          strcat(out, " \u26C1");
+        }else if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='b'){
+          strcat(out, " \u26C2");
+        }else if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='B'){
+          strcat(out, " \u26C3");
+        }
       }
 
     }
