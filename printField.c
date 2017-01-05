@@ -17,56 +17,57 @@ char inttocolumn(int col){
   }
 }
 
-int printfield(){
+void printfield(void){
+  char out[BUFFERLENGTH];
+  char buf[BUFFERLENGTH];
 
-  //char out[BUFFERLENGTH];
-  //strcat(out, "\n\n")
-  printf("\n\n");
-  printf("    A B C D E F G H\n");
-  printf("  +-----------------+\n");
-
+  strcat(out, "\n");
+  strcat(out,"    A B C D E F G H\n");
+  strcat(out,"  +-----------------+\n");
   for(int i=0; i<ROWS; i++){
-    printf(" %i|", 8-i);
+    sprintf(buf," %i|", 8-i);
+    strcat(out,buf);
     for(int j = 0; j<COLUMNS; j++){
       if((!strcmp(serverinfo->field[i][j],""))&&((i%2==0&&j%2==0)||(i%2==1&&j%2==1))){
-        printf(" .");
+        strcat(out," .");
       }else if((!strcmp(serverinfo->field[i][j],""))&&((i%2==1&&j%2==0)||(i%2==0&&j%2==1))){
-        printf(" -");
+        strcat(out," -");
       }else{
-        printf(" %c",serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1]);
+        sprintf(buf," %c",serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1]);
+        strcat(out,buf);
       }
 
     }
-    printf(" |%i\n", 8-i);
+    sprintf(buf," |%i\n", 8-i);
+    strcat(out,buf);
   }
+	strcat(out,"  +-----------------+\n");
+  strcat(out,"    A B C D E F G H\n");
+  strcat(out,"\n");
 
-	printf("  +-----------------+\n");
-  printf("    A B C D E F G H\n");
-  printf("\n\n");
-
-  printf("White Towers\n");
-  printf("============\n");
-
+  strcat(out,"White Towers\n");
+  strcat(out,"============\n");
   for (int a = ROWS-1; a >= 0; a--){
     for (int b = 0; b < COLUMNS; b++){
       if((serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='w')||(serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='w')){
-        printf("%c%i: %s\n", inttocolumn(b), 8-a, serverinfo->field[a][b]);
-
+        sprintf(buf,"%c%i: %s\n", inttocolumn(b), 8-a, serverinfo->field[a][b]);
+        strcat(out,buf);
       }
     }
   }
-  printf("\n\n");
+  strcat(out,"\n");
 
-  printf("Black Towers\n");
-  printf("============\n");
+  strcat(out,"Black Towers\n");
+  strcat(out,"============\n");
   for (int a = ROWS-1; a >= 0; a--){
     for (int b = 0; b < COLUMNS; b++){
       if((serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='b')||(serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='B')){
-        printf("%c%i: %s\n", inttocolumn(b), 8-a, serverinfo->field[a][b]);
+        sprintf(buf,"%c%i: %s\n", inttocolumn(b), 8-a, serverinfo->field[a][b]);
+        strcat(out,buf);
       }
     }
   }
-  printf("\n\n");
+  strcat(out,"\n");
 
-  return 1;
+  printf("%s",out);
 }

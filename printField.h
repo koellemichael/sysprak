@@ -14,9 +14,8 @@
 #include "responseHandler.h"
 #include "processRequest.h"
 
-//Variablen einbinden
-
 //Funktionen deklarieren
-int printfield();
+char inttocolumn(int col);
+void printfield(void);
 
 #endif
