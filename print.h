@@ -12,6 +12,5 @@
 
 //Funktionen deklarieren
 int print();
-char *substring(char *string, unsigned int from, unsigned int to);
 
 #endif
