@@ -12,6 +12,7 @@
 #include "processRequest.h"
 #include "parameter.h"
 #include "sharedMemory.h"
+#include "field.h"
 
 //Externe Variablen
 extern int fd[2];

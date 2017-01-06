@@ -17,8 +17,8 @@ static void exit_handler(void){
 }
 
 void attachPlayers(int sig){
-  sig = 0;
-  for(int i = 0; i<serverinfo->totalplayers-1; i++){                          //Shared Memory Segment jedes Spielers attachen und im struct speichern
+  (void)sig;
+  for(int i = 0; i<serverinfo->totalplayers-1; i++){                            //Shared Memory Segment jedes Spielers attachen und im struct speichern
     serverinfo->otherplayers[i] = attachSHM(shmid_player[i]);
   }
 }
@@ -97,6 +97,7 @@ int main (int argc, char **argv){
     exit(EXIT_FAILURE);
   } else if(pid == 0){                                                          //Kindprozess: Prozess-ID == 0
       //CONNECTOR
+      atexit(exit_handler);
       int sock;
 
       //Schreibeseite der Pipe schließen
@@ -108,13 +109,11 @@ int main (int argc, char **argv){
 
       sock = connectServer(cp.portNumber, cp.hostName);                         //Aufruf connectServer
       performConnection(sock);
-      printf("%s\n",serverinfo->field[2][2]);
 
       //Schliesst das Socket
       close(sock);
   } else {                                                                      //Elternprozess: Prozess-ID > 0
     //THINKER
-    atexit(exit_handler);
     //Leseseite der Pipe schließen
     close(fd[0]);
 
