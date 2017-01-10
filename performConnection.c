@@ -8,14 +8,8 @@
  *@param sock Filedeskriptor des Sockets
  */
 void performConnection(int sock, int fd){
-  char *buffer = malloc(BUFFERLENGTH*sizeof(char));                             //Speicher für Puffervariable allokalisieren
-  char **requests = malloc(BUFFERLENGTH*sizeof(char*));                         //Speicher für das Array der einzelnen Serveranfragen allokalisieren
-  int end = 1;                                                                  //Variable in der gespeichert wird ob der Server das Ende des Prologs (+ ENDPLAYERS) gesendet hat
-  //Variablen
-  fd_set readfds;           //Set der Filedeskriptoren die gelesen werden sollen
-  struct timeval tv;        //Struct für die Zeitslots, in denen überwacht wird
-  int retval;               //return value der Select Methode
-
+ char *buffer = malloc(BUFFERLENGTH*sizeof(char));                             //Speicher für Puffervariable allokalisieren
+ char **requests = malloc(BUFFERLENGTH*sizeof(char*));                         //Speicher für das Array der einzelnen Serveranfragen allokalisieren
   //Beobachtung des Sockets und der Pipe mittels Select
   FD_ZERO(&readfds);                                      //Macht das Set frei 
   FD_SET(sock, &readfds);                                 //Fügt dem Set den Socket hinzu (die Gameserververbindung)
