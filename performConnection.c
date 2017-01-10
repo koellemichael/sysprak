@@ -1,4 +1,4 @@
-﻿#include "performConnection.h"
+#include "performConnection.h"
 
 /**
  *Die Funktion performConnection führt die Prologphase zwischen
@@ -7,11 +7,50 @@
  *
  *@param sock Filedeskriptor des Sockets
  */
-void performConnection(int sock){
+void performConnection(int sock, int fd){
   char *buffer = malloc(BUFFERLENGTH*sizeof(char));                             //Speicher für Puffervariable allokalisieren
   char **requests = malloc(BUFFERLENGTH*sizeof(char*));                         //Speicher für das Array der einzelnen Serveranfragen allokalisieren
   int end = 1;                                                                  //Variable in der gespeichert wird ob der Server das Ende des Prologs (+ ENDPLAYERS) gesendet hat
+    
+    
+    
     do{
+        
+//===============KATHIS CODE -- MUSS NOCH VERSCHOBEN WERDEN ======//
+
+    //Variablen
+    fd_set readfds;
+    struct timeval tv;
+    int retval;
+
+    /*Watch stdin (fd 0) to see when it has input*/
+
+    FD_ZERO(&readfds);
+    FD_SET(sock, &readfds);
+    FD_SET(fd, &readfds);
+
+    /*Wait up to 1 second*/
+
+    tv.tv_sec = 1;
+    tv.tv_usec = 0;
+
+
+    retval = select(sizeof(readfds)*2, &readfds, NULL, NULL, &tv);
+    if(retval == -1){
+        perror("select()");
+    }
+    else if(retval){
+        printf("Data is available now\n");
+        /*FD_ISSET(0, readfds) will be true*/
+    }
+    else{
+        printf("No data within 1 second.\n");
+    }
+
+
+//========== ENDE KATHIS CODE =============//
+    
+    
       memset(buffer,0, BUFFERLENGTH);                                           //Puffer leeren
       recv(sock, buffer, BUFFERLENGTH-1, 0);                                    //Warte auf Anfrage des Servers
       strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
@@ -30,9 +69,10 @@ void performConnection(int sock){
               free(response);                                                   //Response referenziert auf diesen Speicher
             }
           }
-        }else if(buffer[0]=='-'){                                               //Wenn Serveranfrage negativ ausfällt
+        }else {
+          if(buffer[0]=='-'){                                               //Wenn Serveranfrage negativ ausfällt
           printf("server: Error! %s\nDisconnecting server...\n",buffer+2);      //Gebe Fehler aus
-          exit(EXIT_FAILURE);                                                   //Beende Programm
+          exit(EXIT_FAILURE);  }                                              //Beende Programm
         }
         x++;
       }while(requests[x]!=NULL && end);                                         //Solange es noch Anfragen aus dem requests Array gibt und + ENDPLAYERS noch nicht gesendet wurde
@@ -44,4 +84,8 @@ void performConnection(int sock){
     if(requests!=NULL){                                                         //Wenn der Speicher von requests noch nicht freigegeben wurde
       free(requests);                                                           //Speicher von buffer freigeben
     }
+    
 }
+
+
+    

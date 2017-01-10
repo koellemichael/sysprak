@@ -7,6 +7,9 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <sys/select.h>
 
 //Module einbinden
 #include "responseHandler.h"
@@ -14,6 +17,6 @@
 #include "parameter.h"
 
 //Funktionen deklarieren
-void performConnection(int sock);                                               //Handelt den Prolog mit dem Server ab
+void performConnection(int sock, int fd);                                               //Handelt den Prolog mit dem Server ab
 
 #endif

@@ -92,7 +92,7 @@ int main (int argc, char **argv){
       shmid_player = attachSHM(shmid_shmid_player);
 
       sock = connectServer(cp.portNumber, cp.hostName);                         //Aufruf connectServer
-      performConnection(sock);                                                  //Abarbeitung der Prologphase
+      performConnection(sock, fd[0]);                                                  //Abarbeitung der Prologphase
 
       kill(serverinfo->pid_thinker, SIGCONT);                                   //Signal damit Thinker weiterarbeiten kann und somit den playershm attachen kann
       //Schliesst das Socket
