@@ -23,22 +23,33 @@ void performConnection(int sock, int fd){
     
     do{
 
-    /*Wait up to 1 second*/
-    tv.tv_sec = 1;          //Sekunden
-    tv.tv_usec = 0;         //Mikrosekunden
+        /*Wait up to 1 second*/
+        tv.tv_sec = 1;          //Sekunden
+        tv.tv_usec = 0;         //Mikrosekunden
 
-    //Selectmethode, die aus dem Filedeskriptorset im festgelegten Zeitintervall überprüft, ob Daten anstehen
-    retval = select(sizeof(readfds)*2, &readfds, NULL, NULL, &tv);
-    if(retval == -1){               
-        perror("select()");
-    }
-    else if(retval){
-        printf("Data is available now\n");
-        /*FD_ISSET(0, readfds) will be true*/
-    }
-    else{
-        printf("No data within 1 second.\n");
-    }
+        //Selectmethode, die aus dem Filedeskriptorset im festgelegten Zeitintervall überprüft, ob Daten anstehen
+        retval = select(sizeof(readfds)*2, &readfds, NULL, NULL, &tv);
+        if(retval == -1){               
+            perror("select()");
+            exit(EXIT_FAILURE);
+        }
+        else if(retval){
+            printf("Data is available now\n");
+            /*FD_ISSET(0, readfds) will be true*/
+            
+         //Aus der Pipe lesen
+         if((read(fd, nextmove, buffersize)) < 0){                            //Lese nächsten Spielzug aus der Pipe
+          perror("Couldn't read from pipe");                                  //Error, wenn aus der Pipe nicht gelesen werden konnte
+         }
+         //Gameserverbindung auf eine Negativmeldung abchecken
+         if(buffer[0]=='-'){                                                  //Wenn Serveranfrage negativ ausfällt
+          printf("server: Error! %s\nDisconnecting server...\n",buffer+2);    //Gebe Fehler aus
+          exit(EXIT_FAILURE);  }                                              //Beende Programm
+        
+        }
+        else{
+            printf("No data within 1 second.\n");
+        }
 
     
       memset(buffer,0, BUFFERLENGTH);                                           //Puffer leeren
@@ -59,10 +70,6 @@ void performConnection(int sock, int fd){
               free(response);                                                   //Response referenziert auf diesen Speicher
             }
           }
-        }else {
-          if(buffer[0]=='-'){                                               //Wenn Serveranfrage negativ ausfällt
-          printf("server: Error! %s\nDisconnecting server...\n",buffer+2);      //Gebe Fehler aus
-          exit(EXIT_FAILURE);  }                                              //Beende Programm
         }
         x++;
       }while(requests[x]!=NULL && end);                                         //Solange es noch Anfragen aus dem requests Array gibt und + ENDPLAYERS noch nicht gesendet wurde

@@ -82,10 +82,12 @@ int main (int argc, char **argv){
       //Schreibeseite der Pipe schließen
       close(fd[1]);
 
+      /* Dieser Teil wurde nach Perform Connection verschoben. 
+      Aus Testzwecken möchte ich ihn hier noch nicht löschen.
       //Aus der Pipe lesen
       if((read(fd[0],nextmove, buffersize)) < 0){
           perror("Couldn't read from pipe");
-      }
+      }*/
     
       //Shared Memory Segmente anbinden
       serverinfo = attachSHM(shmid_serverinfo);
