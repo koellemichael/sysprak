@@ -24,12 +24,12 @@ void performConnection(int sock, int fd){
     do{
 
     /*Wait up to 1 second*/
-    tv.tv_sec = 1;
-    tv.tv_usec = 0;
+    tv.tv_sec = 1;          //Sekunden
+    tv.tv_usec = 0;         //Mikrosekunden
 
-
+    //Selectmethode, die aus dem Filedeskriptorset im festgelegten Zeitintervall überprüft, ob Daten anstehen
     retval = select(sizeof(readfds)*2, &readfds, NULL, NULL, &tv);
-    if(retval == -1){
+    if(retval == -1){               
         perror("select()");
     }
     else if(retval){
