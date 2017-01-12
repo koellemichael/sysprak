@@ -26,6 +26,7 @@ char* readConfiguration(char* paramName){
      exit(EXIT_FAILURE);
    }
 
+   free(string);
    fclose (file);                                                               //Schliessen der Konfig Datei
    return substring;
 }
