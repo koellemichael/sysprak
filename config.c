@@ -26,7 +26,6 @@ char* readConfiguration(char* paramName){
      exit(EXIT_FAILURE);
    }
 
-   free(string);
    fclose (file);                                                               //Schliessen der Konfig Datei
    return substring;
 }
@@ -46,6 +45,7 @@ char* findParamValue(char *string, char *delimiter, char **substring){
                                                                                 //Bis er letztendlich der letzte Abschnitt ist
             ptr = strtok(NULL, delimiter);                                      //Der Pointer geht eins weiter
         }
+        
     return *substring;
 }
 
