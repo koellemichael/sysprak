@@ -43,9 +43,11 @@ void detachSHM(void *shm){
  * Shared Memory Bereich löschen.
  * @param shmid ID des Shared Memory Segments
  */
-void deleteSHM(int shmid){
-  if(shmctl(shmid, IPC_RMID, 0)!=0){                                            //Shared Memory löschen
+int deleteSHM(int shmid){
+  int r;
+  if((r = shmctl(shmid, IPC_RMID, 0))!=0){                                            //Shared Memory löschen
     perror("Error while deleting shared memory segment");
     exit(EXIT_FAILURE);
   }
+  return r;
 }

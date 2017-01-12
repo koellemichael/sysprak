@@ -55,7 +55,7 @@ void createDefaultConfig(void){
   FILE *file = NULL;
   file = fopen(confile, "r");                                                   //Config versuchen zu öffnen NULL falls nicht existent
   if(file == NULL) {
-    perror("Can not find config file, creating default config");                //Falls nicht existent, erstelle default config
+    printf("Creating default config...\n");                                     //Falls nicht existent, erstelle default config
     file = fopen(confile, "w");                                                 //Erstele file und öffne im Schreibmodus
     if(file == NULL) {                                                          //Überprüfen ob auf die Datei zugegriffen werden kann
   	   perror("No permission to create default config");

@@ -54,7 +54,6 @@ void performConnection(int sock, int fd){
        end = !match(requests[x]+2,"QUIT");                                      //Wurde +ENDPLAYERS gesendet?
         if(buffer[0]=='+'){                                                     //Wenn Serveranfrage positiv ausfällt
           if(strlen(requests[x])>2){                                            //Leere Anfrage vom Server ignorieren               //TODO Fehlerbehandlung
-            printf("server RAW: %s\n",requests[x]);
             char *response = handle(requests[x]+2);                             //Sucht die passende Anfrage auf die Serveranfrage
             if (response!=NULL){                                                //Wenn es eine Anfrage gibt
                 send(sock,response,strlen(response),0);                         //Sendet dem Server die Antwort des Clients
