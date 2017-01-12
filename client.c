@@ -103,12 +103,14 @@ int main (int argc, char **argv){
       //Schreibeseite der Pipe schließen
       close(fd[1]);
 
+
       //Shared Memory Segmente anbinden
       serverinfo = attachSHM(shmid_serverinfo);
       shmid_player = attachSHM(shmid_shmid_player);
 
       sock = connectServer(cp.portNumber, cp.hostName);                         //Aufruf connectServer
-      performConnection(sock);
+      performConnection(sock, fd[0]);                                                  //Abarbeitung der Prologphase
+
 
       //Schliesst das Socket
       close(sock);
