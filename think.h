@@ -20,6 +20,6 @@ extern int fd[2];
 extern struct serverinfo *serverinfo;                                           //Globales struct für die Serverinfos
 
 //Funktionen deklarieren
-void think(int sig);
+void think(int sig, int *fd);
 
 #endif
