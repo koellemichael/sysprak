@@ -29,10 +29,6 @@ int main (int argc, char **argv){
   player = NULL;
   gameid = NULL;
   player = NULL;
-  value = "";
-  paramNameHost = "hostname"; 
-  paramNamePort = "portnumber";
-  paramNameGame = "gamekindname";
   fflag = 0;                                                                    //Flags für die optionalen Kommandozeilenargumente überprüfen, ob ein Argument für Player oder die KonfigDatei angegeben wurde
   pflag = 0;
   pid_t pid = 0;
