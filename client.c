@@ -32,8 +32,6 @@ int main (int argc, char **argv){
   fflag = 0;                                                                    //Flags für die optionalen Kommandozeilenargumente überprüfen, ob ein Argument für Player oder die KonfigDatei angegeben wurde
   pflag = 0;
   pid_t pid = 0;
-  buffersize = 256;
-  nextmove = malloc(sizeof(char) * buffersize); 
   shmid_serverinfo = createSHM(sizeof(struct serverinfo));                      //Shared Memory erstellen, für das Serverinformationen struct
   shmid_shmid_player = createSHM(BUFFERLENGTH*sizeof(int));                     //Shared Memory erstellen, in diesem Segment werden die shmids der einzelnen Players
   signal(SIGUSR1, think);

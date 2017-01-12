@@ -1,6 +1,6 @@
 #include "think.h"
 
-void think(int* fd){
+int think(int* fd){
     
     if(serverinfo->startcalc == 1){
     printfield();
