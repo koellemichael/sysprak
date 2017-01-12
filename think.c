@@ -1,12 +1,11 @@
 #include "think.h"
 
-int think(int* fd){
-    
-    if(serverinfo->startcalc == 1){
+void think(int sig){
+  (void)sig;
+  if(serverinfo->startcalc == 1){
     printfield();
-    //TODO: SPIELTAKTIK
-    move = "A3:B4";
-    
+    //move = "A3:B4\0";
+    move = "\0";
     if((write (fd[1], move, 5)) != 5){
         perror("Error trying to write into the pipe");
         exit (EXIT_FAILURE);

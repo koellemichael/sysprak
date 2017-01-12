@@ -35,7 +35,6 @@ char *confile;                                                                  
 int pflag;                                                                      //Setzt ein Flag, wenn Player angegeben wurde
 int fflag;                                                                      //Setzt ein Flag, wenn Konfigdatei angegeben wurde
 int c;                                                                          //RetValue von getopt. Entweder Argument oder -1, wenn kein Argument vorhanden
-int buffersize;
 int *shmid_player;                                                              //Gobales Int Array für die ShmIDs der Player Segmente
 int shmid_serverinfo;
 int shmid_shmid_player;

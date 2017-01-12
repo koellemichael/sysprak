@@ -45,6 +45,7 @@ char* findParamValue(char *string, char *delimiter, char **substring){
                                                                                 //Bis er letztendlich der letzte Abschnitt ist
             ptr = strtok(NULL, delimiter);                                      //Der Pointer geht eins weiter
         }
+        
     return *substring;
 }
 
