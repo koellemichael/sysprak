@@ -43,10 +43,7 @@ void performConnection(int sock){
         else{
             printf("No data within 1 second.\n");
         }
-
-
-
-      //recv(sock, buffer, BUFFERLENGTH-1, 0);                                    //Warte auf Anfrage des Servers
+        
       strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
       int x = 0;                                                                //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
      do{
