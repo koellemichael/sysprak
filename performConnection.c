@@ -8,13 +8,12 @@
  *@param sock Filedeskriptor des Sockets
  */
 void performConnection(int sock){
- char *buffer = malloc(BUFFERLENGTH*sizeof(char));                             //Speicher für Puffervariable allokalisieren
- char **requests = malloc(BUFFERLENGTH*sizeof(char*));                         //Speicher für das Array der einzelnen Serveranfragen allokalisieren
- char *nextmove = malloc(BUFFERLENGTH_MOVE*sizeof(char*));
+ char *buffer = malloc(BUFFERLENGTH*sizeof(char));                              //Speicher für Puffervariable allokalisieren
+ char **requests = malloc(BUFFERLENGTH*sizeof(char*));                          //Speicher für das Array der einzelnen Serveranfragen allokalisieren
   //Beobachtung des Sockets und der Pipe mittels Select
-  FD_ZERO(&readfds);                                      //Macht das Set frei 
-  FD_SET(sock, &readfds);                                 //Fügt dem Set den Socket hinzu (die Gameserververbindung)
-  FD_SET(fd[0], &readfds);                                   //Fügt dem Set die Pipe hinzu (Leseseite!)
+  FD_ZERO(&readfds);                                                            //Macht das Set frei
+  FD_SET(sock, &readfds);                                                       //Fügt dem Set den Socket hinzu (die Gameserververbindung)
+  FD_SET(fd[0], &readfds);                                                      //Fügt dem Set die Pipe hinzu (Leseseite!)
   end = 1;
     do{
 
@@ -24,31 +23,30 @@ void performConnection(int sock){
 
         //Selectmethode, die aus dem Filedeskriptorset im festgelegten Zeitintervall überprüft, ob Daten anstehen
         retval = select(sizeof(readfds)*2, &readfds, NULL, NULL, &tv);
-        if(retval == -1){               
+        if(retval == -1){
             perror("select()");
             exit(EXIT_FAILURE);
-        }
-        else if(retval){
-            printf("Data is available now\n");
-            /*FD_ISSET(0, readfds) will be true*/
-            
-         //Aus der Pipe lesen[0]
-         if((read(fd[0], nextmove, BUFFERLENGTH_MOVE)) < 0){                            //Lese nächsten Spielzug aus der Pipe
-          perror("Couldn't read from pipe");                                  //Error, wenn aus der Pipe nicht gelesen werden konnte
+        }else if(retval){
+         memset(buffer,0, BUFFERLENGTH);                                        //Puffer leeren
+         if((read(sock, buffer, BUFFERLENGTH)) < 0){                            //Lese nächsten Spielzug aus der Pipe
+             perror("Couldn't read from pipe");                                 //Error, wenn aus der Pipe nicht gelesen werden konnte
          }
-         //Gameserverbindung auf eine Negativmeldung abchecken
-         if(buffer[0]=='-'){                                                  //Wenn Serveranfrage negativ ausfällt
-          printf("server: Error! %s\nDisconnecting server...\n",buffer+2);    //Gebe Fehler aus
-          exit(EXIT_FAILURE);  }                                              //Beende Programm
-        
+
+         //Aus der Pipe lesen[0]
+         /*
+         if((read(fd[0], buffer, BUFFERLENGTH_MOVE)) < 0){                      //Lese nächsten Spielzug aus der Pipe
+          perror("Couldn't read from pipe");                                    //Error, wenn aus der Pipe nicht gelesen werden konnte
+         }
+         */
+
         }
         else{
             printf("No data within 1 second.\n");
         }
 
-    
-      memset(buffer,0, BUFFERLENGTH);                                           //Puffer leeren
-      recv(sock, buffer, BUFFERLENGTH-1, 0);                                    //Warte auf Anfrage des Servers
+
+
+      //recv(sock, buffer, BUFFERLENGTH-1, 0);                                    //Warte auf Anfrage des Servers
       strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
       int x = 0;                                                                //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
      do{
@@ -64,6 +62,9 @@ void performConnection(int sock){
               free(response);                                                   //Response referenziert auf diesen Speicher
             }
           }
+        }else if(buffer[0]=='-'){                                               //Wenn Serveranfrage negativ ausfällt
+          printf("server: Error! %s\nDisconnecting server...\n",buffer+2);      //Gebe Fehler aus
+          exit(EXIT_FAILURE);                                                   //Beende Programm
         }
         x++;
       }while(requests[x]!=NULL && end);                                         //Solange es noch Anfragen aus dem requests Array gibt und + ENDPLAYERS noch nicht gesendet wurde
@@ -75,8 +76,5 @@ void performConnection(int sock){
     if(requests!=NULL){                                                         //Wenn der Speicher von requests noch nicht freigegeben wurde
       free(requests);                                                           //Speicher von buffer freigeben
     }
-    
+
 }
-
-
-    
