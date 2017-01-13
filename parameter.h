@@ -9,7 +9,7 @@
 #define PORTNUMBER 1357                                                         //Konstante PORTNUMBER definieren
 #define HOSTNAME "sysprak.priv.lab.nm.ifi.lmu.de"                               //Konstante HOSTNAME definieren
 #define BUFFERLENGTH 1024                                                       //Konstante für die std Puffergröße definieren
-#define BUFFERLENGTH_MOVE 5                                                     //Konstante für die Puffergröße eines Spielzugs definieren
+#define BUFFERLENGTH_MOVE 50                                                     //Konstante für die Puffergröße eines Spielzugs definieren
 #define VERSION "2.3"                                                           //TODO provisorische Konstante
 #define ROWS 8                                                                  //Konstante für die Reihen des Spielfelds
 #define COLUMNS 8                                                               //Konstante für die Spalten des Spielfelds
