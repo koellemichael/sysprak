@@ -45,12 +45,16 @@ int main (int argc, char **argv){
     while(optind < argc){                                                       //(optind = Index des Arguments) iteriert durch alle Argumente
         if((c = getopt(argc, argv, ":p:f:")) != -1){                            //Parsed die mit flag besetzten Kommandozeilenargumente, bis alle durch sind (dann retval -1)
             switch(c){
-                case 'p': player = optarg;                                      //p-flag: Wert des Players wird aus der Kommandozeile übernommen
-                          pflag = 1;                                            //pflag signalisiert, dass ein Player angegeben wurde
+                case 'p': if(strcmp(optarg, "")){
+                            player = optarg;                                    //p-flag: Wert des Players wird aus der Kommandozeile übernommen
+                            pflag = 1;
+                          }                                                     //pflag signalisiert, dass ein Player angegeben wurde
                           break;
-                case 'f': confile = optarg;                                     //f-flag: Pfad der Konfigdatei wird aus der Kommandozeile übernommen
-                          fflag = 1;                                            //fflag signalisiert, dass eine Konfigdatei angegeben wurde
-                          printf("The specified confile is %s.\n", confile);
+                case 'f': if(strcmp(optarg, "")){
+                            confile = optarg;                                   //f-flag: Pfad der Konfigdatei wird aus der Kommandozeile übernommen
+                            fflag = 1;                                          //fflag signalisiert, dass eine Konfigdatei angegeben wurde
+                            printf("The specified confile is %s.\n", confile);
+                          }
                           break;
                 default:
                           break;
