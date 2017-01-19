@@ -152,7 +152,6 @@ char *handle(char *request){
         memset(serverinfo->field[i][j],0,BUFFERLENGTH);
       }
     }
-    printfield();
     //Format
     strcpy(out, "There are ");
     char *pieces = substring(request, 11, strlen(request));

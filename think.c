@@ -7,7 +7,7 @@ void think(int sig){
     if(test)
       move = "A3:B4\0";
     else
-      move = "E3:F4\0";
+      move = "C3:D4\0";
     //move = "\0";
     if((write (fd[1], move, 5)) != 5){
         perror("Error trying to write into the pipe");
