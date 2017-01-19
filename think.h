@@ -18,6 +18,7 @@ char* move;
 //Externe Variablen
 extern int fd[2];
 extern struct serverinfo *serverinfo;                                           //Globales struct für die Serverinfos
+extern int test;
 
 //Funktionen deklarieren
 void think(int sig);

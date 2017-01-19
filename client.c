@@ -36,7 +36,7 @@ int main (int argc, char **argv){
   shmid_shmid_player = createSHM(BUFFERLENGTH*sizeof(int));                     //Shared Memory erstellen, in diesem Segment werden die shmids der einzelnen Players
   signal(SIGUSR1, think);
   signal(SIGUSR2, attachPlayers);
-
+  test = 1;
   if(argc<2){                                                                   //Test: Wird eine Game-ID übergeben
     perror("No game id");                                                       //Keine Game-ID vorhanden
     exit(EXIT_FAILURE);                                                         //Programm beenden

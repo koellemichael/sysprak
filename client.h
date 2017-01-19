@@ -40,5 +40,6 @@ int shmid_serverinfo;
 int shmid_shmid_player;
 struct serverinfo *serverinfo;                                                  //Gobales struct für die Serverinfos
 int fd[2];
+int test;
 
 #endif
