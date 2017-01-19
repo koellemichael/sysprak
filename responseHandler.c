@@ -1,4 +1,4 @@
-﻿#include "responseHandler.h"
+#include "responseHandler.h"
 
 int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
 int command = 0;                                                                //Flag, das nach den verschiedenen Befehlen gesetzt wird
@@ -189,15 +189,10 @@ char *handle(char *request){
     return response;
   }else if(match(request,"OKTHINK")){
     char* playmove;
-    char* nextmove = malloc(sizeof(char)*5);
-    memset(nextmove, 0, 5);
-                                                                                //TODO FEhler wenn spielzugberechnung länger dauert als der server okthink schickt
-    //Aus der Pipe lesen
-    if((read(fd[0],nextmove, BUFFERLENGTH)) < 0){
-        perror("Couldn't read from pipe");
-        exit(EXIT_FAILURE);
-    }
-    char* play = malloc(sizeof(char)*BUFFERLENGTH);
+    
+    //char* nextmove = malloc(sizeof(char)*5);
+    //memset(nextmove, 0, 5);                                                     //TODO FEhler wenn spielzugberechnung länger dauert als der server okthink schickt
+    char* play = malloc(sizeof(char)*5 + sizeof(char)*BUFFERLENGTH_MOVE);
     playmove = strcpy(play, "PLAY ");
     playmove = strcat(play, nextmove);
     strcpy(response, playmove);

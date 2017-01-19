@@ -9,14 +9,17 @@
  */
 void performConnection(int sock){
  char *buffer = malloc(BUFFERLENGTH*sizeof(char));                              //Speicher für Puffervariable allokalisieren
- char **requests = malloc(BUFFERLENGTH*sizeof(char*));                          //Speicher für das Array der einzelnen Serveranfragen allokalisieren
-  //Beobachtung des Sockets und der Pipe mittels Select
-  FD_ZERO(&readfds);                                                            //Macht das Set frei
-  FD_SET(sock, &readfds);                                                       //Fügt dem Set den Socket hinzu (die Gameserververbindung)
-  FD_SET(fd[0], &readfds);                                                      //Fügt dem Set die Pipe hinzu (Leseseite!)
+ char **requests = malloc(BUFFERLENGTH*sizeof(char*));                          //Speicher für das Array der einzelnen Serveranfragen allokalisieren 
+    
+    
   end = 1;
     do{
 
+      //Beobachtung des Sockets und der Pipe mittels Select
+      FD_ZERO(&readfds);                                                            //Macht das Set frei
+      FD_SET(sock, &readfds);                                                       //Fügt dem Set den Socket hinzu (die Gameserververbindung)
+      FD_SET(fd[0], &readfds);                                                      //Fügt dem Set die Pipe hinzu (Leseseite!)
+        
         /*Wait up to 1 second*/
         tv.tv_sec = 1;          //Sekunden
         tv.tv_usec = 0;         //Mikrosekunden
@@ -26,27 +29,38 @@ void performConnection(int sock){
         if(retval == -1){
             perror("select()");
             exit(EXIT_FAILURE);
+            printf("No Data available at the moment");
         }else if(retval){
+         int pipeData = FD_ISSET(fd[0], &readfds);
+         int socketData = FD_ISSET(sock, &readfds);
+            
          memset(buffer,0, BUFFERLENGTH);                                        //Puffer leeren
-         if((read(sock, buffer, BUFFERLENGTH)) < 0){                            //Lese nächsten Spielzug aus der Pipe
-             perror("Couldn't read from pipe");                                 //Error, wenn aus der Pipe nicht gelesen werden konnte
-         }
-
-         //Aus der Pipe lesen[0]
-         /*
-         if((read(fd[0], buffer, BUFFERLENGTH_MOVE)) < 0){                      //Lese nächsten Spielzug aus der Pipe
-          perror("Couldn't read from pipe");                                    //Error, wenn aus der Pipe nicht gelesen werden konnte
-         }
-         */
-
+         
+        if(socketData!=0){    
+            if((read(sock, buffer, BUFFERLENGTH)) < 0){                            //Lese nächsten Spielzug aus der Pipe
+             perror("Couldn't read from socket");                                 //Error, wenn aus der Pipe nicht gelesen werden konnte
+            }   
+            
         }
-        else{
-            printf("No data within 1 second.\n");
+           
+         
+         if(pipeData!=0){
+         //Aus der Pipe lesen[0] 
+             if((read(fd[0], buffer, BUFFERLENGTH_MOVE)) < 0){                    //Lese nächsten Spielzug aus der Pipe
+              perror("Couldn't read from pipe");                                 //Error, wenn aus der Pipe nicht gelesen werden konnte
+            } else nextmove = buffer;
+                   
+            
+          
+         }
+         
+         
         }
-        
+        else{printf("No Data available right now\n");}
       strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
       int x = 0;                                                                //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
-     do{
+      
+     do{         
        end = !match(requests[x]+2,"QUIT");                                      //Wurde +ENDPLAYERS gesendet?
         if(buffer[0]=='+'){                                                     //Wenn Serveranfrage positiv ausfällt
           if(strlen(requests[x])>2){                                            //Leere Anfrage vom Server ignorieren               //TODO Fehlerbehandlung
