@@ -20,7 +20,7 @@ void performConnection(int sock){
       FD_SET(fd[0], &readfds);                                                      //Fügt dem Set die Pipe hinzu (Leseseite!)
         
         /*Wait up to 1 second*/
-        tv.tv_sec = 1;          //Sekunden
+        tv.tv_sec = 20;          //Sekunden
         tv.tv_usec = 0;         //Mikrosekunden
 
         //Selectmethode, die aus dem Filedeskriptorset im festgelegten Zeitintervall überprüft, ob Daten anstehen
@@ -39,8 +39,9 @@ void performConnection(int sock){
             if((read(sock, buffer, BUFFERLENGTH)) < 0){                            //Lese nächsten Spielzug aus der Pipe
              perror("Couldn't read from socket");                                 //Error, wenn aus der Pipe nicht gelesen werden konnte
             } 
+            printf("Buffercontent: %s", buffer);
         }
-           
+         
          
          if(pipeData!=0){                                                       //Wenn etwas ansteht, dann..
          //Aus der Pipe lesen[0] 
@@ -66,7 +67,7 @@ void performConnection(int sock){
             }
             if(response!=NULL){                                                 //Speicher von response freigeben da, in handle Speicher allokalisiert wurde
               free(response);                                                   //Response referenziert auf diesen Speicher
-            }
+            } 
           }
         }else if(buffer[0]=='-'){                                               //Wenn Serveranfrage negativ ausfällt
           printf("server: Error! %s\nDisconnecting server...\n",buffer+2);      //Gebe Fehler aus
