@@ -30,23 +30,23 @@ void performConnection(int sock){
             exit(EXIT_FAILURE);
             printf("No Data available at the moment");
         }else if(retval){
-         int pipeData = FD_ISSET(fd[0], &readfds);
+         int pipeData = FD_ISSET(fd[0], &readfds);                              //ISSET testet, ob an DIESER PIPE etwas ansteht
          int socketData = FD_ISSET(sock, &readfds);
             
          memset(buffer,0, BUFFERLENGTH);                                        //Puffer leeren
          
-        if(socketData!=0){    
+        if(socketData!=0){                                                      //Wenn etwas ansteht, dann..
             if((read(sock, buffer, BUFFERLENGTH)) < 0){                            //Lese nächsten Spielzug aus der Pipe
              perror("Couldn't read from socket");                                 //Error, wenn aus der Pipe nicht gelesen werden konnte
             } 
         }
            
          
-         if(pipeData!=0){
+         if(pipeData!=0){                                                       //Wenn etwas ansteht, dann..
          //Aus der Pipe lesen[0] 
              if((read(fd[0], buffer, BUFFERLENGTH_MOVE)) < 0){                    //Lese nächsten Spielzug aus der Pipe
               perror("Couldn't read from pipe");                                 //Error, wenn aus der Pipe nicht gelesen werden konnte
-            } else strcpy(nextmove, buffer);
+            } else strcpy(nextmove, buffer);                                    //Kopiere diesen Inhalt in nextmove
          }
          
         }
