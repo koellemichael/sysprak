@@ -46,11 +46,11 @@ void performConnection(int sock){
          //Aus der Pipe lesen[0] 
              if((read(fd[0], buffer, BUFFERLENGTH_MOVE)) < 0){                    //Lese nächsten Spielzug aus der Pipe
               perror("Couldn't read from pipe");                                 //Error, wenn aus der Pipe nicht gelesen werden konnte
-            } else strcpy(nextmove, buffer);x
+            } else strcpy(nextmove, buffer);
          }
          
         }
-        else{printf("No Data available right now\n");}
+        //else{printf("No Data available right now\n");}
         
       strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
       int x = 0;                                                                //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
