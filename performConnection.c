@@ -9,12 +9,11 @@
  */
 void performConnection(int sock){
  char *buffer = malloc(BUFFERLENGTH*sizeof(char));                              //Speicher für Puffervariable allokalisieren
+ nextmove = malloc(BUFFERLENGTH_MOVE*sizeof(char));
  char **requests = malloc(BUFFERLENGTH*sizeof(char*));                          //Speicher für das Array der einzelnen Serveranfragen allokalisieren 
-    
     
   end = 1;
     do{
-
       //Beobachtung des Sockets und der Pipe mittels Select
       FD_ZERO(&readfds);                                                            //Macht das Set frei
       FD_SET(sock, &readfds);                                                       //Fügt dem Set den Socket hinzu (die Gameserververbindung)
@@ -39,8 +38,7 @@ void performConnection(int sock){
         if(socketData!=0){    
             if((read(sock, buffer, BUFFERLENGTH)) < 0){                            //Lese nächsten Spielzug aus der Pipe
              perror("Couldn't read from socket");                                 //Error, wenn aus der Pipe nicht gelesen werden konnte
-            }   
-            
+            } 
         }
            
          
@@ -48,15 +46,12 @@ void performConnection(int sock){
          //Aus der Pipe lesen[0] 
              if((read(fd[0], buffer, BUFFERLENGTH_MOVE)) < 0){                    //Lese nächsten Spielzug aus der Pipe
               perror("Couldn't read from pipe");                                 //Error, wenn aus der Pipe nicht gelesen werden konnte
-            } else nextmove = buffer;
-                   
-            
-          
+            } else strcpy(nextmove, buffer);x
          }
-         
          
         }
         else{printf("No Data available right now\n");}
+        
       strtoken(buffer, "\n",requests);                                          //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
       int x = 0;                                                                //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
       
