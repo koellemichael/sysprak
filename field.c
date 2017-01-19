@@ -85,7 +85,7 @@ void printfield(void){
   strcat(out,"============\n");
   for (int a = ROWS-1; a >= 0; a--){
     for (int b = 0; b < COLUMNS; b++){
-      if((serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='w')||(serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='w')){   //Letzer Char vor @ ein 'w'
+      if((serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='w')||(serverinfo->field[a][b][strlen(serverinfo->field[a][b])-1]=='W')){   //Letzer Char vor @ ein 'w'
         sprintf(buf,"%c%i: %s\n", inttocolumn(b), 8-a, serverinfo->field[a][b]);                      //Ausgabe z.B. E5: w
         strcat(out,buf);
       }
