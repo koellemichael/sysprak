@@ -40,35 +40,28 @@ int main (int argc, char **argv){
   if(argc<2){                                                                   //Test: Wird eine Game-ID übergeben
     perror("No game id");                                                       //Keine Game-ID vorhanden
     exit(EXIT_FAILURE);                                                         //Programm beenden
-  }else{
-    printLogo();
-    while(optind < argc){                                                       //(optind = Index des Arguments) iteriert durch alle Argumente
-        if((c = getopt(argc, argv, ":p:f:")) != -1){                            //Parsed die mit flag besetzten Kommandozeilenargumente, bis alle durch sind (dann retval -1)
-            switch(c){
-                case 'p': if(strcmp(optarg, "")){
-                            player = optarg;                                    //p-flag: Wert des Players wird aus der Kommandozeile übernommen
-                            pflag = 1;
-                          }                                                     //pflag signalisiert, dass ein Player angegeben wurde
-                          break;
-                case 'f': if(strcmp(optarg, "")){
-                            confile = optarg;                                   //f-flag: Pfad der Konfigdatei wird aus der Kommandozeile übernommen
-                            fflag = 1;                                          //fflag signalisiert, dass eine Konfigdatei angegeben wurde
-                            printf("The specified confile is %s.\n", confile);
-                          }
-                          break;
-                default:
-                          break;
-            }
-        }else{                                                                  //Wenn kein Flag angegeben wurde, ist dies die gameid
-            //Game-ID vorhanden
-            if (strlen(argv[1])!=13){                                           //Test: Ist die Game-ID 13-stellig
-                perror("Invalid game id");                                      //Game-ID zu kurz oder zu lang
-                exit(EXIT_FAILURE);                                             //Programm beenden
-            }else {                                                             //13-stellige Game-ID übergeben
-               gameid=argv[1];                                                  //kopieren des Strings nach gameid
-            }
-            optind++;                                                           //Der index muss hier manuell erhöht werden
-        }
+  }else if (strlen(argv[1])!=13){                                               //Ist die Game-ID 13-stellig
+      perror("Invalid game id");                                                //Game-ID zu kurz oder zu lang
+      exit(EXIT_FAILURE);                                                       //Programm beenden
+  }else{                                                                        //13-stellige Game-ID übergeben
+     printLogo();
+     gameid=argv[1];                                                            //kopieren des Strings nach gameid
+     while((c = getopt(argc, argv, ":p:f:")) != -1){                            //(optind = Index des Arguments) iteriert durch alle Argumente                           //Parsed die mit flag besetzten Kommandozeilenargumente, bis alle durch sind (dann retval -1)
+       switch(c){
+         case 'p': if(strcmp(optarg,"")!=0){
+                     player = optarg;                                           //p-flag: Wert des Players wird aus der Kommandozeile übernommen
+                     pflag = 1;                                                 //pflag signalisiert, dass ein Player angegeben wurde
+                   }
+                   break;
+         case 'f': if(strcmp(optarg,"")!=0){
+                     confile = optarg;                                          //f-flag: Pfad der Konfigdatei wird aus der Kommandozeile übernommen
+                     fflag = 1;                                                 //fflag signalisiert, dass eine Konfigdatei angegeben wurde
+                     printf("The specified confile is %s.\n", confile);
+                   }
+                   break;
+         default:
+                   break;
+      }
     }
 
     if(pflag == 0){                                                             //Wenn kein Player angegeben wurde
@@ -88,13 +81,11 @@ int main (int argc, char **argv){
     cp.gameKindName = readConfiguration(paramNameGame);
   }
 
-
   //Unnamed Pipe einrichten, die zwischen Connector und Thinker laufen soll
   if(pipe(fd) < 0){
       perror("Error establishing an unnamed pipe");
       exit(EXIT_FAILURE);
   }
-
 
   if((pid=fork())<0){                                                           //Aufsplitten des Prozesses
     perror("Error while splitting the process");                                //Fehler bei fork
