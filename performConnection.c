@@ -64,31 +64,31 @@ void sendMove(char *move, int sock){
 }
 
 void processAndSendResponse(char *buffer, int sock){
-  char **requests = malloc(BUFFERLENGTH*sizeof(char*));                   //Speicher für das Array der einzelnen Serveranfragen allokalisieren
-  strtoken(buffer, "\n",requests);                                        //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
+  char **requests = malloc(BUFFERLENGTH*sizeof(char*));                         //Speicher für das Array der einzelnen Serveranfragen allokalisieren
+  strtoken(buffer, "\n",requests);                                              //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
 
-  int x = 0;                                                              //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
+  int x = 0;                                                                    //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
   do{
-    end = !match(requests[x]+2,"QUIT");                                   //Wurde +ENDPLAYERS gesendet?
-    if(requests[x][0]=='+'){                                              //Wenn Serveranfrage positiv ausfällt
-      if(strlen(requests[x])>2){                                          //Leere Anfrage vom Server ignorieren               //TODO Fehlerbehandlung
-        char *response = handle(requests[x]+2);                           //Sucht die passende Anfrage auf die Serveranfrage
+    end = !match(requests[x]+2,"QUIT");                                         //Wurde +ENDPLAYERS gesendet?
+    if(requests[x][0]=='+'){                                                    //Wenn Serveranfrage positiv ausfällt
+      if(strlen(requests[x])>2){                                                //Leere Anfrage vom Server ignorieren               //TODO Fehlerbehandlung
+        char *response = handle(requests[x]+2);                                 //Sucht die passende Anfrage auf die Serveranfrage
         sendResponse(response, sock);
       }
-    }else if(requests[x][0]=='-'){                                        //Wenn Serveranfrage negativ ausfällt
+    }else if(requests[x][0]=='-'){                                              //Wenn Serveranfrage negativ ausfällt
       printf("server: Error! %s\nDisconnecting server...\n",
-      requests[x]+2);                                                     //Gebe Fehler aus
-      exit(EXIT_FAILURE);                                                 //Beende Programm
+      requests[x]+2);                                                           //Gebe Fehler aus
+      exit(EXIT_FAILURE);                                                       //Beende Programm
     }
     x++;
 
-  }while(requests[x]!=NULL && end);                                       //Solange es noch Anfragen aus dem requests Array gibt und + ENDPLAYERS noch nicht gesendet wurde
+  }while(requests[x]!=NULL && end);                                             //Solange es noch Anfragen aus dem requests Array gibt und + ENDPLAYERS noch nicht gesendet wurde
 
-  if(buffer!=NULL){                                                       //Wenn der Speicher von buffer noch nicht freigegeben wurde
-    free(buffer);                                                         //Speicher von buffer freigeben
+  if(buffer!=NULL){                                                             //Wenn der Speicher von buffer noch nicht freigegeben wurde
+    free(buffer);                                                               //Speicher von buffer freigeben
   }
-  if(requests!=NULL){                                                     //Wenn der Speicher von requests noch nicht freigegeben wurde
-    free(requests);                                                       //Speicher von buffer freigeben
+  if(requests!=NULL){                                                           //Wenn der Speicher von requests noch nicht freigegeben wurde
+    free(requests);                                                             //Speicher von buffer freigeben
   }
 }
 
