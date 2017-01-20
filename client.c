@@ -1,28 +1,5 @@
 #include "client.h"
 
-static void exit_handler(void){
-      //Löschen der Shared Memory Segmente
-      if(shmid_player != 0){
-        for(int i = 0; i<serverinfo->totalplayers-1; i++){
-          if(shmid_player[i]!=0)
-            shmid_player[i] = deleteSHM(shmid_player[i]);
-        }
-      }
-      //Löschen der Shared Memory Segmente
-      if(shmid_shmid_player!=0)
-        shmid_shmid_player = deleteSHM(shmid_shmid_player);
-
-      if(shmid_serverinfo!=0)
-        shmid_serverinfo = deleteSHM(shmid_serverinfo);
-}
-
-void attachPlayers(int sig){
-  (void)sig;
-  for(int i = 0; i<serverinfo->totalplayers-1; i++){                            //Shared Memory Segment jedes Spielers attachen und im struct speichern
-    serverinfo->otherplayers[i] = attachSHM(shmid_player[i]);
-  }
-}
-
 int main (int argc, char **argv){
   confile = NULL;
   gameid = NULL;
@@ -126,4 +103,27 @@ int main (int argc, char **argv){
 
   }
   exit(EXIT_SUCCESS);
+}
+
+static void exit_handler(void){
+      //Löschen der Shared Memory Segmente
+      if(shmid_player != 0){
+        for(int i = 0; i<serverinfo->totalplayers-1; i++){
+          if(shmid_player[i]!=0)
+            shmid_player[i] = deleteSHM(shmid_player[i]);
+        }
+      }
+      //Löschen der Shared Memory Segmente
+      if(shmid_shmid_player!=0)
+        shmid_shmid_player = deleteSHM(shmid_shmid_player);
+
+      if(shmid_serverinfo!=0)
+        shmid_serverinfo = deleteSHM(shmid_serverinfo);
+}
+
+void attachPlayers(int sig){
+  (void)sig;
+  for(int i = 0; i<serverinfo->totalplayers-1; i++){                            //Shared Memory Segment jedes Spielers attachen und im struct speichern
+    serverinfo->otherplayers[i] = attachSHM(shmid_player[i]);
+  }
 }

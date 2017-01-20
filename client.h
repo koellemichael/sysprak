@@ -12,8 +12,6 @@
 #include <sys/shm.h>
 #include <signal.h>
 
-
-
 //Module einbinden
 #include "performConnection.h"
 #include "connectServer.h"
@@ -40,5 +38,9 @@ int shmid_serverinfo;
 int shmid_shmid_player;
 struct serverinfo *serverinfo;                                                  //Gobales struct für die Serverinfos
 int fd[2];
+
+//Funktionen deklarieren
+static void exit_handler(void);
+void attachPlayers(int sig);
 
 #endif
