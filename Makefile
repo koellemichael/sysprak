@@ -16,7 +16,7 @@ $(EXECUTABLE): $(OBJFILES)
 	$(CC) $(LDFLAGS) $(OBJFILES) -o $@
 
 bashni: ./$(EXECUTABLE)
-	./$(EXECUTABLE) $(GAME_ID) -p $(PLAYER) -f $(CONF_FL)
+	./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID) 
 
 .PHONY: clean
 clean:
