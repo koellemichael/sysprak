@@ -1,6 +1,40 @@
 ﻿#include "field.h"
 
 /**
+ *Prüft ob ein Stein an der Stelle (i,j) weiß ist.
+ *@param i Zeilenindex
+ *@param i Spaltenindex
+ *@return 1 wenn weiß, 0 wenn schwarz, -1 sonst
+ */
+int isWhite(int i, int j){
+    char piece = serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1];
+    if(piece =='w' || piece =='W'){
+      return 1;
+    }else if(piece =='b' || piece =='B'){
+      return 0;
+    }else{
+      return -1;
+    }
+}
+
+/**
+ *Prüft ob ein Stein an der Stelle (i,j) schwarz ist.
+ *@param i Zeilenindex
+ *@param i Spaltenindex
+ *@return 0 wenn weiß, 1 wenn schwarz, -1 sonst
+ */
+int isBlack(int i, int j){
+    char piece = serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1];
+    if(piece =='w' || piece =='W'){
+      return 0;
+    }else if(piece =='b' || piece =='B'){
+      return 1;
+    }else{
+      return -1;
+    }
+}
+
+/**
  * Rechnet die A-H Indizes in Zahlen um.
  */
 int columntoint(char column){

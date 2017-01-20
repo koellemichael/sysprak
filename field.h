@@ -15,6 +15,8 @@
 #include "processRequest.h"
 
 //Funktionen deklarieren
+int isWhite(int i, int j);
+int isBlack(int i, int j);
 int columntoint(char column);
 char inttocolumn(int col);
 void printfield(void);
