@@ -7,14 +7,14 @@
  *@return 1 wenn weiß, 0 wenn schwarz, -1 sonst
  */
 int isWhite(int i, int j){
-    char piece = serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1];
-    if(piece =='w' || piece =='W'){
-      return 1;
-    }else if(piece =='b' || piece =='B'){
-      return 0;
-    }else{
-      return -1;
-    }
+  char piece = serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1];
+  if(piece =='w' || piece =='W'){
+    return 1;
+  }else if(piece =='b' || piece =='B'){
+    return 0;
+  }else{
+    return -1;
+  }
 }
 
 /**
@@ -76,13 +76,20 @@ char inttocolumn(int col){
 void printfield(void){
   char out[BUFFERLENGTH];
   char buf[BUFFERLENGTH];
-
+/*
   char w[] = " \u26C0";
   char W[] = " \u26C1";
   char b[] = " \u26C2";
   char B[] = " \u26C3";
   char bField[] = " \u25FC";
   char wField[] = " \u25FB";
+*/
+  char w[] = " w";
+  char W[] = " W";
+  char b[] = " b";
+  char B[] = " B";
+  char bField[] = " -";
+  char wField[] = " .";
 
   strcat(out, "\n");
   strcat(out,"    A B C D E F G H\n");                                                                //Spielfeld Beschriftung oben
