@@ -23,6 +23,8 @@ extern struct serverinfo *serverinfo;                                           
 void think(int sig);
 char **bestMove(int i, int j);
 char *bestMoveAll(int playernr);
-char *maxWeightMove(char ***moves);
+char *maxWeightMove(char ***moves,int pieces);
+char ***calcPossibleMoves(int i, int j);
+int calcWeight(char *move);
 
 #endif
