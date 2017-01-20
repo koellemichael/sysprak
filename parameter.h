@@ -10,6 +10,7 @@
 #define HOSTNAME "sysprak.priv.lab.nm.ifi.lmu.de"                               //Konstante HOSTNAME definieren
 #define BUFFERLENGTH 2048                                                       //Konstante für die std Puffergröße definieren
 #define BUFFERLENGTH_MOVE 25                                                    //Konstante für die Puffergröße eines Spielzugs definieren
+#define BUFFERLENGTH_MAXPIECES 12                                               //Konstante für die maximale Anzahl an Steinen eines Spielers
 #define VERSION "2.3"                                                           //TODO provisorische Konstante
 #define ROWS 8                                                                  //Konstante für die Reihen des Spielfelds
 #define COLUMNS 8                                                               //Konstante für die Spalten des Spielfelds
