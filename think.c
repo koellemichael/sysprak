@@ -6,10 +6,11 @@ void think(int sig){
     printfield();
     //move = "A3:B4\0";
     move = "\0";
-    if((write (fd[1], move, 5)) != 5){
+
+    if((write (fd[1], move, 25)) != 25){                    //schreibt in die Pipe; höchstens 12 sprünge möglich
         perror("Error trying to write into the pipe");
         exit (EXIT_FAILURE);
     }
     serverinfo->startcalc = 0;
   }
-}
+} 
