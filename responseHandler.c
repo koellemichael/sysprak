@@ -188,17 +188,12 @@ char *handle(char *request){
     response = NULL;
     return response;
   }else if(match(request,"OKTHINK")){
-    char* playmove;
-    
-    //char* nextmove = malloc(sizeof(char)*5);
-    //memset(nextmove, 0, 5);                                                     //TODO FEhler wenn spielzugberechnung länger dauert als der server okthink schickt
-    char* play = malloc(sizeof(char)*5 + sizeof(char)*BUFFERLENGTH_MOVE);
-    playmove = strcpy(play, "PLAY ");
-    playmove = strcat(play, nextmove);
-    strcpy(response, playmove);
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;
+    rdy = 1;
     strcpy(out,"Make a move");
-    free(play);                                                                 //Setze Antwort auf "NULL"
-    free (nextmove);
   }else if(match(request,"ENDPIECESLIST") && command == 1){                     //Wenn Anfrage des Servers übereinstimmt
     strcpy(response,"THINKING");
     serverinfo->startcalc = 1;
