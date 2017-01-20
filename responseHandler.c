@@ -168,7 +168,7 @@ char *handle(char *request){
     char *srow = substring(request, strlen(request)-1, strlen(request));
     char *content = substring(request, 0, strlen(request)-3);
 
-    strcpy(serverinfo->field[ROWS-(atoi(srow))][columntoint(*scolumn)],content);
+    strcat(serverinfo->field[ROWS-(atoi(srow))][columntoint(*scolumn)],content);
 
     if(out!=NULL){
       free(out);
