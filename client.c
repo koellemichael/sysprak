@@ -13,17 +13,16 @@ int main (int argc, char **argv){
   shmid_shmid_player = createSHM(BUFFERLENGTH*sizeof(int));                     //Shared Memory erstellen, in diesem Segment werden die shmids der einzelnen Players
   signal(SIGUSR1, think);
   signal(SIGUSR2, attachPlayers);
-
   if(argc<2){                                                                   //Test: Wird eine Game-ID übergeben
     perror("No game id");                                                       //Keine Game-ID vorhanden
     exit(EXIT_FAILURE);                                                         //Programm beenden
-  }else if (strlen(argv[1])!=13){                                               //Ist die Game-ID 13-stellig
+  }else if (strlen(argv[5])!=13){                                               //Ist die Game-ID 13-stellig
       perror("Invalid game id");                                                //Game-ID zu kurz oder zu lang
       exit(EXIT_FAILURE);                                                       //Programm beenden
   }else{                                                                        //13-stellige Game-ID übergeben
      printLogo();
-     gameid=argv[1];                                                            //kopieren des Strings nach gameid
-     while((c = getopt(argc, argv, ":p:f:")) != -1){                            //(optind = Index des Arguments) iteriert durch alle Argumente                           //Parsed die mit flag besetzten Kommandozeilenargumente, bis alle durch sind (dann retval -1)
+     gameid=argv[5];                                                            //kopieren des Strings nach gameid
+     while((c = getopt(argc, argv, ":p:f:")) != -1){                            //(optind = Index des Arguments) iteriert durch alle Argumente
        switch(c){
          case 'p': if(strcmp(optarg,"")!=0){
                      player = optarg;                                           //p-flag: Wert des Players wird aus der Kommandozeile übernommen
