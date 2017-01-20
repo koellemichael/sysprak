@@ -21,5 +21,8 @@ extern struct serverinfo *serverinfo;                                           
 
 //Funktionen deklarieren
 void think(int sig);
+char **bestMove(int i, int j);
+char *bestMoveAll(int playernr);
+char *maxWeightMove(char ***moves);
 
 #endif
