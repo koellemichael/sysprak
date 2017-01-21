@@ -54,7 +54,7 @@ int isFieldEmpty(int i, int j){
  *@param i Spaltenindex
  *@return 1 wenn Dame, 0 wenn keine Dame, -1 sonst
  */
-int isDraught(int i, int j){
+int isQueen(int i, int j){
   char piece = serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1];
     if(piece =='w' || piece =='b'){
       return 0;
