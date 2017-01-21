@@ -35,6 +35,37 @@ int isBlack(int i, int j){
 }
 
 /**
+ *Prüft ob ein Stein an der Stelle (i,j) ist.
+ *@param i Zeilenindex
+ *@param i Spaltenindex
+ *@return 1 Feld frei, 0 wenn besetzt
+ */
+int isFieldEmpty(int i, int j){
+  if((!strcmp(serverinfo->field[i][j],"")){
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+/**
+ *Prüft ob ein Stein an der Stelle (i,j) ist eine Dame ist.
+ *@param i Zeilenindex
+ *@param i Spaltenindex
+ *@return 1 wenn Dame, 0 wenn keine Dame, -1 sonst
+ */
+int isDraught(int i, int j){
+  char piece = serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1];
+    if(piece =='w' || piece =='b'){
+      return 0;
+    }else if(piece =='W' || piece =='b'){
+      return 1;
+    }else{
+      return -1;
+    }
+}
+
+/**
  * Rechnet die A-H Indizes in Zahlen um.
  */
 int columntoint(char column){
@@ -103,7 +134,7 @@ void printfield(void){
       }else if((!strcmp(serverinfo->field[i][j],""))&&((i%2==1&&j%2==0)||(i%2==0&&j%2==1))){          //Spielfeld-Quadrate als Striche
         strcat(out,bField);
       }else{
-        if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='w'){                       //Weißer Stein wenn 'w' im Array
+        if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='w'){                         //Weißer Stein wenn 'w' im Array
           strcat(out, w);
         }else if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='W'){                   //Weiße Dame wenn 'W' im Array
           strcat(out, W);
