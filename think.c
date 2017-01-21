@@ -136,8 +136,8 @@ char ***calcPossibleMoves(int i, int j){
         possibleMoves[z][1] = malloc(sizeof(int));
 
         //TODO nach den möglichen Zügen schauen und die Gewichtung vergeben
-
-        sprintf(possibleMoves[z][0], "%c%i:%s", inttocolumn(i),j,"00");
+        
+        sprintf(possibleMoves[z][0], "%c%i:%s", inttocolumn(j),COLUMNS-i,"00");
         sprintf(possibleMoves[z][1], "%i",JUMP);
         z++;
       }
