@@ -15,6 +15,10 @@
 #define ROWS 8                                                                  //Konstante für die Reihen des Spielfelds
 #define COLUMNS 8                                                               //Konstante für die Spalten des Spielfelds
 
+//Gewichtungen
+#define JUMP 500
+#define MOVE 5
+
 //Funktionen definieren
 void printLogo(void);
 
