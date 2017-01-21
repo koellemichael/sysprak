@@ -41,7 +41,7 @@ int isBlack(int i, int j){
  *@return 1 Feld frei, 0 wenn besetzt
  */
 int isFieldEmpty(int i, int j){
-  if((!strcmp(serverinfo->field[i][j],"")){
+  if((!strcmp(serverinfo->field[i][j],""))){
     return 1;
   } else {
     return 0;
