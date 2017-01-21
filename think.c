@@ -34,7 +34,7 @@ char **bestMove(int i, int j){
   int maxIndex = 0;
   int max = 0;
   int x = 0;
-  for(x = 0; x<BUFFERLENGTH_MOVE;x++){
+  for(x = 0; x<(int)(sizeof(possibleMoves)/sizeof(char));x++){
     if(atoi(possibleMoves[x][1])>max){
       maxIndex = x;
     }
@@ -43,7 +43,7 @@ char **bestMove(int i, int j){
   strcpy(move[1], possibleMoves[maxIndex][1]);
 
   //Speicher freigeben
-  for(int y = 0; y<BUFFERLENGTH_MOVE;y++){
+  for(int y = 0; y<(int)(sizeof(possibleMoves)/sizeof(char));y++){
     free(possibleMoves[y][0]);
     free(possibleMoves[y][1]);
   }
@@ -52,7 +52,7 @@ char **bestMove(int i, int j){
   }
   free(possibleMoves);
 
-  printf("Move:%s Weight: %s\n",move[0],move[1]);
+  printf("Move: \"%s\" Weight: %s\n",move[0],move[1]);
   return move;
 }
 
@@ -124,29 +124,25 @@ char ***calcPossibleMoves(int i, int j){
   printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
   char ***possibleMoves = malloc(sizeof(char*)*BUFFERLENGTH_MOVE);
 
-  for(int x = 0; x<BUFFERLENGTH_MOVE;x++){
-    possibleMoves[x] = malloc(sizeof(char*)*2);
-    possibleMoves[x][0] = malloc(sizeof(char*)*BUFFERLENGTH_MOVE);
-    possibleMoves[x][1] = malloc(sizeof(int));
+  int z = 0; //Zählvariable für die möglichen Züge im Array
+  for(int x = -1; x<2;x++){
+    for(int y = -1; y<2;y++){
+      if(!(x==0&&y==0)){
 
-    //TODO Hier alle möglichen Spielzüge berechnen und pro Spielzug in das Array kopieren,
+        //TODO schauen das es nicht über die Ränder hinaus überprüft
 
-    strcpy(possibleMoves[x][0],"testmove");
-    sprintf(possibleMoves[x][1], "%i", calcWeight(possibleMoves[x][0]));
+        possibleMoves[z] = malloc(sizeof(char*)*2);
+        possibleMoves[z][0] = malloc(sizeof(char*)*BUFFERLENGTH_MOVE);
+        possibleMoves[z][1] = malloc(sizeof(int));
+
+        //TODO nach den möglichen Zügen schauen und die Gewichtung vergeben
+
+        sprintf(possibleMoves[z][0], "%c%i:%s", inttocolumn(i),j,"00");
+        sprintf(possibleMoves[z][1], "%i",JUMP);
+        z++;
+      }
+    }
   }
+
   return possibleMoves;
-}
-
-/**
- * Berechnet die Gewichtung für einen gegebenen Zug
- * @param move Spielzug als String
- * @return Die Gewichtung des Zugs
- */
-int calcWeight(char *move){
-  (void)move;
-  //printf("Calculating weight für possible move %s\n",move);
-
-  //TODO Für einen Spielzug Gewichtung ausrechnen
-
-  return 0;
 }
