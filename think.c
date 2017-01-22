@@ -34,22 +34,28 @@ char **bestMove(int i, int j){
   int maxIndex = 0;
   int max = 0;
   int x = 0;
-  for(x = 0; x<(int)(sizeof(possibleMoves)/sizeof(char));x++){
+  for(x = 0; x<p;x++){
+
     if(atoi(possibleMoves[x][1])>max){
       maxIndex = x;
     }
   }
+
   strcpy(move[0], possibleMoves[maxIndex][0]);
   strcpy(move[1], possibleMoves[maxIndex][1]);
 
+
   //Speicher freigeben
-  for(int y = 0; y<(int)(sizeof(possibleMoves)/sizeof(char));y++){
+  for(int y = 0; y<p;y++){
     free(possibleMoves[y][0]);
     free(possibleMoves[y][1]);
   }
-  for(int y = 0; y<2;y++){
-    free(possibleMoves[y]);
+
+  for(int y = 0; y<p;y++){
+    if(possibleMoves[y]!=NULL)
+      free(possibleMoves[y]);
   }
+
   free(possibleMoves);
 
   printf("Move: \"%s\" Weight: %s\n",move[0],move[1]);
@@ -123,26 +129,24 @@ char *maxWeightMove(char ***moves,int pieces){
 char ***calcPossibleMoves(int i, int j){
   printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
   char ***possibleMoves = malloc(sizeof(char*)*BUFFERLENGTH_MOVE);
-
-  int z = 0; //Zählvariable für die möglichen Züge im Array
+  p = 0; //Zählvariable für die möglichen Züge im Array
   for(int x = -1; x<2;x++){
     for(int y = -1; y<2;y++){
-      if(!(x==0&&y==0)){
-
+      if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-i+x)>=0 && (j+y)>=0 && (COLUMNS-1-i+x)<=COLUMNS && (j+y)<=ROWS){
+        printf("Moves: %i\n",p);
         //TODO schauen das es nicht über die Ränder hinaus überprüft
 
-        possibleMoves[z] = malloc(sizeof(char*)*2);
-        possibleMoves[z][0] = malloc(sizeof(char*)*BUFFERLENGTH_MOVE);
-        possibleMoves[z][1] = malloc(sizeof(int));
+        possibleMoves[p] = malloc(sizeof(char*)*2);
+        possibleMoves[p][0] = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
+        possibleMoves[p][1] = malloc(sizeof(char));
 
         //TODO nach den möglichen Zügen schauen und die Gewichtung vergeben
-        
-        sprintf(possibleMoves[z][0], "%c%i:%s", inttocolumn(j),COLUMNS-i,"00");
-        sprintf(possibleMoves[z][1], "%i",JUMP);
-        z++;
+
+        sprintf(possibleMoves[p][0], "%c%i:%s", inttocolumn(j),COLUMNS-i,"00");
+        sprintf(possibleMoves[p][1], "%i",JUMP);
+        p++;
       }
     }
   }
-
   return possibleMoves;
 }

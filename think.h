@@ -14,6 +14,7 @@
 
 //Variablen einbinden
 char* move;
+int p;
 
 //Externe Variablen
 extern int fd[2];
@@ -25,6 +26,6 @@ char **bestMove(int i, int j);
 char *bestMoveAll(int playernr);
 char *maxWeightMove(char ***moves,int pieces);
 char ***calcPossibleMoves(int i, int j);
-int calcWeight(char *move);
+
 
 #endif
