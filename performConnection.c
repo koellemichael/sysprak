@@ -37,6 +37,7 @@ void performConnection(int sock){
         processAndSendResponse(buffer, sock);
       }
 
+      //TODO nachdem einmal was in die Pipe geschrieben wurde, gibt FD_ISSET permanent !=0 zurück was dazu führt dass der nächste zug "" ist
       if(pipeData!=0&&rdy){                                                     //Wenn etwas ansteht, dann..Aus der Pipe lesen
         char *move = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
         memset(move,0, BUFFERLENGTH_MOVE);
@@ -47,7 +48,6 @@ void performConnection(int sock){
           rdy = 0;
         }
       }
-
     }
 
   }while(end);                                                                  //Nehme solange Antworten vom Server entgegen bis Server "+ ENDPLAYERS" antwortet
