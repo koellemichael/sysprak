@@ -10,7 +10,7 @@ void think(int sig){
     //strcat(move, "\n");
     //move = "\0";
 
-    if((write (fd[1], move, 25)) != 25){                    //schreibt in die Pipe; höchstens 12 sprünge möglich
+    if((write (fd[1], move, sizeof(move))) != sizeof(move)){                    //schreibt in die Pipe; höchstens 12 sprünge möglich
         perror("Error trying to write into the pipe");
         exit (EXIT_FAILURE);
     }
