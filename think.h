@@ -25,5 +25,6 @@ char **bestMove(int i, int j);
 char *bestMoveAll(int playernr);
 char *maxWeightMove(char ***moves,int pieces);
 char ***calcPossibleMoves(int i, int j);
+void jump (int i, int j, char ***possibleMoves, int p);
 
 #endif

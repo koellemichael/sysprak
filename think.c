@@ -152,12 +152,12 @@ char ***calcPossibleMoves(int i, int j){
                       //printf("springbar\n");
                       sprintf(possibleMoves[p][0], "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                       sprintf(possibleMoves[p][1], "%i",JUMP);
-                      jump(i+(2*x), j+(2*y)), possibleMoves , p);
+                      jump(i+(2*x), j+(2*y), possibleMoves , p);
                       p++;
                     }
                     break;
           case -1:  //printf("%c%i Leeres Feld %i\n",inttocolumn(j+y),COLUMNS-(i+x),i>(i+x));
-                    if(i>(i+x)){
+                    if((i>(i+x) && serverinfo->clientplayernr == 0)||(i<(i+x) && serverinfo->clientplayernr == 1)){
                       sprintf(possibleMoves[p][0], "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
                       sprintf(possibleMoves[p][1], "%i",MOVE);
                       p++;
@@ -177,22 +177,21 @@ char ***calcPossibleMoves(int i, int j){
 
 
 void jump (int i, int j, char ***possibleMoves, int p){
+  printf("jump\n");
   for(int x = -1; x<2;x++){
     for(int y = -1; y<2;y++){
       if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-(i+x))>0 && (j+y)>0 && (COLUMNS-1-(i+x))<COLUMNS && (j+y)<ROWS){
-        possibleMoves[p] = malloc(sizeof(char*)*2);                             //Speicher allokieren notwendig????
-        possibleMoves[p][0] = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
-        possibleMoves[p][1] = malloc(sizeof(char));
         switch (isAlly(i+x,j+y)) {
           case 0:   //printf("%c%i Gegner Stein\n",inttocolumn(j+y),COLUMNS-(i+x));
                     if(isFieldEmpty(i+(2*x), j+(2*y))){
                       //printf("springbar\n");
-                      char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);     //eigentlich weniger oder??
+                      char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
                       sprintf(onemore, ":%c%i",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                       strcat(possibleMoves[p][0], onemore);
+                      free(onemore);
                       sprintf(possibleMoves[p][1], "%i",atoi(possibleMoves[p][1])+JUMP);
-                      free (onemore);
-                      jump(i+(2*x), j+(2*y)));
+                      printf("jump2\n");
+                      jump(i+(2*x), j+(2*y), possibleMoves, p);
                     }
                     break;
           case -1:  //printf("%c%i Leeres Feld %i\n",inttocolumn(j+y),COLUMNS-(i+x),i>(i+x));
