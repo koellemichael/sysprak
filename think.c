@@ -134,8 +134,7 @@ char ***calcPossibleMoves(int i, int j){
     for(int y = -1; y<2;y++){
       if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-i+x)>=0 && (j+y)>=0 && (COLUMNS-1-i+x)<=COLUMNS && (j+y)<=ROWS){
         printf("Moves: %i\n",p);
-        //TODO schauen das es nicht über die Ränder hinaus überprüft
-
+        
         possibleMoves[p] = malloc(sizeof(char*)*2);
         possibleMoves[p][0] = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
         possibleMoves[p][1] = malloc(sizeof(char));
