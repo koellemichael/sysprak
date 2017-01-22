@@ -25,8 +25,8 @@ void performConnection(int sock){
       perror("select()");
       exit(EXIT_FAILURE);
     }else if(retval){
-      int pipeData = FD_ISSET(fd[0], &readfds);                                 //ISSET testet, ob an DIESER PIPE etwas ansteht
-      int socketData = FD_ISSET(sock, &readfds);
+      pipeData = FD_ISSET(fd[0], &readfds);                                 //ISSET testet, ob an DIESER PIPE etwas ansteht
+      socketData = FD_ISSET(sock, &readfds);
 
       if(socketData!=0){                                                        //Wenn etwas ansteht, dann..
         char *buffer = malloc(BUFFERLENGTH*sizeof(char));                       //Speicher für Puffervariable allokalisieren
@@ -47,7 +47,7 @@ void performConnection(int sock){
           sendMove(move, sock);
           rdy = 0;
         }
-      }
+      } 
     }
 
   }while(end);                                                                  //Nehme solange Antworten vom Server entgegen bis Server "+ ENDPLAYERS" antwortet

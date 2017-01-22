@@ -23,6 +23,8 @@ fd_set readfds;                                                                 
 struct timeval tv;                                                              //Struct für die Zeitslots, in denen überwacht wird
 int retval;                                                                     //return value der Select Methode
 int rdy;
+int pipeData;                                                                   //prüft ob Daten anstehen
+int socketData;
 //Funktionen deklarieren
 void performConnection(int sock);                                               //Handelt den Prolog mit dem Server ab
 void sendResponse(char *response, int sock);
