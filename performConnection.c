@@ -30,7 +30,7 @@ void performConnection(int sock){
 
       if(socketData!=0){                                                        //Wenn etwas ansteht, dann..
         char *buffer = malloc(BUFFERLENGTH*sizeof(char));                       //Speicher für Puffervariable allokalisieren
-        memset(buffer,0, BUFFERLENGTH);                                         //Puffer leeren
+        memset(buffer,0, strlen(buffer));                                         //Puffer leeren
         if((read(sock, buffer, BUFFERLENGTH)) < 0){                             //Lese nächsten Spielzug aus der Pipe
           perror("Couldn't read from socket");                                  //Error, wenn aus der Pipe nicht gelesen werden konnte
         }
@@ -40,7 +40,7 @@ void performConnection(int sock){
       //TODO nachdem einmal was in die Pipe geschrieben wurde, gibt FD_ISSET permanent !=0 zurück was dazu führt dass der nächste zug "" ist
       if(pipeData!=0&&rdy){                                                     //Wenn etwas ansteht, dann..Aus der Pipe lesen
         char *move = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
-        memset(move,0, BUFFERLENGTH_MOVE);
+        memset(move,0, strlen(move));
         if((read(fd[0], move, sizeof(move))) < 0){                              //Lese nächsten Spielzug aus der Pipe
           perror("Couldn't read from pipe");                                    //Error, wenn aus der Pipe nicht gelesen werden konnte
         }else {
@@ -55,7 +55,7 @@ void performConnection(int sock){
 
 void sendMove(char *move, int sock){
   char *response = malloc((sizeof(char)*BUFFERLENGTH_MOVE)+sizeof(move));
-  memset(response, 0, sizeof(move));
+  memset(response, 0, strlen(move));
   strcpy(response, "PLAY ");
   strcat(response,move);
   strcat(response,"\n");
