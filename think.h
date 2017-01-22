@@ -13,7 +13,6 @@
 #include "field.h"
 
 //Variablen einbinden
-char* move;
 int p;
 
 //Externe Variablen
@@ -26,6 +25,5 @@ char **bestMove(int i, int j);
 char *bestMoveAll(int playernr);
 char *maxWeightMove(char ***moves,int pieces);
 char ***calcPossibleMoves(int i, int j);
-
 
 #endif

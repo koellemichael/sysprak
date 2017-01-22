@@ -7,13 +7,14 @@ void think(int sig){
     //move = "A3:B4\0";
     char *move = bestMoveAll(serverinfo->clientplayernr);
     printf("Spielzug: %s\n", move);
-    free(move);
-    move = "\0";
+    //strcat(move, "\n");
+    //move = "\0";
 
     if((write (fd[1], move, 25)) != 25){                    //schreibt in die Pipe; höchstens 12 sprünge möglich
         perror("Error trying to write into the pipe");
         exit (EXIT_FAILURE);
     }
+    free(move);
     serverinfo->startcalc = 0;
   }
 }
@@ -25,25 +26,28 @@ void think(int sig){
  * @return Array das den Spielzug und die dazugehörige Gewichtung enthält
  */
 char **bestMove(int i, int j){
-  char **move = malloc(sizeof(char*)*2);
-  move[0] = malloc(sizeof(char)*BUFFERLENGTH_MOVE); //MOVE STRING
-  move[1] = malloc(sizeof(char)*BUFFERLENGTH_MOVE); //GEWICHTUNG
   //Gültige Möglichkeiten für Stein(i,j)
+  char **move = NULL;
   char ***possibleMoves = calcPossibleMoves(i,j);
-  //maximum der gewichtung der gültigen möglichkeiten
-  int maxIndex = 0;
-  int max = 0;
-  int x = 0;
-  for(x = 0; x<p;x++){
-
-    if(atoi(possibleMoves[x][1])>max){
-      maxIndex = x;
+  //Wenn es mind. einen möglichen Zug gibt
+  if(p>0){
+    //maximum der gewichtung der gültigen möglichkeiten
+    int maxIndex = 0;
+    int max = 0;
+    int x = 0;
+    for(x = 0; x<p;x++){
+      if(atoi(possibleMoves[x][1])>max){
+        max = atoi(possibleMoves[x][1]);
+        maxIndex = x;
+      }
     }
+    move = malloc(sizeof(char*)*2);
+    move[0] = malloc(sizeof(char)*BUFFERLENGTH_MOVE); //MOVE STRING
+    move[1] = malloc(sizeof(char)*BUFFERLENGTH_MOVE); //GEWICHTUNG
+    strcpy(move[0], possibleMoves[maxIndex][0]);
+    strcpy(move[1], possibleMoves[maxIndex][1]);
+    printf("Move: \"%s\" Weight: %s\n",move[0],move[1]);
   }
-
-  strcpy(move[0], possibleMoves[maxIndex][0]);
-  strcpy(move[1], possibleMoves[maxIndex][1]);
-
 
   //Speicher freigeben
   for(int y = 0; y<p;y++){
@@ -58,7 +62,6 @@ char **bestMove(int i, int j){
 
   free(possibleMoves);
 
-  printf("Move: \"%s\" Weight: %s\n",move[0],move[1]);
   return move;
 }
 
@@ -99,20 +102,26 @@ char *maxWeightMove(char ***moves,int pieces){
   int maxIndex = 0;
   int max = 0;
   for(int i = 0; i<pieces;i++){
-    if(atoi(moves[i][1])>max){
-      maxIndex = i;
+    if(moves[i]!=NULL){
+      if(atoi(moves[i][1])>max){
+        max = atoi(moves[i][1]);
+        maxIndex = i;
+      }
     }
   }
+
   char *bestmove = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
   strcpy(bestmove, *moves[maxIndex]);
-
   //Speicher freigeben
   for(int i = 0; i<pieces;i++){
-    free(moves[i][0]);
-    free(moves[i][1]);
+    if(moves[i]!=NULL){
+      free(moves[i][0]);
+      free(moves[i][1]);
+    }
   }
   for(int i = 0; i<2;i++){
-    free(moves[i]);
+    if(moves[i]!=NULL)
+      free(moves[i]);
   }
   free(moves);
 
@@ -132,18 +141,34 @@ char ***calcPossibleMoves(int i, int j){
   p = 0; //Zählvariable für die möglichen Züge im Array
   for(int x = -1; x<2;x++){
     for(int y = -1; y<2;y++){
-      if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-i+x)>=0 && (j+y)>=0 && (COLUMNS-1-i+x)<=COLUMNS && (j+y)<=ROWS){
-        printf("Moves: %i\n",p);
-        
+      if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-(i+x))>0 && (j+y)>0 && (COLUMNS-1-(i+x))<COLUMNS && (j+y)<ROWS){
         possibleMoves[p] = malloc(sizeof(char*)*2);
         possibleMoves[p][0] = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
         possibleMoves[p][1] = malloc(sizeof(char));
-
         //TODO nach den möglichen Zügen schauen und die Gewichtung vergeben
-
-        sprintf(possibleMoves[p][0], "%c%i:%s", inttocolumn(j),COLUMNS-i,"00");
-        sprintf(possibleMoves[p][1], "%i",JUMP);
-        p++;
+        switch (isAlly(i+x,j+y)) {
+          case 0:   //printf("%c%i Gegner Stein\n",inttocolumn(j+y),COLUMNS-(i+x));
+                    if(isFieldEmpty(i+(2*x), j+(2*y))){
+                      //printf("springbar\n");
+                      sprintf(possibleMoves[p][0], "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
+                      sprintf(possibleMoves[p][1], "%i",JUMP);
+                      p++;
+                      //TODO prüfen ob man noch mal springen kann
+                    }
+                    break;
+          case -1:  //printf("%c%i Leeres Feld %i\n",inttocolumn(j+y),COLUMNS-(i+x),i>(i+x));
+                    if(i>(i+x)){
+                      sprintf(possibleMoves[p][0], "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
+                      sprintf(possibleMoves[p][1], "%i",MOVE);
+                      p++;
+                    }
+                    break;
+          case 1:   //printf("%c%i Unser Stein\n",inttocolumn(j+y),COLUMNS-(i+x));
+                    break;
+          default:  perror("Unknown piece");
+                    exit(EXIT_FAILURE);
+                    break;
+        }
       }
     }
   }
