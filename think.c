@@ -141,7 +141,7 @@ char ***calcPossibleMoves(int i, int j){
   p = 0; //Zählvariable für die möglichen Züge im Array
   for(int x = -1; x<2;x++){
     for(int y = -1; y<2;y++){
-      if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-(i+x))>0 && (j+y)>0 && (COLUMNS-1-(i+x))<COLUMNS && (j+y)<ROWS){ //TODO überprüfen der Ränder (oben hat nicht gestimmt)
+      if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-(i+x))>0 && (j+y)>0 && (COLUMNS-(i+x))<COLUMNS && (j+y)<ROWS){
         possibleMoves[p] = malloc(sizeof(char*)*2);
         possibleMoves[p][0] = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
         possibleMoves[p][1] = malloc(sizeof(char));
@@ -180,18 +180,18 @@ void jump (int i, int j, char ***possibleMoves, int p){
   printf("jump\n");
   for(int x = -1; x<2;x++){
     for(int y = -1; y<2;y++){
-      if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-(i+x))>0 && (j+y)>0 && (COLUMNS-1-(i+x))<COLUMNS && (j+y)<ROWS){ //TODO überprüfen der Ränder (oben hat nicht gestimmt)
-        switch (isAlly(i+x,j+y)) {
+      if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-(i+x))>0 && (j+y)>0 && (COLUMNS-(i+x))<COLUMNS && (j+y)<ROWS){
           case 0:   printf("%c%i Gegner Stein\n",inttocolumn(j+y),COLUMNS-(i+x));
                     if(isFieldEmpty(i+(2*x), j+(2*y))){
                       printf("springbar\n");
-                      char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);   //TODO Datenmüll entfernen
+                      char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
+                      memset(onemore, 0, strlen(onemore));
                       sprintf(onemore, ":%c%i",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                       strcat(possibleMoves[p][0], onemore);
                       free(onemore);
                       sprintf(possibleMoves[p][1], "%i",atoi(possibleMoves[p][1])+JUMP);
                       printf("jump2\n");
-                      sprintf(serverinfo->field[i][j], " ");
+                      sprintf(serverinfo->field[i][j], " s");
                       jump(i+(2*x), j+(2*y), possibleMoves, p);
                     }
                     break;
