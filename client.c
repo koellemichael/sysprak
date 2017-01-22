@@ -82,6 +82,7 @@ int main (int argc, char **argv){
       performConnection(sock);
 
       //Schliesst das Socket
+      close(fd[0]);
       close(sock);
   } else {                                                                      //Elternprozess: Prozess-ID > 0
     //THINKER
@@ -99,7 +100,7 @@ int main (int argc, char **argv){
       perror("Error while waiting for childprocess");
       exit(EXIT_FAILURE);
     }
-
+    close(fd[1]);
   }
   exit(EXIT_SUCCESS);
 }
