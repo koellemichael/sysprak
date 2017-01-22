@@ -182,21 +182,22 @@ void jump (int i, int j, char ***possibleMoves, int p){
     for(int y = -1; y<2;y++){
       if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-(i+x))>0 && (j+y)>0 && (COLUMNS-1-(i+x))<COLUMNS && (j+y)<ROWS){
         switch (isAlly(i+x,j+y)) {
-          case 0:   //printf("%c%i Gegner Stein\n",inttocolumn(j+y),COLUMNS-(i+x));
+          case 0:   printf("%c%i Gegner Stein\n",inttocolumn(j+y),COLUMNS-(i+x));
                     if(isFieldEmpty(i+(2*x), j+(2*y))){
-                      //printf("springbar\n");
+                      printf("springbar\n");
                       char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
                       sprintf(onemore, ":%c%i",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                       strcat(possibleMoves[p][0], onemore);
                       free(onemore);
                       sprintf(possibleMoves[p][1], "%i",atoi(possibleMoves[p][1])+JUMP);
                       printf("jump2\n");
+                      sprintf(serverinfo->field[i][j], " ");
                       jump(i+(2*x), j+(2*y), possibleMoves, p);
                     }
                     break;
-          case -1:  //printf("%c%i Leeres Feld %i\n",inttocolumn(j+y),COLUMNS-(i+x),i>(i+x));
+          case -1:  printf("%c%i Leeres Feld %i\n",inttocolumn(j+y),COLUMNS-(i+x),i>(i+x));
                     break;
-          case 1:   //printf("%c%i Unser Stein\n",inttocolumn(j+y),COLUMNS-(i+x));
+          case 1:   printf("%c%i Unser Stein\n",inttocolumn(j+y),COLUMNS-(i+x));
                     break;
           default:  perror("Unknown piece");
                     exit(EXIT_FAILURE);
