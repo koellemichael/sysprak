@@ -66,6 +66,33 @@ int isQueen(int i, int j){
 }
 
 /**
+ *Prüft ob ein Stein an der Stelle (i,j) ein gegnerischer Stein ist.
+ *@param i Zeilenindex
+ *@param i Spaltenindex
+ *@return 1 Gegner, 0 wenn eigener Stein, sonst -1
+ */
+int isEnemy(int i, int j){
+  char piece = serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1];
+  if(serverinfo->clientplayernr==0){
+    if(piece =='w' || piece =='W'){
+      return 0;
+    }else if(piece =='b' || piece =='B'){
+      return 1;
+    }else{
+      return -1;
+    }
+  } else {
+    if(piece =='b' || piece =='B'){
+      return 0;
+    }else if(piece =='w' || piece =='W'){
+      return 1;
+    }else{
+      return -1;
+    }
+  }
+}
+
+/**
  * Rechnet die A-H Indizes in Zahlen um.
  */
 int columntoint(char column){
