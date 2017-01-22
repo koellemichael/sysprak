@@ -186,7 +186,16 @@ char *handle(char *request){
       free(response);
     }
     response = NULL;
-    return response;
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
+  }else if(match(request,"MOVE .+")){                                           //Übereinstimmung mit MOVE
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;
+    strcpy(out, "Valid turn!");
   }else if(match(request,"OKTHINK")){
     if(response!=NULL){
       free(response);
