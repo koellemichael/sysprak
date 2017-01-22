@@ -181,6 +181,7 @@ void jump (int i, int j, char ***possibleMoves, int p){
   for(int x = -1; x<2;x++){
     for(int y = -1; y<2;y++){
       if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-(i+x))>0 && (j+y)>0 && (COLUMNS-(i+x))<COLUMNS && (j+y)<ROWS){
+        switch (isAlly(i+x,j+y)) {
           case 0:   printf("%c%i Gegner Stein\n",inttocolumn(j+y),COLUMNS-(i+x));
                     if(isFieldEmpty(i+(2*x), j+(2*y))){
                       printf("springbar\n");
