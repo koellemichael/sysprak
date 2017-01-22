@@ -80,10 +80,10 @@ int isEnemy(int i, int j){
 }
 
 /**
- *Prüft ob ein Stein an der Stelle (i,j) ein gegnerischer Stein ist.
+ *Prüft ob ein Stein an der Stelle (i,j) ein verbündeter Stein ist.
  *@param i Zeilenindex
  *@param i Spaltenindex
- *@return 1 Gegner, 0 wenn eigener Stein, sonst -1
+ *@return 1 Verbündeter, 0 wenn gegnerischer Stein, sonst -1
  */
 int isAlly(int i, int j){
   if(serverinfo->clientplayernr==0){
@@ -206,5 +206,4 @@ void printfield(void){
   strcat(out,"\n");
 
   printf("%s",out);                                                                                 //Ausgabe des gesamten Strings
-
 }
