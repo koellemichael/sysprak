@@ -9,8 +9,12 @@ void think(int sig){
     printf("Spielzug: %s\n", move.move);
     //strcat(move, "\n");
     //move = "\0";
-
-    if((write (fd[1], move.move, sizeof(move.move))) != sizeof(move)){     //schreibt in die Pipe; höchstens 12 sprünge möglich
+    space = ' ';
+    shortMove = strtok(move.move, &space);
+    moveSize = strlen(shortMove);
+    //printf("Movesize: %d \n", moveSize);
+    //printf("strtok: %s\n", shortMove);
+    if(write (fd[1], shortMove, moveSize) != moveSize){     //schreibt in die Pipe; höchstens 12 sprünge möglich
         perror("Error trying to write into the pipe");
         exit (EXIT_FAILURE);
     }

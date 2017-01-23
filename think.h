@@ -14,6 +14,9 @@
 
 //Variablen einbinden
 int p;
+char space;                                                                     //Delimiter: Leeres Zeichen
+char* shortMove;                                                                //Move ohne Bufferspace danach
+int moveSize;                                                                   //Größe von Short move
 
 //Externe Variablen
 extern int fd[2];
