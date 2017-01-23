@@ -52,9 +52,14 @@ int main (int argc, char **argv){
     }
 
     //Struct befüllen mit den Werten zur Verbindung mit dem Server
-    cp.hostName = readConfiguration(paramNameHost);
+    char *bufHost = readConfiguration(paramNameHost);
+    strcpy(cp.hostName,bufHost);
+    free(bufHost);
+    char *bufGameKind = readConfiguration(paramNameGame);
+    strcpy(cp.gameKindName,bufGameKind);
+    free(bufGameKind);
     cp.portNumber = atoi(readConfiguration(paramNamePort));
-    cp.gameKindName = readConfiguration(paramNameGame);
+
   }
 
   //Unnamed Pipe einrichten, die zwischen Connector und Thinker laufen soll

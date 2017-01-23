@@ -27,7 +27,10 @@ char* readConfiguration(char* paramName){
    }
 
    fclose (file);                                                               //Schliessen der Konfig Datei
-   return substring;
+   char *value = malloc(sizeof(char)*BUFFERLENGTH);
+   strcpy(value, substring);
+   free(string);
+   return value;
 }
 
 /**

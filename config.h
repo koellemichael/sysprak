@@ -12,9 +12,9 @@
 
 //Struct definieren
 typedef struct{
-    char *hostName;
+    char hostName[BUFFERLENGTH];
     int portNumber;
-    char *gameKindName;
+    char gameKindName[BUFFERLENGTH];
 }configparams;
 
 //Externe Variablen deklarieren
