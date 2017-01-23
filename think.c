@@ -10,7 +10,7 @@ void think(int sig){
     //strcat(move, "\n");
     //move = "\0";
 
-    if((write (fd[1], move.move, sizeof(move.move))) != sizeof(move.move)){     //schreibt in die Pipe; höchstens 12 sprünge möglich
+    if((write (fd[1], move.move, sizeof(move.move))) != sizeof(move)){     //schreibt in die Pipe; höchstens 12 sprünge möglich
         perror("Error trying to write into the pipe");
         exit (EXIT_FAILURE);
     }
@@ -31,16 +31,17 @@ move bestMove(int i, int j){
 
   //Maximum der Gewichtung der gültigen Möglichkeiten
   if(possibleMoves.count>0){
-    int maxIndex = 0;
+    /*int maxIndex = 0;
     int max = 0;
     for(int x = 0; x<possibleMoves.count;x++){
       if(possibleMoves.moves[x].weight>max){
         max = possibleMoves.moves[x].weight;
         maxIndex = x;
       }
-    }
-    printf("Best move for %c%i is: \"%s\"  with weight: %i\n",inttocolumn(j),COLUMNS-i,possibleMoves.moves[maxIndex].move,possibleMoves.moves[maxIndex].weight);
-    return possibleMoves.moves[maxIndex];
+    }*/
+    move bestmove = maxWeightMove(possibleMoves);
+    //printf("Best move for %c%i is: \"%s\"  with weight: %i\n",inttocolumn(j),COLUMNS-i,possibleMoves.moves[maxIndex].move,possibleMoves.moves[maxIndex].weight);
+    return bestmove;
   }
 
   return *possibleMoves.moves;
@@ -83,9 +84,7 @@ move bestMoveAll(int playernr){
 move maxWeightMove(movearray moves){
   int maxIndex = 0;
   int max = 0;
-printf("test %i\n", moves.count);
   for(int i = 0; i<moves.count;i++){
-
     if(moves.moves[i].weight>max){
       max = moves.moves[i].weight;
       maxIndex = i;
@@ -109,27 +108,24 @@ movearray calcPossibleMoves(int i, int j){
   for(int x = -1; x<2;x++){
     for(int y = -1; y<2;y++){
       if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-(i+x))>0 && (j+y)>0 && (COLUMNS-(i+x))<COLUMNS && (j+y)<ROWS){
-        //TODO nach den möglichen Zügen schauen und die Gewichtung vergeben
         memset(possibleMoves.moves[p].move,0,strlen(possibleMoves.moves[p].move));
         possibleMoves.moves[p].weight = 0;
         switch (isAlly(i+x,j+y)) {
-          case 0:   //printf("%c%i Gegner Stein\n",inttocolumn(j+y),COLUMNS-(i+x));
-                    if(isFieldEmpty(i+(2*x), j+(2*y))){
+          case 0:   if(isFieldEmpty(i+(2*x), j+(2*y))){
                       sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                       possibleMoves.moves[p].weight = JUMP;
-                      jump(i+(2*x), j+(2*y), possibleMoves,p);
+                      jump(i+(2*x), j+(2*y), &possibleMoves,p);
+                      printf("test1 %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                       p++;
                     }
                     break;
-          case -1:  //printf("%c%i Leeres Feld %i\n",inttocolumn(j+y),COLUMNS-(i+x),i>(i+x));
-                    if((i>(i+x) && serverinfo->clientplayernr == 0)||(i<(i+x) && serverinfo->clientplayernr == 1)){
+          case -1:  if((i>(i+x) && serverinfo->clientplayernr == 0)||(i<(i+x) && serverinfo->clientplayernr == 1)){
                       sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
                       possibleMoves.moves[p].weight = MOVE;
                       p++;
                     }
                     break;
-          case 1:   //printf("%c%i Unser Stein\n",inttocolumn(j+y),COLUMNS-(i+x));
-                    break;
+          case 1:   break;
           default:  perror("Unknown piece");
                     exit(EXIT_FAILURE);
                     break;
@@ -142,7 +138,7 @@ movearray calcPossibleMoves(int i, int j){
 }
 
 
-void jump (int i, int j, movearray possibleMoves, int p){
+void jump (int i, int j, movearray *possibleMoves, int p){
   printf("jump\n");
   for(int x = -1; x<2;x++){
     for(int y = -1; y<2;y++){
@@ -150,15 +146,16 @@ void jump (int i, int j, movearray possibleMoves, int p){
       && (COLUMNS-1-(i+x))>0 && (j+y)>0
       && (COLUMNS-(i+x))<COLUMNS && (j+y)<ROWS
       && isAlly(i+x,j+y) == 0 && isFieldEmpty(i+(2*x), j+(2*y))){
+
         char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
         memset(onemore, 0, strlen(onemore));
-
         sprintf(onemore, ":%c%i",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
-        strcat(possibleMoves.moves[p].move, onemore);
-        free(onemore);
-        possibleMoves.moves[p].weight += JUMP;
+
+        strcat(possibleMoves->moves[p].move, onemore);
+        possibleMoves->moves[p].weight += JUMP;
 
         sprintf(serverinfo->field[i][j], " s");
+        free(onemore);
         jump(i+(2*x), j+(2*y), possibleMoves, p);
       }
     }

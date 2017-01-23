@@ -36,7 +36,7 @@ move maxWeightMove(movearray moves);
 movearray calcPossibleMoves(int i, int j);
 move bestMoveAll(int playernr);
 move bestMove(int i, int j);
-void jump (int i, int j, movearray possibleMoves, int p);
+void jump (int i, int j, movearray *possibleMoves, int p);
 
 
 
