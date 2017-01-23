@@ -47,9 +47,9 @@ void performConnection(int sock){
           sendMove(move, sock);
           rdy = 0;
         }
-      } 
+      }
     }
-
+    
   }while(end);                                                                  //Nehme solange Antworten vom Server entgegen bis Server "+ ENDPLAYERS" antwortet
 }
 
