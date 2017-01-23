@@ -213,29 +213,53 @@ char *handle(char *request){
     }
     out = NULL;
   }else if(match(request,"PLAYER0WON .+")){                                     //Hat Spieler 0 gewonnen
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
     char *wonzero = substring(request, 11, strlen(request));
     if (!strcmp(wonzero, "Yes")){
-      *won0 = 1;
+      won0 = 1;
+    }else {
+      won0 = 0;
     }
-    else won0 = 0;
     free(wonzero);
-  }else if(match(request,"PLAYER0WON .+")){                                     //Hat Spieler 1 gewonnen
-    char *wonone = substring(request, 11, strlen(request));
-    if (!strcmp(wonone, "Yes")){
-      *won1 = 1;
+  }else if(match(request,"PLAYER1WON .+")){                                     //Hat Spieler 1 gewonnen
+    if(response!=NULL){
+      free(response);
     }
-    else won1 = 0;
+    response = NULL;
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
+
+    char *wonone = substring(request, 11, strlen(request));
+
+    if (!strcmp(wonone, "Yes")){
+      won1 = 1;
+    }else {
+      won1 = 0;
+    }
+
     free(wonone);
   }else if (match(request, "QUIT")){                                            //Ausgabe Gewinner
-    if(*won0==1 && *won1==0){
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;
+
+    if(won0 && !won1){
       strcpy(out, "Player 0 won the game!");                                    //Spieler 0 hat gewonnen
-    } else if(*won0==0 && *won1==1){
+    } else if(!won0 && won1){
       strcpy(out, "Player 1 won the game!");                                    //Spieler 1 hat gewonnen
     } else {
       strcpy(out, "The game ended in a draw.");                                 //Unentschieden
-    }
-    free(won0);
-    free(won1);                                                                 //TODO Verbindung zum Server beenden!
+    }                                                                           //TODO Verbindung zum Server beenden!
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
       free(response);
