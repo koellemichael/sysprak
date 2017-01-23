@@ -19,12 +19,25 @@ int p;
 extern int fd[2];
 extern struct serverinfo *serverinfo;                                           //Globales struct für die Serverinfos
 
+typedef struct {
+  char move[BUFFERLENGTH_MOVE];
+  int weight;
+}move;
+
+typedef struct {
+  move moves[BUFFERLENGTH];
+  int count;
+}movearray;
+
+
 //Funktionen deklarieren
 void think(int sig);
-char **bestMove(int i, int j);
-char *bestMoveAll(int playernr);
-char *maxWeightMove(char ***moves,int pieces);
-char ***calcPossibleMoves(int i, int j);
-void jump (int i, int j, char ***possibleMoves, int p);
+move maxWeightMove(movearray moves);
+movearray calcPossibleMoves(int i, int j);
+move bestMoveAll(int playernr);
+move bestMove(int i, int j);
+void jump (int i, int j, movearray possibleMoves, int p);
+
+
 
 #endif
