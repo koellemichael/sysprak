@@ -41,9 +41,10 @@ void performConnection(int sock){
       if(pipeData!=0&&rdy){                                                     //Wenn etwas ansteht, dann..Aus der Pipe lesen
         char *move = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
         memset(move,0, strlen(move));
-        if((read(fd[0], move, sizeof(move))) < 0){                              //Lese nächsten Spielzug aus der Pipe
+        if((read(fd[0], move, BUFFERLENGTH_MOVE)) < 0){                              //Lese nächsten Spielzug aus der Pipe
           perror("Couldn't read from pipe");                                    //Error, wenn aus der Pipe nicht gelesen werden konnte
         }else {
+          printf("MOVE: %s\n", move);
           sendMove(move, sock);
           rdy = 0;
         }
