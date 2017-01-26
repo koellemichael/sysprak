@@ -141,7 +141,7 @@ movearray calcPossibleMoves(int i, int j){
                     exit(EXIT_FAILURE);
                     break;
           } 
-        } else if(isQueen(i,j)){
+        }else if(isQueen(i,j)){
           printf("Queen!");
           for(int a=-8; a<8; a++){
             for (int b=-8; b<8; b++){
@@ -169,7 +169,7 @@ movearray calcPossibleMoves(int i, int j){
                                 }
                           break;
                   case -1:  if((i>(i+a && serverinfo->clientplayernr == 0)||(i<(i+a && serverinfo->clientplayernr == 1)))){
-                            sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
+                            sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+b),COLUMNS-(i+a));
                             possibleMoves.moves[p].weight = MOVE;
                             p++;
                           }
