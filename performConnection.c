@@ -40,7 +40,7 @@ void performConnection(int sock){
       //TODO nachdem einmal was in die Pipe geschrieben wurde, gibt FD_ISSET permanent !=0 zurück was dazu führt dass der nächste zug "" ist
       if(pipeData!=0&&rdy){                                                     //Wenn etwas ansteht, dann..Aus der Pipe lesen
         char *move = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
-        memset(move,0, strlen(move));
+        memset(move,0, sizeof(char)*BUFFERLENGTH_MOVE);
         if((read(fd[0], move, BUFFERLENGTH_MOVE)) < 0){                              //Lese nächsten Spielzug aus der Pipe
           perror("Couldn't read from pipe");                                    //Error, wenn aus der Pipe nicht gelesen werden konnte
         }else {
