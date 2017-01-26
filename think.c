@@ -181,7 +181,7 @@ void jump (int i, int j, movearray *possibleMoves, int p){
     for(int y = -1; y<2;y++){
       if(!(x==0&&y==0) && abs(x)==abs(y)
       && (COLUMNS-1-(i+x))>0 && (j+y)>0
-      && (COLUMNS-(i+x))<COLUMNS && (j+y)<ROWS
+      && (COLUMNS-(i+x))<COLUMNS-1 && (j+y)<ROWS-1
       && isAlly(i+x,j+y) == 0 && isFieldEmpty(i+(2*x), j+(2*y))){
 
         char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
