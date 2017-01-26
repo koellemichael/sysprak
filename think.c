@@ -111,7 +111,7 @@ movearray calcPossibleMoves(int i, int j){
   p = 0; //Zählvariable für die möglichen Züge im Array
   for(int x = -1; x<2;x++){
     for(int y = -1; y<2;y++){
-      if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-(i+x))>0 && (j+y)>0 && (COLUMNS-(i+x))<COLUMNS-1 && (j+y)<ROWS){
+      if(!(x==0&&y==0) && abs(x)==abs(y) && (COLUMNS-1-(i+x))>0 && (j+y)>0 && (COLUMNS-(i+x))<COLUMNS-1 && (j+y)<ROWS-1){
         memset(possibleMoves.moves[p].move,0,strlen(possibleMoves.moves[p].move));
         possibleMoves.moves[p].weight = 0;
         if(!(isQueen(i,j))){
@@ -138,7 +138,7 @@ movearray calcPossibleMoves(int i, int j){
         } else if(isQueen(i,j)){
           for(int a=-8; a<8; a++){
             for (int b=-8; b<8; b++){
-              if(!(a==0&&b==0) && abs(a)==abs(b) && (COLUMNS-1-(a+x))>0 && (b+y)>0 && (COLUMNS-(i+a))<COLUMNS-1 && (j+b)<ROWS){
+              if(!(a==0&&b==0) && abs(a)==abs(b) && (COLUMNS-1-(a+x))>0 && (b+y)>0 && (COLUMNS-(i+a))<COLUMNS-1 && (j+b)<ROWS-1){
                 switch (isAlly(i+a,j+b)){                                                                                                    
                   case 0:   if(isFieldEmpty(i+a, j+b)){   //TODO RICHTIGES FELD BERECHNEN +/- JE NACH RECHT/LINKS/OBEN/UNTEN es fehlt ein +1 (je nach Richtung)
                             printf("COLUMN: %c", inttocolumn(j+a));
@@ -181,7 +181,7 @@ void jump (int i, int j, movearray *possibleMoves, int p){
     for(int y = -1; y<2;y++){
       if(!(x==0&&y==0) && abs(x)==abs(y)
       && (COLUMNS-1-(i+x))>0 && (j+y)>0
-      && (COLUMNS-(i+x))<COLUMNS-1 && (j+y)<ROWS
+      && (COLUMNS-(i+x))<COLUMNS-1 && (j+y)<ROWS-1
       && isAlly(i+x,j+y) == 0 && isFieldEmpty(i+(2*x), j+(2*y))){
 
         char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
