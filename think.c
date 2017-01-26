@@ -106,6 +106,12 @@ move maxWeightMove(movearray moves){
  * @return Array mit allen mögichen Spielzügen und zugehörigen Gewichtungen
  */
 movearray calcPossibleMoves(int i, int j){
+  //Für die Queens muss getestet werden, ob sie schwarz oder weiß sind. Je nachdem ändert sich das Vorzeichen
+  if(isWhite(i,j)){                              
+      vzcol = 1;
+  }else{
+      vzcol = -1;
+  }
   printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
   movearray possibleMoves;
   p = 0; //Zählvariable für die möglichen Züge im Array
@@ -136,17 +142,31 @@ movearray calcPossibleMoves(int i, int j){
                     break;
           } 
         } else if(isQueen(i,j)){
+          printf("Queen!");
           for(int a=-8; a<8; a++){
             for (int b=-8; b<8; b++){
-              if(!(a==0&&b==0) && abs(a)==abs(b) && (ROWS-1-(a+x))>0 && (b+y)>0 && (ROWS-(i+a))<ROWS && (j+b)<COLUMNS-1){
-                switch (isAlly(i+a,j+b)){                                                                            
-                  case 0:   if(isFieldEmpty(i+a, j+b)){   //TODO RICHTIGES FELD BERECHNEN +/- JE NACH RECHT/LINKS/OBEN/UNTEN es fehlt ein +1 (je nach Richtung)
-                            sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+a),COLUMNS-(i+b)); //TODO anpassen wir drüber
-                            possibleMoves.moves[p].weight = JUMP;
-                            jump(i+a, j+b, &possibleMoves,p);
-                            printf("Möglicher Sprung %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
-                            p++;
-                          }
+              if(!(a==0&&b==0) && abs(a)==abs(b) && ROWS-1-(i+a)>0 && (j+b)>0 && (i+a)<ROWS && (j+b)<COLUMNS-1){
+                   printf("My Position: %i Enemy: %i\n",i, i+a);
+                  switch (isAlly(i+a,j+b)){  
+                      case 0:   if(a==0){                                                           //Sonderfall: a=0 oder b = 0
+                                vza = 0;                                                            //Dann wird nichts addiert in die Richtung
+                                vzb = 2*((int)(b+abs(b)/b));                                        //Die andere Richtung muss 2 Felder weiter
+                            }else if(b==0){
+                                vza= 2*(int)(a+abs(a)/a);
+                                vzb = 0;
+                            }else{
+                                vza= a+ (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
+                                vzb= b+ (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
+                            } 
+                              if(isFieldEmpty(i+vza, j+vzb)){ 
+                                printf("Gegner: Reihe: %i, Spalte: %i\n", a, b);
+                                printf("Sprung: Reihe: %i ,Spalte: %i \n", (vzcol)*vza, (vzcol)*vzb);
+                                sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(vzcol)*vza),COLUMNS-(i+(vzcol)*vzb)); //TODO anpassen wir drüber
+                                possibleMoves.moves[p].weight = JUMP;
+                                jump(i+(vzcol)*vza, j+(vzcol)*vzb, &possibleMoves,p);
+                                printf("Möglicher Damesprung %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
+                                p++;
+                                }
                           break;
                   case -1:  if((i>(i+a && serverinfo->clientplayernr == 0)||(i<(i+a && serverinfo->clientplayernr == 1)))){
                             sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
@@ -161,7 +181,7 @@ movearray calcPossibleMoves(int i, int j){
                   default:  perror("Unknown piece");
                             exit(EXIT_FAILURE);
                             break;
-                }  
+                } 
               }
             }
           }
@@ -200,3 +220,5 @@ void jump (int i, int j, movearray *possibleMoves, int p){
     }
   }
 }
+
+

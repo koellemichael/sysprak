@@ -17,7 +17,9 @@ int p;
 char space;                                                                     //Delimiter: Leeres Zeichen
 char* shortMove;                                                                //Move ohne Bufferspace danach
 int moveSize;                                                                   //Größe von Short move
-
+int vza;                                                                        //Vorzeichen von a
+int vzb;                                                                        //Vorzeichen von b  
+int vzcol;                                                                      //Vorzeichen der Farbe 
 //Externe Variablen
 extern int fd[2];
 extern struct serverinfo *serverinfo;                                           //Globales struct für die Serverinfos
@@ -33,7 +35,7 @@ typedef struct {
 }movearray;
 
 
-//Funktionen deklarieren
+//Funktionen deklarieren/Users/KatharinaWinter/Desktop/Systempraktikum/sysprak/think.h
 void think(int sig);
 move maxWeightMove(movearray moves);
 movearray calcPossibleMoves(int i, int j);
