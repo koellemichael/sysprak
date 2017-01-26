@@ -116,7 +116,7 @@ movearray calcPossibleMoves(int i, int j){
         possibleMoves.moves[p].weight = 0;
         if(!(isQueen(i,j))){
           switch (isAlly(i+x,j+y)) {
-            case 0:   if(isFieldEmpty(i+(2*x), j+(2*y))){
+            case 0:   if(isFieldEmpty(i+(2*x), j+(2*y)) && inttocolumn(j+2+y) != 'x'){
                       sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                       possibleMoves.moves[p].weight = JUMP;
                       jump(i+(2*x), j+(2*y), &possibleMoves,p);
