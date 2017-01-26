@@ -116,7 +116,7 @@ movearray calcPossibleMoves(int i, int j){
         possibleMoves.moves[p].weight = 0;
         if(!(isQueen(i,j))){
           switch (isAlly(i+x,j+y)) {
-            case 0:   if(isFieldEmpty(i+(2*x), j+(2*y)) && inttocolumn(j+2+y) != 'x'){
+            case 0:   if(isFieldEmpty(i+(2*x), j+(2*y)) && inttocolumn(j+2*y) != 'x'){
                       sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                       possibleMoves.moves[p].weight = JUMP;
                       jump(i+(2*x), j+(2*y), &possibleMoves,p);
@@ -140,7 +140,8 @@ movearray calcPossibleMoves(int i, int j){
             for (int b=-8; b<8; b++){
               if(!(a==0&&b==0) && abs(a)==abs(b) && (COLUMNS-1-(a+x))>0 && (b+y)>0 && (COLUMNS-(i+a))<COLUMNS && (j+b)<ROWS){
                 switch (isAlly(i+a,j+b)){                                                                                                    
-                  case 0:   if(isFieldEmpty(i+a, j+b)){   //TODO RICHTIGES FELD BERECHNEN +/- JE NACH RECHT/LINKS/OBEN/UNTEN es fehlt ein +1 (je nach Richtung)
+                  case 0:   if(isFieldEmpty(i+a, j+b) && inttocolumn(j+a) != 'x'){   //TODO RICHTIGES FELD BERECHNEN +/- JE NACH RECHT/LINKS/OBEN/UNTEN es fehlt ein +1 (je nach Richtung)
+                            printf("COLUMN: %c", inttocolumn(j+a));
                             sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+a),COLUMNS-(i+b)); //TODO anpassen wir drüber
                             possibleMoves.moves[p].weight = JUMP;
                             jump(i+a, j+b, &possibleMoves,p);
