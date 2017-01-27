@@ -118,6 +118,11 @@ movearray calcPossibleMoves(int i, int j){
                 case 0:  vza= a+ (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
                          vzb= b+ (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
                         if(isFieldEmpty(i+vza, j+vzb)){
+                            for(int c=1; c < a; c--){                                        //Testen, ob Bei Damensprung Steine im Weg liegen
+                                if(!(isFieldEmpty(a-vza*c, b-vzb*c))){                       //Geht den Weg ab, den dame überspringt
+                                    break;                                                   //TODO: Testen
+                                }
+                            }
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j), ROWS-i, inttocolumn((j)+vzb), (ROWS-i)-vza);
                           possibleMoves.moves[p].weight = JUMP;
                           jump(ROWS-i-vza, j+1+vzb, &possibleMoves,p);
