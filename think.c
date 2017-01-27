@@ -115,7 +115,6 @@ movearray calcPossibleMoves(int i, int j){
   printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
   movearray possibleMoves;
   p = 0; //Zählvariable für die möglichen Züge im Array
-
   if(isQueen(i,j)==1){
     printf("Queen!");
     for(int a=-ROWS; a<ROWS; a++){
@@ -133,57 +132,6 @@ movearray calcPossibleMoves(int i, int j){
                           jump(i+(vzcol)*vza, j+(vzcol)*vzb, &possibleMoves,p);
                           printf("Möglicher Damesprung %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           p++;
-
-  for(int x = -1; x<2;x++){
-    for(int y = -1; y<2;y++){
-      if(!(x==0&&y==0) && abs(x)==abs(y) && (ROWS-1-(i+x))>0 && (j+y)>0 && (ROWS-(i+x))<ROWS && (j+y)<COLUMNS-1){
-        memset(possibleMoves.moves[p].move,0,strlen(possibleMoves.moves[p].move));
-        possibleMoves.moves[p].weight = 0;
-        if(!(isQueen(i,j))){
-          switch (isAlly(i+x,j+y)) {
-            case 0:   if(isFieldEmpty(i+(2*x), j+(2*y))){
-                      sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
-                      possibleMoves.moves[p].weight = JUMP;
-                      jump(i+(2*x), j+(2*y), &possibleMoves,p);
-                      printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
-                      p++;
-                    }
-                    break;
-            case -1:  if((i>(i+x) && serverinfo->clientplayernr == 0)||(i<(i+x) && serverinfo->clientplayernr == 1)){
-                      sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
-                      possibleMoves.moves[p].weight = MOVE;
-                      p++;
-                    }
-                    break;
-            case 1:   break;
-            default:  perror("Unknown piece");
-                    exit(EXIT_FAILURE);
-                    break;
-          } 
-        }else if(isQueen(i,j)){
-          printf("Queen!");
-          for(int a=-8; a<8; a++){
-            for (int b=-8; b<8; b++){
-              if(!(a==0&&b==0) && abs(a)==abs(b) && ROWS-1-(i+a)>0 && (j+b)>0 && (i+a)<ROWS && (j+b)<COLUMNS-1){
-                   printf("My Position: %i Enemy: %i\n",i, i+a);
-                  switch (isAlly(i+a,j+b)){  
-                      case 0:   vza= a+ (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
-                                vzb= b+ (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
-                              if(isFieldEmpty(i+vza, j+vzb)){ 
-                                printf("Gegner: Reihe: %i, Spalte: %i\n", a, b);
-                                printf("Sprung: Reihe: %i ,Spalte: %i \n", (vzcol)*vza, (vzcol)*vzb);
-                                sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(vzcol)*vza),COLUMNS-(i+(vzcol)*vzb)); 
-                                possibleMoves.moves[p].weight = JUMP;
-                                jump(i+(vzcol)*vza, j+(vzcol)*vzb, &possibleMoves,p);
-                                printf("Möglicher Damesprung %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
-                                p++;
-                                }
-                          break;
-                  case -1:  if((i>(i+a && serverinfo->clientplayernr == 0)||(i<(i+a && serverinfo->clientplayernr == 1)))){
-                            sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+b),COLUMNS-(i+a));
-                            possibleMoves.moves[p].weight = MOVE;
-                            p++;
-
                           }
                         break;
                 case -1:if((i>(i+a && serverinfo->clientplayernr == 0)||(i<(i+a && serverinfo->clientplayernr == 1)))){
