@@ -148,16 +148,16 @@ movearray calcPossibleMoves(int i, int j){
               if(!(a==0&&b==0) && abs(a)==abs(b) && ROWS-1-(i+a)>0 && (j+b)>0 && (i+a)<ROWS && (j+b)<COLUMNS-1){
                    printf("My Position: %i Enemy: %i\n",i, i+a);
                   switch (isAlly(i+a,j+b)){  
-                      case 0:   if(a==0){                                                           //Sonderfall: a=0 oder b = 0
+                      case 0:   /*if(a==0){                                                           //Sonderfall: a=0 oder b = 0
                                 vza = 0;                                                            //Dann wird nichts addiert in die Richtung
                                 vzb = 2*((int)(b+abs(b)/b));                                        //Die andere Richtung muss 2 Felder weiter
                             }else if(b==0){
                                 vza= 2*(int)(a+abs(a)/a);
                                 vzb = 0;
-                            }else{
+                            }else{*/
                                 vza= a+ (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
                                 vzb= b+ (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
-                            } 
+                            //} 
                               if(isFieldEmpty(i+vza, j+vzb)){ 
                                 printf("Gegner: Reihe: %i, Spalte: %i\n", a, b);
                                 printf("Sprung: Reihe: %i ,Spalte: %i \n", (vzcol)*vza, (vzcol)*vzb);
