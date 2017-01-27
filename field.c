@@ -133,8 +133,8 @@ char inttocolumn(int col){
  */
 
 void printfield(void){
-  char out[BUFFERLENGTH];
-  char buf[BUFFERLENGTH];
+  char out[BUFFERLENGTH_FIELD];
+  char buf[BUFFERLENGTH_FIELD];
 /*
   char w[] = " \u26C0";
   char W[] = " \u26C1";
