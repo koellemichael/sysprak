@@ -116,15 +116,22 @@ movearray calcPossibleMoves(int i, int j){
         if(!(a==0&&b==0) && abs(a)==abs(b) && ROWS-1-(i+a)>0 && COLUMNS-1-(j+b)>0 && (i+a)<ROWS-1 && (j+b)<COLUMNS-1){
             switch (isAlly(i+a,j+b)){
                 case 0:  vza= a+ (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
-                         vzb= b+ (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
-                        if(isFieldEmpty(i+vza, j+vzb)){
-                          sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j), ROWS-i, inttocolumn((j)+vzb), (ROWS-i)-vza);
+                         vzb= b+ (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert  
+                         if(isFieldEmpty(i+vza, j+vzb)){  
+                            for(int c=1; c<a; c++){                                          //c von 1 auf inkrementieren
+                                for(int d=1; d<b;d++){                                       //d von 1 auf inkrementieren
+                                    if(!(isFieldEmpty(a-vza*c, b-vzb*d))){                   //Test, ob Feld zwischen Dame und Turm frei ist
+                                        break;                                               //TODO: DIESEN TEIL TESTEN!
+                                    }
+                                }
+                          }
+                          sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j), ROWS-i, inttocolumn((j)+vzb), ROWS-i-vza);
                           possibleMoves.moves[p].weight = JUMP;
                           jump(ROWS-i-vza, j+1+vzb, &possibleMoves,p);
                           printf("Möglicher Damesprung %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           p++;
+                          break;
                           }
-                        break;
                 case -1:if((i>(i+a && serverinfo->clientplayernr == 0)||(i<(i+a && serverinfo->clientplayernr == 1)))){
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+b),COLUMNS-(i+a));
                           possibleMoves.moves[p].weight = MOVE;
