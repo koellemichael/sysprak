@@ -110,10 +110,10 @@ movearray calcPossibleMoves(int i, int j){
   movearray possibleMoves;
   p = 0; //Zählvariable für die möglichen Züge im Array
   if(isQueen(i,j)==1){
-    printf("Queen!");
     for(int a=-ROWS; a<ROWS; a++){
       for (int b=-COLUMNS; b<COLUMNS; b++){
-        if(!(a==0&&b==0) && abs(a)==abs(b) && ROWS-1-(i+a)>0 && COLUMNS-1-(j+b)>0 && (i+a)<ROWS-1 && (j+b)<COLUMNS-1){
+        if(!(a==0&&b==0) && abs(a)==abs(b) && (i+a)>0 && (j+b)>0 && (i+a)<ROWS && (j+b)<COLUMNS){
+          printf("i+a: %i j+b: %i \n",i+a,j+b);
             switch (isAlly(i+a,j+b)){
                 case 0:  vza= a+ (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
                          vzb= b+ (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
@@ -149,7 +149,7 @@ movearray calcPossibleMoves(int i, int j){
   }else{
     for(int x = -1; x<2;x++){
       for(int y = -1; y<2;y++){
-        if(!(x==0&&y==0) && abs(x)==abs(y) && (ROWS-1-(i+x))>0 && (j+y)>0 && (ROWS-(i+x))<ROWS && (j+y)<COLUMNS-1){
+        if(!(x==0&&y==0) && abs(x)==abs(y) && (i+x)>0 && (j+y)>0 && (i+x)<ROWS && (j+y)<COLUMNS){
           memset(possibleMoves.moves[p].move,0,strlen(possibleMoves.moves[p].move));
           possibleMoves.moves[p].weight = 0;
           switch (isAlly(i+x,j+y)){
@@ -199,7 +199,7 @@ void jump (int i, int j, movearray *possibleMoves, int p){
               free(onemore);
               if(((j+b)<ROWS-1)||(j+b)>0){
                   printf("jump2\n");
-                  jump(j+(vzcol)*vza,COLUMNS-(i+(vzcol)*vzb), possibleMoves, p); 
+                  jump(j+(vzcol)*vza,COLUMNS-(i+(vzcol)*vzb), possibleMoves, p);
               }
          }
       }
