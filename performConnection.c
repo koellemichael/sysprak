@@ -50,12 +50,12 @@ void performConnection(int sock){
         }
       }
     }
-    
+
   }while(end);                                                                  //Nehme solange Antworten vom Server entgegen bis Server "+ ENDPLAYERS" antwortet
 }
 
 void sendMove(char *move, int sock){
-  char *response = malloc((sizeof(char)*BUFFERLENGTH_MOVE)+sizeof(move));
+  char *response = malloc(sizeof(char)*(BUFFERLENGTH_MOVE+strlen(move)));
   memset(response, 0, strlen(move));
   strcpy(response, "PLAY ");
   strcat(response,move);
