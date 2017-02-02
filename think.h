@@ -19,7 +19,8 @@ char* shortMove;                                                                
 int moveSize;                                                                   //Größe von Short move
 int vza;                                                                        //Vorzeichen von a
 int vzb;                                                                        //Vorzeichen von b  
-int vzcol;                                                                      //Vorzeichen der Farbe 
+int queen;                                                                      //Prüfen, ob Dame während Zug
+
 //Externe Variablen
 extern int fd[2];
 extern struct serverinfo *serverinfo;                                           //Globales struct für die Serverinfos
