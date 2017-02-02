@@ -3,7 +3,12 @@
 void printfieldcopy(char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH]){
   for(int i = 0; i<ROWS; i++){
     for(int j = 0; j<COLUMNS; j++){
-      printf("%c ", fieldcopy[i][j][strlen(fieldcopy[i][j])-1]);
+      if(fieldcopy[i][j][strlen(fieldcopy[i][j])-1]==0){
+        printf("  ");
+      }else{
+        printf("%c ", fieldcopy[i][j][strlen(fieldcopy[i][j])-1]);
+      }
+
     }
     printf("\n");
   }
@@ -142,9 +147,9 @@ movearray calcPossibleMoves(int i, int j){
                             }
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j), ROWS-i, inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
                           possibleMoves.moves[p].weight = JUMP;
-                          sprintf(fieldcopy[i+a][j+b], " ");
+                          sprintf(fieldcopy[i+a][j+b], "");
                           strcpy(fieldcopy[i+(a+vza)][j+(b+vzb)], fieldcopy[i][j]);
-                          sprintf(fieldcopy[i][j], " ");
+                          sprintf(fieldcopy[i][j], "");
                           printf("Möglicher Damesprung %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           jump(i+(a+vza), j+(b+vzb), &possibleMoves,p, fieldcopy);
                           p++;
@@ -184,9 +189,9 @@ movearray calcPossibleMoves(int i, int j){
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                           possibleMoves.moves[p].weight = JUMP;
                           printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
-                          sprintf(fieldcopy[i+x][j+y], " ");
+                          sprintf(fieldcopy[i+x][j+y], "");
                           strcpy(fieldcopy[i+(2*x)][j+(2*y)], fieldcopy[i][j]);
-                          sprintf(fieldcopy[i][j], " ");
+                          sprintf(fieldcopy[i][j], "");
                           if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
                             fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)]-1)]='W';
                           }else if((serverinfo->clientplayernr==1&&i+(2*x)==ROWS-1)){
@@ -235,9 +240,9 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
                 printf("Weiterer möglicher Damesprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);
                 sprintf(onemore, ":%c%i", inttocolumn(j+(b+vzb)), (ROWS-i)-(a+vza));
                 free(onemore);
-                sprintf(fieldcopy[i+a][j+b], " ");
+                sprintf(fieldcopy[i+a][j+b], "");
                 strcpy(fieldcopy[i+(a+vza)][j+(b+vzb)], fieldcopy[i][j]);
-                sprintf(fieldcopy[i][j], " ");
+                sprintf(fieldcopy[i][j], "");
                 printfieldcopy(fieldcopy);
                 jump(i+(a+vza), j+(b+vzb), possibleMoves,p, fieldcopy);
                 p++;
@@ -261,9 +266,9 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
             strcat(possibleMoves->moves[p].move, onemore);
             possibleMoves->moves[p].weight += JUMP;
             printf("Weiterer möglicher Sprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);
-            sprintf(fieldcopy[i+x][j+y], " ");
+            sprintf(fieldcopy[i+x][j+y], "");
             strcpy(fieldcopy[i+(2*x)][j+(2*y)], fieldcopy[i][j]);
-            sprintf(fieldcopy[i][j], " ");
+            sprintf(fieldcopy[i][j], "");
             if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
               printf("Weiße QUEEN %c%i erstellt\n",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
               fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)])-1]='W';
