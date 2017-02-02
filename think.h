@@ -18,8 +18,8 @@ char space;                                                                     
 char* shortMove;                                                                //Move ohne Bufferspace danach
 int moveSize;                                                                   //Größe von Short move
 int vza;                                                                        //Vorzeichen von a
-int vzb;                                                                        //Vorzeichen von b  
-int vzcol;                                                                      //Vorzeichen der Farbe
+int vzb;                                                                        //Vorzeichen von b
+
 //Externe Variablen
 extern int fd[2];
 extern struct serverinfo *serverinfo;                                           //Globales struct für die Serverinfos

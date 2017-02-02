@@ -108,7 +108,7 @@ move maxWeightMove(movearray moves){
 movearray calcPossibleMoves(int i, int j){
   printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
   char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH];
-  
+
   movearray possibleMoves;
   p = 0; //Zählvariable für die möglichen Züge im Array
   if(isQueen(i,j,fieldcopy)==1){
@@ -133,8 +133,8 @@ movearray calcPossibleMoves(int i, int j){
                             }
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j), ROWS-i, inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
                           possibleMoves.moves[p].weight = JUMP;
-                          sprintf(fieldcopy[i+a][j+b], ""); 
-                          jump(i+(a+vza), j+(b+vzb), possibleMoves,p, fieldcopy);
+                          sprintf(fieldcopy[i+a][j+b], "");
+                          jump(i+(a+vza), j+(b+vzb), &possibleMoves,p, fieldcopy);
                           printf("Möglicher Damesprung %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           p++;
                           }
@@ -220,6 +220,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
 
               sprintf(onemore, ":%c%i", inttocolumn(j+(b+vzb)), (ROWS-i)-(a+vza));
               free(onemore);
+              sprintf(fieldcopy[i+a][j+b], "");
               jump(i+(a+vza), j+(b+vzb), possibleMoves,p, fieldcopy);
               p++;
             }
