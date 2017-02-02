@@ -209,15 +209,13 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
     printf("queen\n");
        for(int a = -8; a<8;a++){
           for(int b = -8; b<8; b++){
-            vza= (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
-            vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
             if(!(a==0&&b==0) && abs(a)==abs(b)
-              && (i+a)>=0 && (j+b)>=0
-              && (i+a)<ROWS && (j+b)<COLUMNS
-              && isAlly(i+a,j+b,fieldcopy)==0 && isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)
-              && (i+(a+vza))>=0 && (j+(b+vzb))>=0
-              && (i+(a+vza))<ROWS && (j+(b+vzb))<COLUMNS){
-
+              && (i+a)>0 && (j+b)>0
+              && (i+a)<ROWS-1 && (j+b)<COLUMNS-1
+              && isAlly(i+a,j+b,fieldcopy)==0){
+              vza= (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
+              vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
+              if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)){
               char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
               memset(onemore, 0, strlen(onemore));
               sprintf(onemore, ":%c%i", inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
@@ -233,6 +231,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
               p++;
             }
           }
+         }
         }
   }else{
     for(int x = -1; x<2;x++){
