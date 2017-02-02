@@ -175,6 +175,13 @@ movearray calcPossibleMoves(int i, int j){
                           possibleMoves.moves[p].weight = JUMP;
                           sprintf(fieldcopy[i+x][j+y], "");
                           sprintf(fieldcopy[i][j], "");
+
+                          if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
+                            fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)]-1)]='W';
+                          }else if((serverinfo->clientplayernr==1&&i+(2*x)==ROWS-1)){
+                            fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)]-1)]='B';
+                          }
+
                           jump(i+(2*x), j+(2*y), &possibleMoves,p,fieldcopy);
                           printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           p++;
@@ -249,6 +256,13 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
 
             sprintf(fieldcopy[i+x][j+y], "");
             sprintf(fieldcopy[i][j], "");
+            if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
+              printf("Weiße QUEEN erstellt\n");
+              fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)]-1)]='W';
+            }else if((serverinfo->clientplayernr==1&&i+(2*x)==ROWS-1)){
+              printf("Schwarze QUEEN erstellt\n");
+              fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)]-1)]='B';
+            }
             free(onemore);
             jump(i+(2*x), j+(2*y), possibleMoves, p,fieldcopy);
             p++;
