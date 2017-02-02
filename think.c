@@ -133,8 +133,8 @@ movearray calcPossibleMoves(int i, int j){
                             }
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j), ROWS-i, inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
                           possibleMoves.moves[p].weight = JUMP;
-                          sprintf(fieldcopy[i+(vzcol)*vza][j+(vzcol)*vzb], "");   //TODO is noch falsch
-                          jump(i-(a+vza), j+1+(b+vzb), &possibleMoves,p,fieldcopy);//TODO is noch falsch
+                          sprintf(fieldcopy[i+a][j+b], ""); 
+                          jump(i+(a+vza), j+(b+vzb), possibleMoves,p, fieldcopy);
                           printf("Möglicher Damesprung %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           p++;
                           }
