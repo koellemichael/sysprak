@@ -19,7 +19,7 @@ char* shortMove;                                                                
 int moveSize;                                                                   //Größe von Short move
 int vza;                                                                        //Vorzeichen von a
 int vzb;                                                                        //Vorzeichen von b  
-int vzcol;                                                                      //Vorzeichen der Farbe 
+int vzcol;                                                                      //Vorzeichen der Farbe
 //Externe Variablen
 extern int fd[2];
 extern struct serverinfo *serverinfo;                                           //Globales struct für die Serverinfos
@@ -41,7 +41,7 @@ move maxWeightMove(movearray moves);
 movearray calcPossibleMoves(int i, int j);
 move bestMoveAll(int playernr);
 move bestMove(int i, int j);
-void jump (int i, int j, movearray *possibleMoves, int p);
+void jump (int i, int j, movearray *possibleMoves, int p,char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH]);
 
 
 

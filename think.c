@@ -63,12 +63,12 @@ move bestMoveAll(int playernr){
   for(int i = 0; i<ROWS;i++){
     for(int j = 0; j<COLUMNS;j++){
       if(playernr){
-        if(isBlack(i,j)==1){
+        if(isBlack(i,j,serverinfo->field)==1){
           bestmoves.moves[x] = bestMove(i,j);
           x++;
         }
       }else{
-        if(isWhite(i,j)==1){
+        if(isWhite(i,j,serverinfo->field)==1){
           bestmoves.moves[x] = bestMove(i,j);
           x++;
         }
@@ -107,25 +107,34 @@ move maxWeightMove(movearray moves){
  */
 movearray calcPossibleMoves(int i, int j){
   printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
+  //Spielfeld kopieren
+  char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH];
+  for(int m = 0; m<ROWS; m++){
+    for(int n = 0; n<COLUMNS; n++){
+      strcpy(fieldcopy[m][n], serverinfo->field[m][n]);
+    }
+  }
+
   movearray possibleMoves;
   p = 0; //Zählvariable für die möglichen Züge im Array
-  if(isQueen(i,j)==1){
+  if(isQueen(i,j,fieldcopy)==1){
     for(int a=-ROWS; a<ROWS; a++){
       for (int b=-COLUMNS; b<COLUMNS; b++){
         if(!(a==0&&b==0) && abs(a)==abs(b) && (i+a)>=0 && (j+b)>=0 && (i+a)<ROWS && (j+b)<COLUMNS){
           printf("i+a: %i j+b: %i \n",i+a,j+b);
-            switch (isAlly(i+a,j+b)){
+            switch (isAlly(i+a,j+b,fieldcopy)){
                 case 0:  vza= (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
                          vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
-                        if(isFieldEmpty(i+(a+vza), j+(b+vzb))){
+                        if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)){
                             for(int c=1; c < a; c++){                                        //Testen, ob Bei Damensprung Steine im Weg liegen
-                                if(!(isFieldEmpty(a-vza*c, b-vzb*c))){                       //Geht den Weg ab, den dame überspringt
+                                if(!(isFieldEmpty(a-vza*c, b-vzb*c,fieldcopy))){                       //Geht den Weg ab, den dame überspringt
                                     break;                                                   //TODO: Testen
                                 }
                             }
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j), ROWS-i, inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
                           possibleMoves.moves[p].weight = JUMP;
-                          jump(ROWS-i-(a+vza), j+1+(b+vzb), &possibleMoves,p);
+                          sprintf(fieldcopy[i+(vzcol)*vza][j+(vzcol)*vzb], "");   //TODO is noch falsch
+                          jump(i-(a+vza), j+1+(b+vzb), &possibleMoves,p,fieldcopy);//TODO is noch falsch
                           printf("Möglicher Damesprung %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           p++;
                           }
@@ -153,11 +162,12 @@ movearray calcPossibleMoves(int i, int j){
           printf("%i %i\n",i+x,j+y );
           memset(possibleMoves.moves[p].move,0,strlen(possibleMoves.moves[p].move));
           possibleMoves.moves[p].weight = 0;
-          switch (isAlly(i+x,j+y)){
-            case 0:     if(isFieldEmpty(i+(2*x), j+(2*y)) && (i+(2*x))>=0 && (j+(2*y))>=0 && (i+(2*x))<ROWS && (j+(2*y))<COLUMNS){
+          switch (isAlly(i+x,j+y,fieldcopy)){
+            case 0:     if(isFieldEmpty(i+(2*x), j+(2*y),fieldcopy) && (i+(2*x))>=0 && (j+(2*y))>=0 && (i+(2*x))<ROWS && (j+(2*y))<COLUMNS){
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                           possibleMoves.moves[p].weight = JUMP;
-                          jump(i+(2*x), j+(2*y), &possibleMoves,p);
+                          sprintf(fieldcopy[i+x][j+y], "");
+                          jump(i+(2*x), j+(2*y), &possibleMoves,p,fieldcopy);
                           printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           p++;
                         }
@@ -181,14 +191,15 @@ movearray calcPossibleMoves(int i, int j){
   return possibleMoves;
 }
 
-void jump (int i, int j, movearray *possibleMoves, int p){
-  if(isQueen(i, j)==1){
+void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH]){
+  if(isQueen(i, j,fieldcopy)==1){
+    printf("queen\n");
        for(int a = -8; a<8;a++){
           for(int b = -8; b<8; b++){
             if(!(a==0&&b==0) && abs(a)==abs(b)
               && (i+a)>=0 && (j+b)>=0
               && (i+a)<ROWS && (j+b)<COLUMNS
-              && isAlly(i+a,j+b)==0 && isFieldEmpty(i+(2*a), j+(2*b))
+              && isAlly(i+a,j+b,fieldcopy)==0 && isFieldEmpty(i+(2*a), j+(2*b),fieldcopy)
               && (i+(2*a))>=0 && (j+(2*b))>=0
               && (i+(2*a))<ROWS && (j+(2*b))<COLUMNS){
               char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
@@ -198,9 +209,9 @@ void jump (int i, int j, movearray *possibleMoves, int p){
               strcat(possibleMoves->moves[p].move, onemore);
               possibleMoves->moves[p].weight += JUMP;
 
-              sprintf(serverinfo->field[i][j], " s");
+              sprintf(fieldcopy[i+(vzcol)*vza][j+(vzcol)*vzb], "");  //TODO is noch falsch
               free(onemore);
-              jump(j+(vzcol)*vza,COLUMNS-(i+(vzcol)*vzb), possibleMoves, p);
+              jump(i+(vzcol)*vza,j+(vzcol)*vzb, possibleMoves, p,fieldcopy); //TODO is noch falsch
               p++;
             }
           }
@@ -212,7 +223,7 @@ void jump (int i, int j, movearray *possibleMoves, int p){
         if(!(x==0&&y==0) && abs(x)==abs(y)
           && (i+x)>=0 && (j+y)>=0
           && (i+x)<ROWS && (j+y)<COLUMNS
-          && isAlly(i+x,j+y)==0 && isFieldEmpty(i+(2*x), j+(2*y))
+          && isAlly(i+x,j+y,fieldcopy)==0 && isFieldEmpty(i+(2*x), j+(2*y),fieldcopy)
           && (i+(2*x))>=0 && (j+(2*y))>=0
           && (i+(2*x))<ROWS && (j+(2*y))<COLUMNS){
             printf("Weiterer möglicher Sprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);
@@ -223,9 +234,9 @@ void jump (int i, int j, movearray *possibleMoves, int p){
             strcat(possibleMoves->moves[p].move, onemore);
             possibleMoves->moves[p].weight += JUMP;
 
-            sprintf(serverinfo->field[i][j], " s");
+            sprintf(fieldcopy[i+x][j+y], "");
             free(onemore);
-            jump(i+(2*x), j+(2*y), possibleMoves, p);
+            jump(i+(2*x), j+(2*y), possibleMoves, p,fieldcopy);
             p++;
         }
       }
