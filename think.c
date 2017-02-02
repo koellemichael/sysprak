@@ -202,6 +202,9 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
               && isAlly(i+a,j+b,fieldcopy)==0 && isFieldEmpty(i+(2*a), j+(2*b),fieldcopy)
               && (i+(2*a))>=0 && (j+(2*b))>=0
               && (i+(2*a))<ROWS && (j+(2*b))<COLUMNS){
+              vza= (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
+              vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
+                
               char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
               memset(onemore, 0, strlen(onemore));
               sprintf(onemore, ":%c%i", inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
@@ -209,9 +212,9 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
               strcat(possibleMoves->moves[p].move, onemore);
               possibleMoves->moves[p].weight += JUMP;
 
-              sprintf(fieldcopy[i+(vzcol)*vza][j+(vzcol)*vzb], "");  //TODO is noch falsch
+              sprintf(onemore, ":%c%i", inttocolumn(j+(b+vzb)), (ROWS-i)-(a+vza));
               free(onemore);
-              jump(i+(vzcol)*vza,j+(vzcol)*vzb, possibleMoves, p,fieldcopy); //TODO is noch falsch
+              jump(i+(a+vza), j+(b+vzb), possibleMoves,p, fieldcopy);
               p++;
             }
           }
