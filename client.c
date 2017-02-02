@@ -55,13 +55,16 @@ int main (int argc, char **argv){
     char *bufHost = readConfiguration(paramNameHost);
     strcpy(cp.hostName,bufHost);
     free(bufHost);
+
     char *bufGameKind = readConfiguration(paramNameGame);
     strcpy(cp.gameKindName,bufGameKind);
     free(bufGameKind);
-    char *bufPort = readConfiguration(paramNamePort);
-    cp.portNumber = atoi(bufPort);
-    free(bufPort);
 
+    char *bufPort = readConfiguration(paramNamePort);
+    char bufPort2[BUFFERLENGTH_PORT];
+    strcpy(bufPort2, bufPort);
+    free(bufPort);
+    cp.portNumber = atoi(bufPort2);
   }
 
   //Unnamed Pipe einrichten, die zwischen Connector und Thinker laufen soll
