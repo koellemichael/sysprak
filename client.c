@@ -58,7 +58,9 @@ int main (int argc, char **argv){
     char *bufGameKind = readConfiguration(paramNameGame);
     strcpy(cp.gameKindName,bufGameKind);
     free(bufGameKind);
-    cp.portNumber = atoi(readConfiguration(paramNamePort));
+    char *bufPort = readConfiguration(paramNamePort);
+    cp.portNumber = atoi(bufPort);
+    free(bufPort);
 
   }
 
