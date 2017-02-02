@@ -202,14 +202,14 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
     printf("queen\n");
        for(int a = -8; a<8;a++){
           for(int b = -8; b<8; b++){
+            vza= (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
+            vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
             if(!(a==0&&b==0) && abs(a)==abs(b)
               && (i+a)>=0 && (j+b)>=0
               && (i+a)<ROWS && (j+b)<COLUMNS
-              && isAlly(i+a,j+b,fieldcopy)==0 && isFieldEmpty(i+(2*a), j+(2*b),fieldcopy)
-              && (i+(2*a))>=0 && (j+(2*b))>=0
-              && (i+(2*a))<ROWS && (j+(2*b))<COLUMNS){
-              vza= (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
-              vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
+              && isAlly(i+a,j+b,fieldcopy)==0 && isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)
+              && (i+(a+vza))>=0 && (j+(b+vzb))>=0
+              && (i+(a+vza))<ROWS && (j+(b+vzb))<COLUMNS){
 
               char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
               memset(onemore, 0, strlen(onemore));
