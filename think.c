@@ -125,7 +125,7 @@ movearray calcPossibleMoves(int i, int j){
 
   movearray possibleMoves;
   p = 0; //Zählvariable für die möglichen Züge im Array
-  if(isQueen(i,j,fieldcopy)==1){
+  if(isQueen(i,j,serverinfo->field)==1){
     for(int a=-ROWS; a<ROWS; a++){
       for (int b=-COLUMNS; b<COLUMNS; b++){
         if(!(a==0&&b==0) && abs(a)==abs(b) && (i+a)>=0 && (j+b)>=0 && (i+a)<ROWS && (j+b)<COLUMNS){
