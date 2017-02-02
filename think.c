@@ -134,6 +134,7 @@ movearray calcPossibleMoves(int i, int j){
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j), ROWS-i, inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
                           possibleMoves.moves[p].weight = JUMP;
                           sprintf(fieldcopy[i+a][j+b], "");
+                          sprintf(fieldcopy[i][j], "");
                           jump(i+(a+vza), j+(b+vzb), &possibleMoves,p, fieldcopy);
                           printf("Möglicher Damesprung %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           p++;
@@ -173,6 +174,7 @@ movearray calcPossibleMoves(int i, int j){
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                           possibleMoves.moves[p].weight = JUMP;
                           sprintf(fieldcopy[i+x][j+y], "");
+                          sprintf(fieldcopy[i][j], "");
                           jump(i+(2*x), j+(2*y), &possibleMoves,p,fieldcopy);
                           printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           p++;
@@ -221,6 +223,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
               sprintf(onemore, ":%c%i", inttocolumn(j+(b+vzb)), (ROWS-i)-(a+vza));
               free(onemore);
               sprintf(fieldcopy[i+a][j+b], "");
+              sprintf(fieldcopy[i][j], "");
               jump(i+(a+vza), j+(b+vzb), possibleMoves,p, fieldcopy);
               p++;
             }
@@ -245,6 +248,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
             possibleMoves->moves[p].weight += JUMP;
 
             sprintf(fieldcopy[i+x][j+y], "");
+            sprintf(fieldcopy[i][j], "");
             free(onemore);
             jump(i+(2*x), j+(2*y), possibleMoves, p,fieldcopy);
             p++;
