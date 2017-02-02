@@ -128,7 +128,7 @@ movearray calcPossibleMoves(int i, int j){
   if(isQueen(i,j,serverinfo->field)==1){
     for(int a=-ROWS; a<ROWS; a++){
       for (int b=-COLUMNS; b<COLUMNS; b++){
-        if(!(a==0&&b==0) && abs(a)==abs(b) && (i+a)>0 && (j+b)>0 && (i+a)<ROWS && (j+b)<COLUMNS){
+        if(!(a==0&&b==0) && abs(a)==abs(b) && (i+a)>0 && (j+b)>0 && (i+a)<ROWS-1 && (j+b)<COLUMNS-1){
           //Spielfeld kopieren
           for(int m = 0; m<ROWS; m++){
             for(int n = 0; n<COLUMNS; n++){
@@ -140,13 +140,15 @@ movearray calcPossibleMoves(int i, int j){
                 case 0:  vza= (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
                          vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
                         if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)){
+                            obstacle = 0;                                                      //Testet, ob Steine im Weg liegen
                             for(int c=1; c < a; c++){                                       //Testen, ob Bei Damensprung Steine im Weg liegen
                                 printf("ZWISCHENFELDPOSITION: %i, %c\n", (i+a)-vza*c, inttocolumn((j+b)-vzb*c));
                                 if(!(isFieldEmpty((i+a)-vza*c, (j+b)-vzb*c,fieldcopy))){             //Geht den Weg ab, den dame überspringt
                                     printf("FELD NICHT LEER");
-                                    break;                                                   //TODO: Testen
-                                }
+                                    obstacle=1;                                            //1, wenn Steine im Weg liegen
+                                }           
                             }
+                          if(obstacle==0){                                                    //Nur wenn check != 1, also keine Steine im Weg
                           printf("Kathis Test: %i %i, %c \n", j+b, j+b+vzb, inttocolumn(j+b+vzb));
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j), ROWS-i, inttocolumn(j+(b+vzb)), (ROWS-i)-(a+vza));
                           possibleMoves.moves[p].weight = JUMP;
@@ -157,6 +159,7 @@ movearray calcPossibleMoves(int i, int j){
                           jump(i+(a+vza), j+(b+vzb), &possibleMoves,p, fieldcopy);
                           p++;
                           }
+                        }
                         break;
                 case -1:if((i>(i+a && serverinfo->clientplayernr == 0)||(i<(i+a && serverinfo->clientplayernr == 1)))){
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+b),COLUMNS-(i+a));
@@ -237,7 +240,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
               vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
               if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)
                  && (i+a+vza)>=0 && (j+b+vzb)>=0
-                 && (i+a+vza)<ROWS && (j+b+vzb)<COLUMNS){
+                 && (i+a+vza)<ROWS-1 && (j+b+vzb)<COLUMNS){
                 char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
                 memset(onemore, 0, strlen(onemore));
                 sprintf(onemore, ":%c%i", inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
