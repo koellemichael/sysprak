@@ -201,6 +201,7 @@ void jump (int i, int j, movearray *possibleMoves, int p){
               sprintf(serverinfo->field[i][j], " s");
               free(onemore);
               jump(j+(vzcol)*vza,COLUMNS-(i+(vzcol)*vzb), possibleMoves, p);
+              p++;
             }
           }
         }
@@ -225,6 +226,7 @@ void jump (int i, int j, movearray *possibleMoves, int p){
             sprintf(serverinfo->field[i][j], " s");
             free(onemore);
             jump(i+(2*x), j+(2*y), possibleMoves, p);
+            p++;
         }
       }
     }
