@@ -173,17 +173,15 @@ movearray calcPossibleMoves(int i, int j){
             case 0:     if(isFieldEmpty(i+(2*x), j+(2*y),fieldcopy) && (i+(2*x))>=0 && (j+(2*y))>=0 && (i+(2*x))<ROWS && (j+(2*y))<COLUMNS){
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                           possibleMoves.moves[p].weight = JUMP;
+                          printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           sprintf(fieldcopy[i+x][j+y], "");
                           sprintf(fieldcopy[i][j], "");
-
                           if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
                             fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)]-1)]='W';
                           }else if((serverinfo->clientplayernr==1&&i+(2*x)==ROWS-1)){
                             fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)]-1)]='B';
                           }
-
                           jump(i+(2*x), j+(2*y), &possibleMoves,p,fieldcopy);
-                          printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           p++;
                         }
                         break;
@@ -237,7 +235,6 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
           }
         }
   }else{
-    printf("jump1\n");
     for(int x = -1; x<2;x++){
       for(int y = -1; y<2;y++){
         if(!(x==0&&y==0) && abs(x)==abs(y)
@@ -246,14 +243,13 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
           && isAlly(i+x,j+y,fieldcopy)==0 && isFieldEmpty(i+(2*x), j+(2*y),fieldcopy)
           && (i+(2*x))>=0 && (j+(2*y))>=0
           && (i+(2*x))<ROWS && (j+(2*y))<COLUMNS){
-            printf("Weiterer möglicher Sprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);
             char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
             memset(onemore, 0, strlen(onemore));
             sprintf(onemore, ":%c%i",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
 
             strcat(possibleMoves->moves[p].move, onemore);
             possibleMoves->moves[p].weight += JUMP;
-
+            printf("Weiterer möglicher Sprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);
             sprintf(fieldcopy[i+x][j+y], "");
             sprintf(fieldcopy[i][j], "");
             if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
