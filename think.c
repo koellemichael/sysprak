@@ -147,7 +147,6 @@ movearray calcPossibleMoves(int i, int j){
       }
     }
   }else{
-    queen = 0;
     for(int x = -1; x<2;x++){
       for(int y = -1; y<2;y++){
         if(!(x==0&&y==0) && abs(x)==abs(y) && (i+x)>=0 && (j+y)>=0 && (i+x)<ROWS && (j+y)<COLUMNS){
@@ -183,7 +182,7 @@ movearray calcPossibleMoves(int i, int j){
 }
 
 void jump (int i, int j, movearray *possibleMoves, int p){
-  if(isQueen(i, j)==1 || queen==1){                                             //Wenn Dame, oder wenn während Zug Dame geworden
+  if(isQueen(i, j)==1){
        for(int a = -8; a<8;a++){
           for(int b = -8; b<8; b++){
             if(!(a==0&&b==0) && abs(a)==abs(b)
@@ -192,18 +191,16 @@ void jump (int i, int j, movearray *possibleMoves, int p){
               && isAlly(i+a,j+b)==0 && isFieldEmpty(i+(2*a), j+(2*b))
               && (i+(2*a))>=0 && (j+(2*b))>=0
               && (i+(2*a))<ROWS && (j+(2*b))<COLUMNS){
-              vza= (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
-              vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
               char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
               memset(onemore, 0, strlen(onemore));
-              sprintf(onemore, ":%c%i", inttocolumn(j+(b+vzb)), (ROWS-i)-(a+vza));
+              sprintf(onemore, ":%c%i", inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
 
               strcat(possibleMoves->moves[p].move, onemore);
               possibleMoves->moves[p].weight += JUMP;
 
               sprintf(serverinfo->field[i][j], " s");
               free(onemore);
-              jump(i+(a+vza), j+(b+vzb), possibleMoves,p);
+              jump(j+(vzcol)*vza,COLUMNS-(i+(vzcol)*vzb), possibleMoves, p);
               p++;
             }
           }
@@ -225,13 +222,7 @@ void jump (int i, int j, movearray *possibleMoves, int p){
 
             strcat(possibleMoves->moves[p].move, onemore);
             possibleMoves->moves[p].weight += JUMP;
-            
-            printf("JUMP POSITION: %i", i+x);
-            
-            if((i+x)==1){                                                       //Überprüft, ob Turm während eines Zuges eine Dame wird
-                queen = 1;                                                      //Wird Dame, wenn er das andere Ende erreicht hat
-            }
-            
+
             sprintf(serverinfo->field[i][j], " s");
             free(onemore);
             jump(i+(2*x), j+(2*y), possibleMoves, p);
