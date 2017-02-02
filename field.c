@@ -6,8 +6,8 @@
  *@param i Spaltenindex
  *@return 1 wenn weiß, 0 wenn schwarz, -1 sonst
  */
-int isWhite(int i, int j){
-  char piece = serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1];
+int isWhite(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH]){
+  char piece = field[i][j][strlen(field[i][j])-1];
   if(piece =='w' || piece =='W'){
     return 1;
   }else if(piece =='b' || piece =='B'){
@@ -23,8 +23,8 @@ int isWhite(int i, int j){
  *@param i Spaltenindex
  *@return 0 wenn weiß, 1 wenn schwarz, -1 sonst
  */
-int isBlack(int i, int j){
-    char piece = serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1];
+int isBlack(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]){
+    char piece = field[i][j][strlen(field[i][j])-1];
     if(piece =='w' || piece =='W'){
       return 0;
     }else if(piece =='b' || piece =='B'){
@@ -40,8 +40,8 @@ int isBlack(int i, int j){
  *@param i Spaltenindex
  *@return 1 Feld frei, 0 wenn besetzt
  */
-int isFieldEmpty(int i, int j){
-  if((!strcmp(serverinfo->field[i][j],""))){
+int isFieldEmpty(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]){
+  if((!strcmp(field[i][j],""))){
     return 1;
   } else {
     return 0;
@@ -54,8 +54,8 @@ int isFieldEmpty(int i, int j){
  *@param i Spaltenindex
  *@return 1 wenn Dame, 0 wenn keine Dame, -1 sonst
  */
-int isQueen(int i, int j){
-  char piece = serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1];
+int isQueen(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]){
+  char piece = field[i][j][strlen(field[i][j])-1];
     if(piece =='w' || piece =='b'){
       return 0;
     }else if(piece =='W' || piece =='B'){
@@ -71,11 +71,11 @@ int isQueen(int i, int j){
  *@param i Spaltenindex
  *@return 1 Gegner, 0 wenn eigener Stein, sonst -1
  */
-int isEnemy(int i, int j){
+int isEnemy(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]){
   if(serverinfo->clientplayernr==0){
-    return isBlack(i, j);
+    return isBlack(i, j,field);
   } else {
-    return isWhite(i, j);
+    return isWhite(i, j,field);
   }
 }
 
@@ -85,11 +85,11 @@ int isEnemy(int i, int j){
  *@param i Spaltenindex
  *@return 1 Verbündeter, 0 wenn gegnerischer Stein, sonst -1
  */
-int isAlly(int i, int j){
+int isAlly(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH]){
   if(serverinfo->clientplayernr==0){
-    return isWhite(i, j);
+    return isWhite(i, j,field);
   } else {
-    return isBlack(i, j);
+    return isBlack(i, j,field);
   }
 }
 

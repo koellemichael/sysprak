@@ -15,12 +15,12 @@
 #include "processRequest.h"
 
 //Funktionen deklarieren
-int isWhite(int i, int j);
-int isBlack(int i, int j);
-int isFieldEmpty(int i, int j);
-int isQueen(int i, int j);
-int isEnemy(int i, int j);
-int isAlly(int i, int j);
+int isWhite(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]);
+int isBlack(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]);
+int isFieldEmpty(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]);
+int isQueen(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]);
+int isEnemy(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]);
+int isAlly(int i, int j, char array[ROWS][COLUMNS][BUFFERLENGTH]);
 int columntoint(char column);
 char inttocolumn(int col);
 void printfield(void);
