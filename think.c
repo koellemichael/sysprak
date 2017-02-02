@@ -184,10 +184,7 @@ void jump (int i, int j, movearray *possibleMoves, int p){
   if(isQueen(i, j)==1){
        for(int a = -8; a<8;a++){
           for(int b = -8; b<8; b++){
-              if(!(a==0&&b==0) && abs(a)==abs(b)
-                 && (ROWS-1-(i+a))>0 && (j+b)>0
-                 && (ROWS-(i+a))<ROWS && (j+b)<COLUMNS-1
-                 && isAlly(i+a,j+b) == 0 && isFieldEmpty(i+vza, j+vzb)){
+              if(!(a==0&&b==0) && abs(a)==abs(b) && (i+a)>0 && (j+b)>0 && (i+a)<ROWS && (j+b)<COLUMNS){
               char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
               memset(onemore, 0, strlen(onemore));
               sprintf(onemore, ":%c%i",inttocolumn(j+(vzcol)*vza),COLUMNS-(i+(vzcol)*vzb));
@@ -209,11 +206,7 @@ void jump (int i, int j, movearray *possibleMoves, int p){
     printf("jump1\n");
     for(int x = -1; x<2;x++){
       for(int y = -1; y<2;y++){
-        if(!(x==0&&y==0) && abs(x)==abs(y)
-        && (ROWS-1-(i+x))>0 && (j+y)>0
-        && (ROWS-(i+x))<ROWS && (j+y)<COLUMNS-1
-        && isAlly(i+x,j+y) == 0 && isFieldEmpty(i+(2*x), j+(2*y))){
-
+        if(!(a==0&&b==0) && abs(a)==abs(b) && (i+a)>0 && (j+b)>0 && (i+a)<ROWS && (j+b)<COLUMNS){
           char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
           memset(onemore, 0, strlen(onemore));
           sprintf(onemore, ":%c%i",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
