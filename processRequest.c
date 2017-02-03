@@ -36,7 +36,7 @@ char *substring(char *string, unsigned int from, unsigned int to){
   }else{                                                                        //Falls sinbvolle Eingabe
     char *substring = malloc((to-from)*sizeof(char));                           //Speicher füresponse substring allokalisieren
     strncpy(substring,string+from,(to-from));                                   //Teilstring in substring speichern
-    substring[(to-from)]=0;                                                     //Teilstringende festlegen
+    substring[(to-from)]= '\0';                                                 //Teilstringende festlegen
     return substring;                                                           //Substring zurückgeben
   }
 }
