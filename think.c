@@ -1,4 +1,4 @@
-#include "think.h"
+﻿#include "think.h"
 
 void printfieldcopy(char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH]){
   for(int i = 0; i<ROWS; i++){
@@ -49,17 +49,10 @@ move bestMove(int i, int j){
 
   //Maximum der Gewichtung der gültigen Möglichkeiten
   if(possibleMoves.count>0){
-    /*int maxIndex = 0;
-    int max = 0;
-    for(int x = 0; x<possibleMoves.count;x++){
-      if(possibleMoves.moves[x].weight>max){
-        max = possibleMoves.moves[x].weight;
-        maxIndex = x;
-      }
-    }*/
     move bestmove = maxWeightMove(possibleMoves);
-    //printf("Best move for %c%i is: \"%s\"  with weight: %i\n",inttocolumn(j),COLUMNS-i,possibleMoves.moves[maxIndex].move,possibleMoves.moves[maxIndex].weight);
     return bestmove;
+  }else{
+    printf("Kein Zug vorhanden\n");
   }
 
   return *possibleMoves.moves;
@@ -73,6 +66,7 @@ move bestMove(int i, int j){
  */
 move bestMoveAll(int playernr){
   movearray bestmoves;
+  //memset(bestmoves.moves, 0, BUFFERLENGTH);
   int x=0;
   for(int i = 0; i<ROWS;i++){
     for(int j = 0; j<COLUMNS;j++){
@@ -102,10 +96,16 @@ move bestMoveAll(int playernr){
 move maxWeightMove(movearray moves){
   int maxIndex = 0;
   int max = 0;
+  srand((unsigned) time(NULL));
   for(int i = 0; i<moves.count;i++){
     if(moves.moves[i].weight>max){
       max = moves.moves[i].weight;
       maxIndex = i;
+    }else if (moves.moves[i].weight==max){
+      if((rand()%99)<50){
+        max = moves.moves[i].weight;
+        maxIndex = i;
+      }
     }
   }
 
@@ -147,7 +147,7 @@ movearray calcPossibleMoves(int i, int j){
                                 if(!(isFieldEmpty((i+a)-vza*c, (j+b)-vzb*c,fieldcopy))){             //Geht den Weg ab, den dame überspringt
                                     printf("FELD NICHT LEER");
                                     obstacle=1;                                            //1, wenn Steine im Weg liegen
-                                }           
+                                }
                             }
                           if(obstacle==0){                                                    //Nur wenn check != 1, also keine Steine im Weg
                           printf("Kathis Test: %i %i, %c \n", j+b, j+b+vzb, inttocolumn(j+b+vzb));
@@ -198,7 +198,7 @@ movearray calcPossibleMoves(int i, int j){
                           
                           printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           strcpy(fieldcopy[i+x][j+y], "");
-                
+
                           strcpy(fieldcopy[i+(2*x)][j+(2*y)], fieldcopy[i][j]);
                           strcpy(fieldcopy[i][j], "");
                           if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
@@ -242,7 +242,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
               if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)
                  && (i+a+vza)>=0 && (j+b+vzb)>=0
                  && (i+a+vza)<ROWS-1 && (j+b+vzb)<COLUMNS){
-                
+             
                 printf("xxxxxxxxxxxxxxxxxxxxxx\n");
                 int lastrow = possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-4] - '0';         //lastrow-i positiv: nach oben; negativ nach unten
                 printf("last row: %i\n", 8-lastrow);                                            
@@ -251,6 +251,18 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
                 printf("i: %i\n", i);
                 printf("j: %i\n", j);
                 printf("xxxxxxxxxxxxxxxxxxxxxx\n");
+
+                //Test: Liegen beim zweiten Sprung Steine im Weg  
+                obstacle = 0;
+                for(int c=1; c < abs(a); c++){                                       //Testen, ob Bei Damensprung Steine im Weg liegen
+                   printf("ZWISCHENFELDPOSITION: %i, %c\n", (i+a)-vza*c, inttocolumn((j+b)-vzb*c));
+                   if(!(isFieldEmpty((i+a)-vza*c, (j+b)-vzb*c,fieldcopy))){             //Geht den Weg ab, den dame überspringt
+                       printf("FELD NICHT LEER");
+                       obstacle=1;                                            //1, wenn Steine im Weg liegen
+                                }           
+                   }
+                //Wenn keine Steine im Weg liegen darf gesprungen werden
+                if(obstacle==0){
 
                 char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
                 memset(onemore, 0, strlen(onemore));
@@ -267,6 +279,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
                 printfieldcopy(fieldcopy);
                 jump(i+(a+vza), j+(b+vzb), possibleMoves,p, fieldcopy);
                 p++;
+                }
               }
             }
           }
