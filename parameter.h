@@ -9,7 +9,8 @@
 #define PORTNUMBER 1357                                                         //Konstante PORTNUMBER definieren
 #define HOSTNAME "sysprak.priv.lab.nm.ifi.lmu.de"                               //Konstante HOSTNAME definieren
 #define BUFFERLENGTH 2048	                                                      //Konstante für die std Puffergröße definieren
-#define BUFFERLENGTH_FIELD 40000
+#define BUFFERLENGTH_FIELD 2048
+#define BUFFERLENGTH_SMALL 128
 #define BUFFERLENGTH_PORT 6
 #define BUFFERLENGTH_MOVE 25                                                    //Konstante für die Puffergröße eines Spielzugs definieren
 #define BUFFERLENGTH_MAXPIECES 12                                               //Konstante für die maximale Anzahl an Steinen eines Spielers
