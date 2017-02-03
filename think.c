@@ -141,7 +141,8 @@ movearray calcPossibleMoves(int i, int j){
                          vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
                         if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)){
                             obstacle = 0;                                                      //Testet, ob Steine im Weg liegen
-                            for(int c=1; c < a; c++){                                       //Testen, ob Bei Damensprung Steine im Weg liegen
+                            printf("Testi Test");
+                            for(int c=1; c < abs(a); c++){                                       //Testen, ob Bei Damensprung Steine im Weg liegen
                                 printf("ZWISCHENFELDPOSITION: %i, %c\n", (i+a)-vza*c, inttocolumn((j+b)-vzb*c));
                                 if(!(isFieldEmpty((i+a)-vza*c, (j+b)-vzb*c,fieldcopy))){             //Geht den Weg ab, den dame überspringt
                                     printf("FELD NICHT LEER");
