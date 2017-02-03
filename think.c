@@ -195,7 +195,7 @@ movearray calcPossibleMoves(int i, int j){
             case 0:     if(isFieldEmpty(i+(2*x), j+(2*y),fieldcopy) && (i+(2*x))>=0 && (j+(2*y))>=0 && (i+(2*x))<ROWS && (j+(2*y))<COLUMNS){
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                           possibleMoves.moves[p].weight = JUMP;
-
+                          
                           printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           strcpy(fieldcopy[i+x][j+y], "");
                 
@@ -236,12 +236,22 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
             if(!(a==0&&b==0) && abs(a)==abs(b)
               && (i+a)>0 && (j+b)>0
               && (i+a)<ROWS-1 && (j+b)<COLUMNS-1
-              && isAlly(i+a,j+b,fieldcopy)==0){
+              && isAlly(i+a,j+b,fieldcopy)==0){                               //TODO einfügen von nicht rückwärts springen
               vza= (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
               vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
               if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)
                  && (i+a+vza)>=0 && (j+b+vzb)>=0
                  && (i+a+vza)<ROWS-1 && (j+b+vzb)<COLUMNS){
+                
+                printf("xxxxxxxxxxxxxxxxxxxxxx\n");
+                int lastrow = possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-4] - '0';         //lastrow-i positiv: nach oben; negativ nach unten
+                printf("last row: %i\n", 8-lastrow);                                            
+                int lastcol = columntoint(possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-5]);  //lastcol-j positiv: nach links; negativ nach rechts (?)
+                printf("last col: %i\n", lastcol);
+                printf("i: %i\n", i);
+                printf("j: %i\n", j);
+                printf("xxxxxxxxxxxxxxxxxxxxxx\n");
+
                 char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
                 memset(onemore, 0, strlen(onemore));
                 sprintf(onemore, ":%c%i", inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
