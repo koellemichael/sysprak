@@ -242,15 +242,6 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
               if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)
                  && (i+a+vza)>=0 && (j+b+vzb)>=0
                  && (i+a+vza)<ROWS-1 && (j+b+vzb)<COLUMNS){
-             
-                printf("xxxxxxxxxxxxxxxxxxxxxx\n");
-                int lastrow = possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-4] - '0';         //lastrow-i positiv: nach oben; negativ nach unten
-                printf("last row: %i\n", 8-lastrow);                                            
-                int lastcol = columntoint(possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-5]);  //lastcol-j positiv: nach links; negativ nach rechts (?)
-                printf("last col: %i\n", lastcol);
-                printf("i: %i\n", i);
-                printf("j: %i\n", j);
-                printf("xxxxxxxxxxxxxxxxxxxxxx\n");
 
                 //Test: Liegen beim zweiten Sprung Steine im Weg  
                 obstacle = 0;
@@ -293,26 +284,39 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
           && isAlly(i+x,j+y,fieldcopy)==0 && isFieldEmpty(i+(2*x), j+(2*y),fieldcopy)
           && (i+(2*x))>=0 && (j+(2*y))>=0
           && (i+(2*x))<ROWS && (j+(2*y))<COLUMNS){
-            char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
-            memset(onemore, 0, strlen(onemore));
-            sprintf(onemore, ":%c%i",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
+            int lastrow = possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-4] - '0';         //lastrow-i positiv: nach oben; negativ nach unten
+            int lastcol = columntoint(possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-5]);  //lastcol-j positiv: nach links; negativ nach rechts (?)
+            printf("lastrow = %i\n", lastrow);
+            printf("i = %i\n", i);
+            printf("abs(lastrow-i)) = %i\n", abs(lastrow-i));
+            printf("(((abs(lastrow-i))/lastrow-i) = %i\n", (((abs(lastrow-i))/(lastrow-i))));
+            printf("(-1)*(abs(i-x))/i-x) = %i\n", (-1)*((abs(i-x))/i-x));
+            printf("(((abs(lastcol-j))/lastcol-j) = %i\n", (((abs(lastcol-j))/(lastcol-j))));
+            printf("(-1)*(abs(j-y))/j-y) = %i\n", (-1)*((abs(j-y))/j-y));
+            
+            if(!(((abs(lastrow-i))/(lastrow-i))==(-1)*((abs(i-x))/(i-x)))&&(((abs(lastcol-j))/(lastcol-j))==(-1)*((abs(j-y))/(j-y)))){
+              printf("HIER GEHTS WEITER!\n");
+              char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
+              memset(onemore, 0, strlen(onemore));
+              sprintf(onemore, ":%c%i",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
 
-            strcat(possibleMoves->moves[p].move, onemore);
-            possibleMoves->moves[p].weight += JUMP;
-            printf("Weiterer möglicher Sprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);
-            strcpy(fieldcopy[i+x][j+y], "");
-            strcpy(fieldcopy[i+(2*x)][j+(2*y)], fieldcopy[i][j]);
-            strcpy(fieldcopy[i][j], "");
-            if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
-              printf("Weiße QUEEN %c%i erstellt\n",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
-              fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)])-1]='W';
-            }else if((serverinfo->clientplayernr==1&&i+(2*x)==ROWS-1)){
-              printf("Schwarze QUEEN %c%i erstellt\n",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
-              fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)])-1]='B';
+              strcat(possibleMoves->moves[p].move, onemore);
+              possibleMoves->moves[p].weight += JUMP;
+              printf("Weiterer möglicher Sprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);
+              strcpy(fieldcopy[i+x][j+y], "");
+              strcpy(fieldcopy[i+(2*x)][j+(2*y)], fieldcopy[i][j]);
+              strcpy(fieldcopy[i][j], "");
+              if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
+                printf("Weiße QUEEN %c%i erstellt\n",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
+                fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)])-1]='W';
+              }else if((serverinfo->clientplayernr==1&&i+(2*x)==ROWS-1)){
+                printf("Schwarze QUEEN %c%i erstellt\n",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
+                fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)])-1]='B';
             }
             free(onemore);
             jump(i+(2*x), j+(2*y), possibleMoves, p,fieldcopy);
             p++;
+          }
         }
       }
     }
