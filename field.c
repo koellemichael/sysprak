@@ -133,8 +133,8 @@ char inttocolumn(int col){
  */
 
 void printfield(void){
-  char out[BUFFERLENGTH_FIELD];
-  char buf[BUFFERLENGTH_FIELD];
+  char *out = malloc(sizeof(char)*BUFFERLENGTH_FIELD);
+  char *buf = malloc(sizeof(char)*BUFFERLENGTH_SMALL);
 /*
   char w[] = " \u26C0";
   char W[] = " \u26C1";
@@ -206,4 +206,7 @@ void printfield(void){
   strcat(out,"\n");
 
   printf("%s",out);                                                                                 //Ausgabe des gesamten Strings
+
+  free(out);
+  free(buf);
 }
