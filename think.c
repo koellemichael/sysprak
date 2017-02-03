@@ -242,6 +242,18 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
               if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)
                  && (i+a+vza)>=0 && (j+b+vzb)>=0
                  && (i+a+vza)<ROWS-1 && (j+b+vzb)<COLUMNS){
+        
+                //Test: Liegen beim zweiten Sprung Steine im Weg  
+                obstacle = 0;
+                for(int c=1; c < abs(a); c++){                                       //Testen, ob Bei Damensprung Steine im Weg liegen
+                   printf("ZWISCHENFELDPOSITION: %i, %c\n", (i+a)-vza*c, inttocolumn((j+b)-vzb*c));
+                   if(!(isFieldEmpty((i+a)-vza*c, (j+b)-vzb*c,fieldcopy))){             //Geht den Weg ab, den dame überspringt
+                       printf("FELD NICHT LEER");
+                       obstacle=1;                                            //1, wenn Steine im Weg liegen
+                                }           
+                   }
+                //Wenn keine Steine im Weg liegen darf gesprungen werden
+                if(obstacle==0){
                 char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
                 memset(onemore, 0, strlen(onemore));
                 sprintf(onemore, ":%c%i", inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
@@ -257,6 +269,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
                 printfieldcopy(fieldcopy);
                 jump(i+(a+vza), j+(b+vzb), possibleMoves,p, fieldcopy);
                 p++;
+                }
               }
             }
           }
