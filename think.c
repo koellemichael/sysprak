@@ -49,17 +49,10 @@ move bestMove(int i, int j){
 
   //Maximum der Gewichtung der gültigen Möglichkeiten
   if(possibleMoves.count>0){
-    /*int maxIndex = 0;
-    int max = 0;
-    for(int x = 0; x<possibleMoves.count;x++){
-      if(possibleMoves.moves[x].weight>max){
-        max = possibleMoves.moves[x].weight;
-        maxIndex = x;
-      }
-    }*/
     move bestmove = maxWeightMove(possibleMoves);
-    //printf("Best move for %c%i is: \"%s\"  with weight: %i\n",inttocolumn(j),COLUMNS-i,possibleMoves.moves[maxIndex].move,possibleMoves.moves[maxIndex].weight);
     return bestmove;
+  }else{
+    printf("Kein Zug vorhanden\n");
   }
 
   return *possibleMoves.moves;
@@ -73,6 +66,7 @@ move bestMove(int i, int j){
  */
 move bestMoveAll(int playernr){
   movearray bestmoves;
+  //memset(bestmoves.moves, 0, BUFFERLENGTH);
   int x=0;
   for(int i = 0; i<ROWS;i++){
     for(int j = 0; j<COLUMNS;j++){
@@ -102,10 +96,16 @@ move bestMoveAll(int playernr){
 move maxWeightMove(movearray moves){
   int maxIndex = 0;
   int max = 0;
+  srand((unsigned) time(NULL));
   for(int i = 0; i<moves.count;i++){
     if(moves.moves[i].weight>max){
       max = moves.moves[i].weight;
       maxIndex = i;
+    }else if (moves.moves[i].weight==max){
+      if((rand()%99)<50){
+        max = moves.moves[i].weight;
+        maxIndex = i;
+      }
     }
   }
 
@@ -147,7 +147,7 @@ movearray calcPossibleMoves(int i, int j){
                                 if(!(isFieldEmpty((i+a)-vza*c, (j+b)-vzb*c,fieldcopy))){             //Geht den Weg ab, den dame überspringt
                                     printf("FELD NICHT LEER");
                                     obstacle=1;                                            //1, wenn Steine im Weg liegen
-                                }           
+                                }
                             }
                           if(obstacle==0){                                                    //Nur wenn check != 1, also keine Steine im Weg
                           printf("Kathis Test: %i %i, %c \n", j+b, j+b+vzb, inttocolumn(j+b+vzb));
@@ -198,7 +198,7 @@ movearray calcPossibleMoves(int i, int j){
 
                           printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           strcpy(fieldcopy[i+x][j+y], "");
-                
+
                           strcpy(fieldcopy[i+(2*x)][j+(2*y)], fieldcopy[i][j]);
                           strcpy(fieldcopy[i][j], "");
                           if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
