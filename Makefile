@@ -7,6 +7,7 @@ SOURCES = client.c parameter.c connectServer.c performConnection.c responseHandl
 OBJFILES = $(SOURCES:.c=.o)
 EXECUTABLE = client
 
+all: $(EXECUTABLE) clean
 play: $(EXECUTABLE) clean bashni
 
 .c.o:
@@ -16,7 +17,7 @@ $(EXECUTABLE): $(OBJFILES)
 	$(CC) $(LDFLAGS) $(OBJFILES) -o $@
 
 bashni: ./$(EXECUTABLE)
-	./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID) 
+	./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID)
 
 .PHONY: clean
 clean:
