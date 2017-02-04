@@ -146,13 +146,13 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                       //Ist das daraufliegende Feld frei?
                       if(isFieldEmpty(i+x+vzx, j+y+vzy,fieldcopy) && (i+x+vzx)>=0 && (j+y+vzy)>=0 && (i+x+vzx)<ROWS && (j+y+vzy)<COLUMNS){
                         if(isQueen(i,j,fieldcopy)==1){
-                          printf("Dame Sprung\n");
+                          printf("Dame Sprung zu %c:%i\n",inttocolumn(j+y+vzy),COLUMNS-(i+x+vzx));
                           int obstacle = 0;
-                          printf("Zu prüfende Zwischensteine: %i\n",abs(y)-1);
-                          for(int a = 0; a<abs(y)-1;a++){
+                          printf("Zu prüfende Zwischensteine: %i\n",abs(y));
+                          for(int a = 0; a<abs(y);a++){
                             printf("Teste ob Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
                             if(!isFieldEmpty(i+((a+1)*vzx),j+((a+1)*vzy),fieldcopy)){
-                              if(i+((a+1)*vzx)!=j+y &&  j+((a+1)*vzy) != i+x){
+                              if(i+((a+1)*vzx)!=i+x &&  j+((a+1)*vzy) != j+y){
                                 printf("Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
                                 obstacle = 1;
                               }else{
@@ -240,15 +240,13 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                         printf("Möglicher Zug mit Gewicht %s %i gespeichert in %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight,p);
                         p++;
                       }
-                    }else{
+                    }else if(((i>(i+x) && serverinfo->clientplayernr == 0)||(i<(i+x) && serverinfo->clientplayernr == 1))&&jump==0){
                       printf("Normaler Zug\n");
-                      if(((i>(i+x) && serverinfo->clientplayernr == 0)||(i<(i+x) && serverinfo->clientplayernr == 1))&&jump==0){
-                       //Speichern des Zuges
-                       sprintf(possibleMoves->moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
-                       possibleMoves->moves[p].weight = MOVE;
-                       printf("Möglicher Zug mit Gewicht %s %i gespeichert in %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight,p);
-                       p++;
-                      }
+                      //Speichern des Zuges
+                      sprintf(possibleMoves->moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
+                      possibleMoves->moves[p].weight = MOVE;
+                      printf("Möglicher Zug mit Gewicht %s %i gespeichert in %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight,p);
+                      p++;
                     }
                     break;
            default: break;
