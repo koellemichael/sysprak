@@ -25,23 +25,22 @@ void performConnection(int sock){
       perror("select()");
       exit(EXIT_FAILURE);
     }else if(retval){
-      pipeData = FD_ISSET(fd[0], &readfds);                                 //ISSET testet, ob an DIESER PIPE etwas ansteht
+      pipeData = FD_ISSET(fd[0], &readfds);                                     //ISSET testet, ob an DIESER PIPE etwas ansteht
       socketData = FD_ISSET(sock, &readfds);
 
       if(socketData!=0){                                                        //Wenn etwas ansteht, dann..
-        char *buffer = malloc(BUFFERLENGTH*sizeof(char));                       //Speicher für Puffervariable allokalisieren
-        memset(buffer,0, strlen(buffer));                                         //Puffer leeren
+        char *buffer = calloc(BUFFERLENGTH,sizeof(char));                       //Speicher für Puffervariable allokalisieren
+        //memset(buffer,0, strlen(buffer));                                     //Puffer leeren
         if((read(sock, buffer, BUFFERLENGTH)) < 0){                             //Lese nächsten Spielzug aus der Pipe
           perror("Couldn't read from socket");                                  //Error, wenn aus der Pipe nicht gelesen werden konnte
         }
         processAndSendResponse(buffer, sock);
       }
 
-      //TODO nachdem einmal was in die Pipe geschrieben wurde, gibt FD_ISSET permanent !=0 zurück was dazu führt dass der nächste zug "" ist
       if(pipeData!=0&&rdy){                                                     //Wenn etwas ansteht, dann..Aus der Pipe lesen
-        char *move = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
-        memset(move,0, sizeof(char)*BUFFERLENGTH_MOVE);
-        if((read(fd[0], move, BUFFERLENGTH_MOVE)) < 0){                              //Lese nächsten Spielzug aus der Pipe
+        char *move = calloc(BUFFERLENGTH_MOVE,sizeof(char));
+        //memset(move,0, sizeof(char)*BUFFERLENGTH_MOVE);
+        if((read(fd[0], move, BUFFERLENGTH_MOVE)) < 0){                         //Lese nächsten Spielzug aus der Pipe
           perror("Couldn't read from pipe");                                    //Error, wenn aus der Pipe nicht gelesen werden konnte
         }else {
           printf("MOVE: %s\n", move);
@@ -55,8 +54,8 @@ void performConnection(int sock){
 }
 
 void sendMove(char *move, int sock){
-  char *response = malloc(sizeof(char)*(BUFFERLENGTH_MOVE+strlen(move)));
-  memset(response, 0, strlen(move));
+  char *response = calloc(BUFFERLENGTH_MOVE+strlen(move),sizeof(char));
+  //memset(response, 0, strlen(move));
   strcpy(response, "PLAY ");
   strcat(response,move);
   strcat(response,"\n");
@@ -65,7 +64,7 @@ void sendMove(char *move, int sock){
 }
 
 void processAndSendResponse(char *buffer, int sock){
-  char **requests = malloc(BUFFERLENGTH*sizeof(char*));                         //Speicher für das Array der einzelnen Serveranfragen allokalisieren
+  char **requests = calloc(BUFFERLENGTH,sizeof(char*));                         //Speicher für das Array der einzelnen Serveranfragen allokalisieren
   strtoken(buffer, "\n",requests);                                              //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
 
   int x = 0;                                                                    //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können

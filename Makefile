@@ -17,7 +17,7 @@ $(EXECUTABLE): $(OBJFILES)
 	$(CC) $(LDFLAGS) $(OBJFILES) -o $@
 
 bashni: ./$(EXECUTABLE)
-	./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID)
+	valgrind --track-origins=yes --leak-check=full --trace-children=yes ./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID)
 
 .PHONY: clean
 clean:

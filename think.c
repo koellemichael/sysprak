@@ -1,34 +1,20 @@
 ﻿#include "think.h"
 
-void printfieldcopy(char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH]){
-  for(int i = 0; i<ROWS; i++){
-    for(int j = 0; j<COLUMNS; j++){
-      if(fieldcopy[i][j][strlen(fieldcopy[i][j])-1]==0){
-        printf("  ");
-      }else{
-        printf("%c ", fieldcopy[i][j][strlen(fieldcopy[i][j])-1]);
-      }
-
-    }
-    printf("\n");
-  }
-}
-
 void think(int sig){
   (void)sig;
   if(serverinfo->startcalc == 1){
     printfield();
-    //move = "A3:B4\0";
-    move move = bestMoveAll(serverinfo->clientplayernr);
-    printf("Spielzug: %s\n", move.move);
-    //strcat(move, "\n");
-    //move = "\0";
-    space = ' ';
-    shortMove = strtok(move.move, &space);
-    moveSize = strlen(shortMove);
-    //printf("Movesize: %d \n", moveSize);
-    //printf("strtok: %s\n", shortMove);
-    if(write (fd[1], shortMove, moveSize) != moveSize){     //schreibt in die Pipe; höchstens 12 sprünge möglich
+    move bestmove = {0};
+    bestmove = bestMoveAll(serverinfo->clientplayernr);
+    printf("Spielzug: %s\n", bestmove.move);
+    char space = ' ';
+    int moveSize = 0;                                                           //Größe von Short move
+    char* shortMove = NULL;
+    shortMove = strtok(bestmove.move, &space);
+    if(shortMove!=NULL)
+      moveSize = strlen(shortMove);
+
+    if(write (fd[1], shortMove, moveSize) != moveSize){                         //schreibt in die Pipe; höchstens 12 sprünge möglich
         perror("Error trying to write into the pipe");
         exit (EXIT_FAILURE);
     }
@@ -45,11 +31,13 @@ void think(int sig){
  */
 move bestMove(int i, int j){
   //Gültige Möglichkeiten für Stein(i,j)
-  movearray possibleMoves = calcPossibleMoves(i,j);
+  movearray possibleMoves = {0};
+  possibleMoves = calcPossibleMoves(i,j);
 
   //Maximum der Gewichtung der gültigen Möglichkeiten
   if(possibleMoves.count>0){
-    move bestmove = maxWeightMove(possibleMoves);
+    move bestmove = {0};
+    bestmove = maxWeightMove(possibleMoves);
     return bestmove;
   }else{
     printf("Kein Zug vorhanden\n");
@@ -65,7 +53,7 @@ move bestMove(int i, int j){
  * @return Bester möglicher Zug als String
  */
 move bestMoveAll(int playernr){
-  movearray bestmoves;
+  movearray bestmoves = {0};
   //memset(bestmoves.moves, 0, BUFFERLENGTH);
   int x=0;
   for(int i = 0; i<ROWS;i++){
@@ -101,12 +89,12 @@ move maxWeightMove(movearray moves){
     if(moves.moves[i].weight>max){
       max = moves.moves[i].weight;
       maxIndex = i;
-    }else if (moves.moves[i].weight==max){
+    }/*else if (moves.moves[i].weight==max){
       if((rand()%99)<50){
         max = moves.moves[i].weight;
         maxIndex = i;
       }
-    }
+    }*/
   }
 
   //Besten Spielzug zurückgeben
@@ -121,9 +109,10 @@ move maxWeightMove(movearray moves){
  */
 movearray calcPossibleMoves(int i, int j){
   printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
-  char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH];
+  char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH] = {{{0}}};
 
-  movearray possibleMoves;
+  movearray possibleMoves = {0};
+
   p = 0; //Zählvariable für die möglichen Züge im Array
   if(isQueen(i,j,serverinfo->field)==1){
     for(int a=-ROWS; a<ROWS; a++){
@@ -195,7 +184,7 @@ movearray calcPossibleMoves(int i, int j){
             case 0:     if(isFieldEmpty(i+(2*x), j+(2*y),fieldcopy) && (i+(2*x))>=0 && (j+(2*y))>=0 && (i+(2*x))<ROWS && (j+(2*y))<COLUMNS){
                           sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                           possibleMoves.moves[p].weight = JUMP;
-                          
+
                           printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
                           strcpy(fieldcopy[i+x][j+y], "");
 
@@ -242,20 +231,20 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
               if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)
                  && (i+a+vza)>=0 && (j+b+vzb)>=0
                  && (i+a+vza)<ROWS-1 && (j+b+vzb)<COLUMNS){
-
-                //Test: Liegen beim zweiten Sprung Steine im Weg  
+                   
+                //Test: Liegen beim zweiten Sprung Steine im Weg
                 obstacle = 0;
                 for(int c=1; c < abs(a); c++){                                       //Testen, ob Bei Damensprung Steine im Weg liegen
                    printf("ZWISCHENFELDPOSITION: %i, %c\n", (i+a)-vza*c, inttocolumn((j+b)-vzb*c));
                    if(!(isFieldEmpty((i+a)-vza*c, (j+b)-vzb*c,fieldcopy))){             //Geht den Weg ab, den dame überspringt
                        printf("FELD NICHT LEER");
                        obstacle=1;                                            //1, wenn Steine im Weg liegen
-                                }           
+                                }
                    }
                 //Wenn keine Steine im Weg liegen darf gesprungen werden
                 if(obstacle==0){
 
-                char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
+                char *onemore = calloc(BUFFERLENGTH_SMALL,sizeof(char));
                 memset(onemore, 0, strlen(onemore));
                 sprintf(onemore, ":%c%i", inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
 
@@ -267,7 +256,6 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
                 strcpy(fieldcopy[i+a][j+b], "");
                 strcpy(fieldcopy[i+(a+vza)][j+(b+vzb)], fieldcopy[i][j]);
                 strcpy(fieldcopy[i][j], "");
-                printfieldcopy(fieldcopy);
                 jump(i+(a+vza), j+(b+vzb), possibleMoves,p, fieldcopy);
                 p++;
                 }
@@ -293,13 +281,12 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
             printf("(-1)*(abs(i-x))/i-x) = %i\n", (-1)*((abs(i-x))/i-x));
             printf("(((abs(lastcol-j))/lastcol-j) = %i\n", (((abs(lastcol-j))/(lastcol-j))));
             printf("(-1)*(abs(j-y))/j-y) = %i\n", (-1)*((abs(j-y))/j-y));
-            
+
             if(!(((abs(lastrow-i))/(lastrow-i))==(-1)*((abs(i-x))/(i-x)))&&(((abs(lastcol-j))/(lastcol-j))==(-1)*((abs(j-y))/(j-y)))){
               printf("HIER GEHTS WEITER!\n");
-              char *onemore = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
+              char *onemore = calloc(BUFFERLENGTH_SMALL,sizeof(char));
               memset(onemore, 0, strlen(onemore));
               sprintf(onemore, ":%c%i",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
-
               strcat(possibleMoves->moves[p].move, onemore);
               possibleMoves->moves[p].weight += JUMP;
               printf("Weiterer möglicher Sprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);

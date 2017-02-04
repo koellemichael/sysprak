@@ -131,10 +131,9 @@ char inttocolumn(int col){
  *Gibt das aktuelle Spielfeld mit Informationen aus dem Shared Memory aus.
  *Ein kompletter String um Unterbrechungen zu vermeiden.
  */
-
 void printfield(void){
-  char *out = malloc(sizeof(char)*BUFFERLENGTH_FIELD);
-  char *buf = malloc(sizeof(char)*BUFFERLENGTH_SMALL);
+  char *out = calloc(BUFFERLENGTH_FIELD,sizeof(char));
+  char *buf = calloc(BUFFERLENGTH_SMALL,sizeof(char));
 /*
   char w[] = " \u26C0";
   char W[] = " \u26C1";

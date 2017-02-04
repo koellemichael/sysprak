@@ -15,9 +15,6 @@
 
 //Variablen einbinden
 int p;
-char space;                                                                     //Delimiter: Leeres Zeichen
-char* shortMove;                                                                //Move ohne Bufferspace danach
-int moveSize;                                                                   //Größe von Short move
 int vza;                                                                        //Vorzeichen von a
 int vzb;                                                                        //Vorzeichen von b
 int obstacle;                                                                      //testet, ob Steine im Weg liegen
