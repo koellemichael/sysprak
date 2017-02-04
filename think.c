@@ -287,7 +287,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
 	    printf("thiscol = %c\n", inttocolumn(thiscol));
 	
 
-            if(!(((abs(lastrow-thisrow))/(lastrow-thisrow))==(-1)*((abs(i-x))/(i-x)))&&(((abs(lastcol-thiscol))/(lastcol-thiscol))==(-1)*((abs(j-y))/(j-y)))){
+            if(!((((abs(lastrow-thisrow))/(lastrow-thisrow))==(-1)*((abs(i-x))/(i-x)))&&(((abs(lastcol-thiscol))/(lastcol-thiscol))==(-1)*((abs(j-y))/(j-y))))){
               printf("HIER GEHTS WEITER!\n");
               char *onemore = calloc(BUFFERLENGTH_SMALL,sizeof(char));
               memset(onemore, 0, strlen(onemore));
