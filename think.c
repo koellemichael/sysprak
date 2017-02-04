@@ -109,7 +109,8 @@ move maxWeightMove(movearray moves){
 movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH],movearray *possibleMoves, int p, int jump, int prevVZX, int prevVZY){
    printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
    //Variablen deklarieren/initialisieren
-   char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH] = {{{0}}};
+   char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH]={0};
+
    int xStart, yStart, xEnd, yEnd, vzx, vzy;
    xStart = yStart = xEnd = yEnd = vzx = vzy = 0;
 
@@ -142,9 +143,9 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
            case 0:  vzx = (int)(abs(x)/x);
                     vzy = (int)(abs(y)/y);
                     //Schauen das es nicht zurückspringt
-                    if(!(prevVZX==(-1*vzx) &&prevVZY==(-1*vzy))){
+                    if(!(prevVZX==(-1*vzx) &&prevVZY == (-1*vzy)) && (i+x+vzx)>=0 && (j+y+vzy)>=0 && (i+x+vzx)<ROWS && (j+y+vzy)<COLUMNS){
                       //Ist das daraufliegende Feld frei?
-                      if(isFieldEmpty(i+x+vzx, j+y+vzy,fieldcopy) && (i+x+vzx)>=0 && (j+y+vzy)>=0 && (i+x+vzx)<ROWS && (j+y+vzy)<COLUMNS){
+                      if(isFieldEmpty(i+x+vzx, j+y+vzy,fieldcopy)){
                         if(isQueen(i,j,fieldcopy)==1){
                           printf("Dame Sprung zu %c:%i\n",inttocolumn(j+y+vzy),COLUMNS-(i+x+vzx));
                           int obstacle = 0;
