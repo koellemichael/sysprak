@@ -1,4 +1,4 @@
-#include "think.h"
+﻿#include "think.h"
 
 void think(int sig){
   (void)sig;
@@ -231,9 +231,31 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
               if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)
                  && (i+a+vza)>=0 && (j+b+vzb)>=0
                  && (i+a+vza)<ROWS-1 && (j+b+vzb)<COLUMNS){
+		printf("\n========TEST1========\n");
+		 int lastrow = possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-4] - '0';         //lastrow-i positiv: nach oben; negativ nach unten
+	    int thisrow = possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-1] - '0';
+            int lastcol = columntoint(possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-5]);  //lastcol-j positiv: nach links; negativ nach rechts (?)
+	    int thiscol = columntoint(possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-2]);
+  	    printf("\n========TEST2========\n");
+	    printf("a: %i\n", a);
+            printf("b: %i\n", b);
+            printf("lastrow = %i\n", lastrow);
+            printf("thisrow = %i\n", thisrow);
+            printf("abs(lastrow-thisrow)) = %i\n", abs(lastrow-thisrow));
+            printf("(((abs(lastrow-thisrow))/lastrow-thisrow) = %i\n", (((abs(lastrow-thisrow))/(lastrow-thisrow))));
+            printf("((abs(a))/a) = %i\n", ((abs(a))/a));
+            printf("(((abs(lastcol-thiscol))/lastcol-thiscol) = %i\n", (((abs(lastcol-thiscol))/(lastcol-thiscol))));
+            printf("(abs-b))/b) = %i\n", ((abs(b))/b));
+	    printf("lastcol = %c\n", inttocolumn(lastcol));
+	    printf("thiscol = %c\n", inttocolumn(thiscol));
 
+
+            if(!(
+	      (abs(lastrow-thisrow)/(lastrow-thisrow)==(-1)*abs(a)/a)
+	      &&(abs(lastcol-thiscol)/(lastcol-thiscol)==abs(b)/b))){
                 //Test: Liegen beim zweiten Sprung Steine im Weg
                 obstacle = 0;
+  
                 for(int c=1; c < abs(a); c++){                                       //Testen, ob Bei Damensprung Steine im Weg liegen
                    printf("ZWISCHENFELDPOSITION: %i, %c\n", (i+a)-vza*c, inttocolumn((j+b)-vzb*c));
                    if(!(isFieldEmpty((i+a)-vza*c, (j+b)-vzb*c,fieldcopy))){             //Geht den Weg ab, den dame überspringt
@@ -241,6 +263,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
                        obstacle=1;                                            //1, wenn Steine im Weg liegen
                                 }
                    }
+		printf("\n========TEST3 obstacle: %i ========\n", obstacle);
                 //Wenn keine Steine im Weg liegen darf gesprungen werden
                 if(obstacle==0){
 
@@ -263,6 +286,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
             }
           }
         }
+}
   }else{
     for(int x = -1; x<2;x++){
       for(int y = -1; y<2;y++){
@@ -280,14 +304,16 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
             printf("thisrow = %i\n", thisrow);
             printf("abs(lastrow-thisrow)) = %i\n", abs(lastrow-thisrow));
             printf("(((abs(lastrow-thisrow))/lastrow-thisrow) = %i\n", (((abs(lastrow-thisrow))/(lastrow-thisrow))));
-            printf("(-1)*(abs(i-x))/i-x) = %i\n", (-1)*((abs(i-x))/i-x));
+            printf("((abs(x))/x) = %i\n", ((abs(x))/x));
             printf("(((abs(lastcol-thiscol))/lastcol-thiscol) = %i\n", (((abs(lastcol-thiscol))/(lastcol-thiscol))));
-            printf("(-1)*(abs(j-y))/j-y) = %i\n", (-1)*((abs(j-y))/j-y));
+            printf("(abs-y))/y) = %i\n", ((abs(y))/y));
 	    printf("lastcol = %c\n", inttocolumn(lastcol));
 	    printf("thiscol = %c\n", inttocolumn(thiscol));
 	
 
-            if(!((((abs(lastrow-thisrow))/(lastrow-thisrow))==(-1)*((abs(i-x))/(i-x)))&&(((abs(lastcol-thiscol))/(lastcol-thiscol))==(-1)*((abs(j-y))/(j-y))))){
+            if(!(
+	      (abs(lastrow-thisrow)/(lastrow-thisrow)==abs(x)/x)
+	      &&(abs(lastcol-thiscol)/(lastcol-thiscol)==abs(y)/y))){
               printf("HIER GEHTS WEITER!\n");
               char *onemore = calloc(BUFFERLENGTH_SMALL,sizeof(char));
               memset(onemore, 0, strlen(onemore));
