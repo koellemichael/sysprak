@@ -32,7 +32,7 @@ void performConnection(int sock){
         char *buffer = calloc(BUFFERLENGTH,sizeof(char));                       //Speicher für Puffervariable allokalisieren
         //memset(buffer,0, strlen(buffer));                                     //Puffer leeren
         if((read(sock, buffer, BUFFERLENGTH)) < 0){                             //Lese nächsten Spielzug aus der Pipe
-          perror("Couldn't read from socket");                                  //Error, wenn aus der Pipe nicht gelesen werden konnte
+          perror("Host is not responding");                                     //Error, wenn aus der Pipe nicht gelesen werden konnte
         }
         processAndSendResponse(buffer, sock);
       }
