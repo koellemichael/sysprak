@@ -12,17 +12,17 @@ play: $(EXECUTABLE) clean bashni
 vplay: $(EXECUTABLE) clean bashnivalgrind
 
 .c.o:
-	$(CC) $(CFLAGS) $< -o $@
+	-$(CC) $(CFLAGS) $< -o $@
 
 $(EXECUTABLE): $(OBJFILES)
-	$(CC) $(LDFLAGS) $(OBJFILES) -o $@
+	-$(CC) $(LDFLAGS) $(OBJFILES) -o $@
 
 bashni: ./$(EXECUTABLE)
-	./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID)
+	-./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID)
 
 bashnivalgrind: ./$(EXECUTABLE)
-	valgrind --track-origins=yes --leak-check=full --trace-children=yes ./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID)
+	-valgrind --track-origins=yes --leak-check=full --trace-children=yes ./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID)
 
 .PHONY: clean
 clean:
-	rm -f *.o
+	-rm -f *.o
