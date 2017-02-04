@@ -41,7 +41,7 @@ int isBlack(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]){
  *@return 1 Feld frei, 0 wenn besetzt
  */
 int isFieldEmpty(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]){
-  if((!strcmp(field[i][j],""))){
+  if(*field[i][j]=='\0'){
     return 1;
   } else {
     return 0;
