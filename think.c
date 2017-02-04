@@ -225,11 +225,11 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
 
                     break;
            case -1: if(isQueen(i, j, fieldcopy)==1 && jump ==0){
-                      printf("Dame Zug\n");
+                      printf("Dame Zug zu %c:%i\n",inttocolumn(j+y),COLUMNS-(i+x));
 
                       int obstacle = 0;
-                      printf("Zu prüfende Zwischensteine: %i\n",abs(y));
-                      for(int a = 0; a<abs(y);a++){
+                      printf("Zu prüfende Zwischensteine: %i\n",abs(y)-1);
+                      for(int a = 0; a<abs(y)-1;a++){
                         printf("Teste ob Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
                         if((i+((a+1)*vzx))>=0 && (i+((a+1)*vzx))<ROWS && (j+((a+1)*vzy))>=0 && (j+((a+1)*vzy))<COLUMNS){
                           if(!isFieldEmpty(i+((a+1)*vzx),j+((a+1)*vzy),fieldcopy)){
