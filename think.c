@@ -4,7 +4,7 @@ void think(int sig){
   (void)sig;
   if(serverinfo->startcalc == 1){
     printfield();
-    move bestmove = {0};
+    move bestmove = {.move = {0},.weight=0};
     bestmove = bestMoveAll(serverinfo->clientplayernr);
     printf("Spielzug: %s\n", bestmove.move);
     char space = ' ';
@@ -31,12 +31,12 @@ void think(int sig){
  */
 move bestMove(int i, int j){
   //Gültige Möglichkeiten für Stein(i,j)
-  movearray possibleMoves = {0};
+  movearray possibleMoves = {.moves = {{.move={0},.weight =0}},.count=0};
   possibleMoves = calcPossibleMoves(i,j);
 
   //Maximum der Gewichtung der gültigen Möglichkeiten
   if(possibleMoves.count>0){
-    move bestmove = {0};
+    move bestmove = {.move = {0},.weight=0};
     bestmove = maxWeightMove(possibleMoves);
     return bestmove;
   }else{
@@ -53,7 +53,7 @@ move bestMove(int i, int j){
  * @return Bester möglicher Zug als String
  */
 move bestMoveAll(int playernr){
-  movearray bestmoves = {0};
+  movearray bestmoves = {.moves = {{.move={0},.weight =0}},.count=0};
   //memset(bestmoves.moves, 0, BUFFERLENGTH);
   int x=0;
   for(int i = 0; i<ROWS;i++){
@@ -111,7 +111,7 @@ movearray calcPossibleMoves(int i, int j){
   printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
   char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH] = {{{0}}};
 
-  movearray possibleMoves = {0};
+  movearray possibleMoves = {.moves = {{.move={0},.weight =0}},.count=0};
 
   p = 0; //Zählvariable für die möglichen Züge im Array
   if(isQueen(i,j,serverinfo->field)==1){
@@ -231,7 +231,7 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
               if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)
                  && (i+a+vza)>=0 && (j+b+vzb)>=0
                  && (i+a+vza)<ROWS-1 && (j+b+vzb)<COLUMNS){
-                   
+
                 //Test: Liegen beim zweiten Sprung Steine im Weg
                 obstacle = 0;
                 for(int c=1; c < abs(a); c++){                                       //Testen, ob Bei Damensprung Steine im Weg liegen
