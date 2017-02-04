@@ -1,4 +1,4 @@
-﻿#include "think.h"
+#include "think.h"
 
 void think(int sig){
   (void)sig;
@@ -273,16 +273,21 @@ void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][C
           && (i+(2*x))>=0 && (j+(2*y))>=0
           && (i+(2*x))<ROWS && (j+(2*y))<COLUMNS){
             int lastrow = possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-4] - '0';         //lastrow-i positiv: nach oben; negativ nach unten
+	    int thisrow = possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-1] - '0';
             int lastcol = columntoint(possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-5]);  //lastcol-j positiv: nach links; negativ nach rechts (?)
+	    int thiscol = columntoint(possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-2]);
             printf("lastrow = %i\n", lastrow);
-            printf("i = %i\n", i);
-            printf("abs(lastrow-i)) = %i\n", abs(lastrow-i));
-            printf("(((abs(lastrow-i))/lastrow-i) = %i\n", (((abs(lastrow-i))/(lastrow-i))));
+            printf("thisrow = %i\n", thisrow);
+            printf("abs(lastrow-thisrow)) = %i\n", abs(lastrow-thisrow));
+            printf("(((abs(lastrow-thisrow))/lastrow-thisrow) = %i\n", (((abs(lastrow-thisrow))/(lastrow-thisrow))));
             printf("(-1)*(abs(i-x))/i-x) = %i\n", (-1)*((abs(i-x))/i-x));
-            printf("(((abs(lastcol-j))/lastcol-j) = %i\n", (((abs(lastcol-j))/(lastcol-j))));
+            printf("(((abs(lastcol-thiscol))/lastcol-thiscol) = %i\n", (((abs(lastcol-thiscol))/(lastcol-thiscol))));
             printf("(-1)*(abs(j-y))/j-y) = %i\n", (-1)*((abs(j-y))/j-y));
+	    printf("lastcol = %c\n", inttocolumn(lastcol));
+	    printf("thiscol = %c\n", inttocolumn(thiscol));
+	
 
-            if(!(((abs(lastrow-i))/(lastrow-i))==(-1)*((abs(i-x))/(i-x)))&&(((abs(lastcol-j))/(lastcol-j))==(-1)*((abs(j-y))/(j-y)))){
+            if(!(((abs(lastrow-thisrow))/(lastrow-thisrow))==(-1)*((abs(i-x))/(i-x)))&&(((abs(lastcol-thiscol))/(lastcol-thiscol))==(-1)*((abs(j-y))/(j-y)))){
               printf("HIER GEHTS WEITER!\n");
               char *onemore = calloc(BUFFERLENGTH_SMALL,sizeof(char));
               memset(onemore, 0, strlen(onemore));
