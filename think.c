@@ -32,7 +32,7 @@ void think(int sig){
 move bestMove(int i, int j){
   //Gültige Möglichkeiten für Stein(i,j)
   movearray possibleMoves = {.moves = {{.move={0},.weight =0}},.count=0};
-  possibleMoves = calcPossibleMoves(i,j);
+  possibleMoves = calcPossibleMoves(i,j,serverinfo->field,&possibleMoves,0,0,0,0);
 
   //Maximum der Gewichtung der gültigen Möglichkeiten
   if(possibleMoves.count>0){
@@ -54,7 +54,6 @@ move bestMove(int i, int j){
  */
 move bestMoveAll(int playernr){
   movearray bestmoves = {.moves = {{.move={0},.weight =0}},.count=0};
-  //memset(bestmoves.moves, 0, BUFFERLENGTH);
   int x=0;
   for(int i = 0; i<ROWS;i++){
     for(int j = 0; j<COLUMNS;j++){
@@ -89,12 +88,12 @@ move maxWeightMove(movearray moves){
     if(moves.moves[i].weight>max){
       max = moves.moves[i].weight;
       maxIndex = i;
-    }/*else if (moves.moves[i].weight==max){
+    }else if (moves.moves[i].weight==max){
       if((rand()%99)<50){
         max = moves.moves[i].weight;
         maxIndex = i;
       }
-    }*/
+    }
   }
 
   //Besten Spielzug zurückgeben
@@ -107,205 +106,159 @@ move maxWeightMove(movearray moves){
  * @param j Spalte des Steins
  * @return Array mit allen mögichen Spielzügen und zugehörigen Gewichtungen
  */
-movearray calcPossibleMoves(int i, int j){
-  printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
-  char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH] = {{{0}}};
+movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH],movearray *possibleMoves, int p, int jump, int prevVZX, int prevVZY){
+   printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
+   //Variablen deklarieren/initialisieren
+   char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH] = {{{0}}};
+   int xStart, yStart, xEnd, yEnd, vzx, vzy;
+   xStart = yStart = xEnd = yEnd = vzx = vzy = 0;
 
-  movearray possibleMoves = {.moves = {{.move={0},.weight =0}},.count=0};
+   //Suchgrenzen
+   if(isQueen(i, j, field)==1){
+     xStart = -8;
+     yStart = -8;
+     xEnd = 8;
+     yEnd = 8;
+   }else{
+     xStart = -1;
+     yStart = -1;
+     xEnd = 2;
+     yEnd = 2;
+   }
 
-  p = 0; //Zählvariable für die möglichen Züge im Array
-  if(isQueen(i,j,serverinfo->field)==1){
-    for(int a=-ROWS; a<ROWS; a++){
-      for (int b=-COLUMNS; b<COLUMNS; b++){
-        if(!(a==0&&b==0) && abs(a)==abs(b) && (i+a)>0 && (j+b)>0 && (i+a)<ROWS-1 && (j+b)<COLUMNS-1){
-          //Spielfeld kopieren
-          for(int m = 0; m<ROWS; m++){
-            for(int n = 0; n<COLUMNS; n++){
-              memset(fieldcopy, 0, strlen(fieldcopy[m][n]));
-              strcpy(fieldcopy[m][n], serverinfo->field[m][n]);
-            }
-          }
-            switch (isAlly(i+a,j+b,fieldcopy)){
-                case 0:  vza= (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
-                         vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
-                        if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)){
-                            obstacle = 0;                                                      //Testet, ob Steine im Weg liegen
-                            printf("Testi Test");
-                            for(int c=1; c < abs(a); c++){                                       //Testen, ob Bei Damensprung Steine im Weg liegen
-                                printf("ZWISCHENFELDPOSITION: %i, %c\n", (i+a)-vza*c, inttocolumn((j+b)-vzb*c));
-                                if(!(isFieldEmpty((i+a)-vza*c, (j+b)-vzb*c,fieldcopy))){             //Geht den Weg ab, den dame überspringt
-                                    printf("FELD NICHT LEER");
-                                    obstacle=1;                                            //1, wenn Steine im Weg liegen
-                                }
+   for(int x = xStart; x<xEnd; x++){
+     for(int y = yStart; y<yEnd; y++){
+       if(!(x==0&&y==0) && abs(x)==abs(y) && (i+x)>=0 && (j+y)>=0 && (i+x)<ROWS && (j+y)<COLUMNS){
+         //printf("Prüfe Stein an der Stelle: %c:%i mit i: %i und x: %i\n", inttocolumn(j+y),COLUMNS-(i+x),i,x);
+         //Spielfeld kopieren
+         for(int m = 0; m<ROWS; m++){
+           for(int n = 0; n<COLUMNS; n++){
+             memset(fieldcopy, 0, strlen(fieldcopy[m][n]));
+             strcpy(fieldcopy[m][n], field[m][n]);
+           }
+         }
+
+         switch (isAlly(i+x,j+y,fieldcopy)){
+           case 0:  vzx = (int)(abs(x)/x);
+                    vzy = (int)(abs(y)/y);
+                    if(!(prevVZX==(-1*vzx) &&prevVZY==(-1*vzy))){
+                      //Ist das daraufliegende Feld frei?
+                      if(isFieldEmpty(i+x+vzx, j+y+vzy,fieldcopy) && (i+x+vzx)>=0 && (j+y+vzy)>=0 && (i+x+vzx)<ROWS && (j+y+vzy)<COLUMNS){
+                        if(isQueen(i,j,fieldcopy)==1){
+                          printf("Dame Sprung\n");
+                          int obstacle = 0;
+                          printf("Zu prüfende Zwischensteine: %i\n",abs(y)-1);
+                          for(int a = 0; a<abs(y)-1;a++){
+                            printf("Teste ob Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
+                            if(!isFieldEmpty(i+((a+1)*vzx),j+((a+1)*vzy),fieldcopy)){
+                              if(i+((a+1)*vzx)!=j+y &&  j+((a+1)*vzy) != i+x){
+                                printf("Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
+                                obstacle = 1;
+                              }else{
+                                printf("Zu überspringender Stein bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
+                              }
                             }
-                          if(obstacle==0){                                                    //Nur wenn check != 1, also keine Steine im Weg
-                          printf("Kathis Test: %i %i, %c \n", j+b, j+b+vzb, inttocolumn(j+b+vzb));
-                          sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j), ROWS-i, inttocolumn(j+(b+vzb)), (ROWS-i)-(a+vza));
-                          possibleMoves.moves[p].weight = JUMP;
-                          strcpy(fieldcopy[i+a][j+b], "");
-                          strcpy(fieldcopy[i+(a+vza)][j+(b+vzb)], fieldcopy[i][j]);
-                          strcpy(fieldcopy[i][j], "");
-                          printf("Möglicher Damesprung %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
-                          jump(i+(a+vza), j+(b+vzb), &possibleMoves,p, fieldcopy);
-                          p++;
                           }
-                        }
-                        break;
-                case -1:if((i>(i+a && serverinfo->clientplayernr == 0)||(i<(i+a && serverinfo->clientplayernr == 1)))){
-                          sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+b),COLUMNS-(i+a));
-                          possibleMoves.moves[p].weight = MOVE;
-                          p++;
-                        }
-                        break;
+                          if(obstacle==0){
+                            //Werte im Move speichern
+                            //Wenn noch nichts im Move steht dann Startposition hinzufügen
+                            if(!strcmp(possibleMoves->moves[p].move, "")){
+                              sprintf(possibleMoves->moves[p].move, "%c%i",inttocolumn(j),COLUMNS-i);
+                            }
+                            //Ziel zum Move hinzufügen
+                            char destination[4] = {0};
+                            sprintf(destination, ":%c%i", inttocolumn(j+y+vzy),COLUMNS-(i+x+vzx));
+                            strcat(possibleMoves->moves[p].move, destination);
+                            possibleMoves->moves[p].weight += JUMP;
 
-                case 1: break;
+                            printf("Möglicher Damesprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);
 
-                default:perror("Unknown piece");
-                        exit(EXIT_FAILURE);
-                        break;
-          }
-        }
-      }
-    }
-  }else{
-    for(int x = -1; x<2;x++){
-      for(int y = -1; y<2;y++){
-        if(!(x==0&&y==0) && abs(x)==abs(y) && (i+x)>=0 && (j+y)>=0 && (i+x)<ROWS && (j+y)<COLUMNS){
-          //Spielfeld kopieren
-          for(int m = 0; m<ROWS; m++){
-            for(int n = 0; n<COLUMNS; n++){
-              memset(fieldcopy, 0, strlen(fieldcopy[m][n]));
-              strcpy(fieldcopy[m][n], serverinfo->field[m][n]);
-            }
-          }
-          memset(possibleMoves.moves[p].move,0,strlen(possibleMoves.moves[p].move));
-          possibleMoves.moves[p].weight = 0;
-          switch (isAlly(i+x,j+y,fieldcopy)){
-            case 0:     if(isFieldEmpty(i+(2*x), j+(2*y),fieldcopy) && (i+(2*x))>=0 && (j+(2*y))>=0 && (i+(2*x))<ROWS && (j+(2*y))<COLUMNS){
-                          sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
-                          possibleMoves.moves[p].weight = JUMP;
+                            //Übersprungerner Stein löschen und eigenen Stein auf das Feld hinter dem Überprungen setzen
+                            strcpy(fieldcopy[i+x][j+y], "");
+                            strcpy(fieldcopy[i+x+vzx][j+y+vzy], fieldcopy[i][j]);
+                            strcpy(fieldcopy[i][j], "");
 
-                          printf("Möglicher Sprung mit Gewicht %s %i\n",possibleMoves.moves[p].move, possibleMoves.moves[p].weight);
+                            jump = 1;
+                            calcPossibleMoves(i+x+vzx, j+y+vzy,fieldcopy,possibleMoves,p,jump,vzx,vzy);
+                            p++;
+                          }
+                        }else{
+                          printf("Normaler Sprung\n");
+                          //Werte im Move speichern
+                          //Wenn noch nichts im Move steht dann Startposition hinzufügen
+                          if(!strcmp(possibleMoves->moves[p].move, "")){
+                            sprintf(possibleMoves->moves[p].move, "%c%i",inttocolumn(j),COLUMNS-i);
+                          }
+                          //Ziel zum Move hinzufügen
+                          char destination[4] = {0};
+                          sprintf(destination, ":%c%i", inttocolumn(j+y+vzy),COLUMNS-(i+x+vzx));
+                          strcat(possibleMoves->moves[p].move, destination);
+                          possibleMoves->moves[p].weight += JUMP;
+
+                          printf("Möglicher Sprung mit Gewicht %s %i gespeichert in %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight,p);
+
+                          //Übersprungerner Stein löschen und eigenen Stein auf das Feld hinter dem Überprungen setzen
                           strcpy(fieldcopy[i+x][j+y], "");
-
-                          strcpy(fieldcopy[i+(2*x)][j+(2*y)], fieldcopy[i][j]);
+                          strcpy(fieldcopy[i+x+vzx][j+y+vzy], fieldcopy[i][j]);
                           strcpy(fieldcopy[i][j], "");
-                          if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
-                            fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)]-1)]='W';
-                          }else if((serverinfo->clientplayernr==1&&i+(2*x)==ROWS-1)){
-                            fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)]-1)]='B';
+
+                          //Ist eine Dame beim Sprung entstanden?
+                          if((serverinfo->clientplayernr==0&&(i+x+vzx)==0)){
+                            printf("Weiße Dame bei %c%i erstellt\n",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
+                            fieldcopy[i+x+vzx][j+y+vzy][strlen(fieldcopy[i+x+vzx][j+y+vzy])-1]='W';
+                          }else if((serverinfo->clientplayernr==1&&i+x+vzx==ROWS-1)){
+                            printf("Schwarze Dame bei %c%i erstellt\n",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
+                            fieldcopy[i+x+vzx][j+y+vzy][strlen(fieldcopy[i+x+vzx][j+y+vzy])-1]='B';
                           }
-                          jump(i+(2*x), j+(2*y), &possibleMoves,p,fieldcopy);
+
+                          jump = 1;
+                          calcPossibleMoves(i+x+vzx, j+y+vzy,fieldcopy,possibleMoves,p,jump,vzx,vzy);
                           p++;
                         }
-                        break;
-              case -1:  if((i>(i+x) && serverinfo->clientplayernr == 0)||(i<(i+x) && serverinfo->clientplayernr == 1)){
-                          sprintf(possibleMoves.moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
-                          possibleMoves.moves[p].weight = MOVE;
-                          p++;
+                      }
+                    }else{
+                      printf("FALSCHE RICHTUNG\n");
+                    }
+
+                    break;
+           case -1: if(isQueen(i, j, fieldcopy)==1 && jump ==0){
+                      printf("Dame Zug\n");
+                      //Speichern des Zuges
+                      int obstacle = 0;
+                      printf("Zu prüfende Zwischensteine: %i\n",abs(y)-1);
+                      for(int a = 0; a<abs(y)-1;a++){
+                        printf("Teste ob Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
+                        if(!isFieldEmpty(i+((a+1)*vzx),j+((a+1)*vzy),fieldcopy)){
+                          printf("Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
+                          obstacle = 1;
                         }
-                        break;
-              case 1:   break;
-              default:  perror("Unknown piece");
-                        exit(EXIT_FAILURE);
-                        break;
-          }
-        }
-      }
-    }
-  }
-  possibleMoves.count = p;
-  return possibleMoves;
-}
+                      }
+                      if(obstacle==0){
+                        sprintf(possibleMoves->moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
+                        possibleMoves->moves[p].weight = MOVE;
+                        printf("Möglicher Zug mit Gewicht %s %i gespeichert in %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight,p);
+                        p++;
+                      }
+                    }else{
+                      printf("Normaler Zug\n");
+                      if(((i>(i+x) && serverinfo->clientplayernr == 0)||(i<(i+x) && serverinfo->clientplayernr == 1))&&jump==0){
+                       //Speichern des Zuges
+                       sprintf(possibleMoves->moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
+                       possibleMoves->moves[p].weight = MOVE;
+                       printf("Möglicher Zug mit Gewicht %s %i gespeichert in %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight,p);
+                       p++;
+                      }
+                    }
+                    break;
+           default: break;
+         }
+       }
+     }
+   }
 
-void jump (int i, int j, movearray *possibleMoves, int p, char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH]){
-  if(isQueen(i, j,fieldcopy)==1){
-       for(int a = -8; a<8;a++){
-          for(int b = -8; b<8; b++){
-            if(!(a==0&&b==0) && abs(a)==abs(b)
-              && (i+a)>0 && (j+b)>0
-              && (i+a)<ROWS-1 && (j+b)<COLUMNS-1
-              && isAlly(i+a,j+b,fieldcopy)==0){                               //TODO einfügen von nicht rückwärts springen
-              vza= (int)(abs(a)/a);                                            //Vorzeichen: wenn a negativ, dann -1 addiert
-              vzb= (int)(abs(b)/b);                                            //Vorzeichen: wenn b positiv, dann +1 addiert
-              if(isFieldEmpty(i+(a+vza), j+(b+vzb),fieldcopy)
-                 && (i+a+vza)>=0 && (j+b+vzb)>=0
-                 && (i+a+vza)<ROWS-1 && (j+b+vzb)<COLUMNS){
-
-                //Test: Liegen beim zweiten Sprung Steine im Weg
-                obstacle = 0;
-                for(int c=1; c < abs(a); c++){                                       //Testen, ob Bei Damensprung Steine im Weg liegen
-                   printf("ZWISCHENFELDPOSITION: %i, %c\n", (i+a)-vza*c, inttocolumn((j+b)-vzb*c));
-                   if(!(isFieldEmpty((i+a)-vza*c, (j+b)-vzb*c,fieldcopy))){             //Geht den Weg ab, den dame überspringt
-                       printf("FELD NICHT LEER");
-                       obstacle=1;                                            //1, wenn Steine im Weg liegen
-                                }
-                   }
-                //Wenn keine Steine im Weg liegen darf gesprungen werden
-                if(obstacle==0){
-
-                char *onemore = calloc(BUFFERLENGTH_SMALL,sizeof(char));
-                memset(onemore, 0, strlen(onemore));
-                sprintf(onemore, ":%c%i", inttocolumn((j)+(b+vzb)), (ROWS-i)-(a+vza));
-
-                strcat(possibleMoves->moves[p].move, onemore);
-                possibleMoves->moves[p].weight += JUMP;
-                printf("Weiterer möglicher Damesprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);
-                sprintf(onemore, ":%c%i", inttocolumn(j+(b+vzb)), (ROWS-i)-(a+vza));
-                free(onemore);
-                strcpy(fieldcopy[i+a][j+b], "");
-                strcpy(fieldcopy[i+(a+vza)][j+(b+vzb)], fieldcopy[i][j]);
-                strcpy(fieldcopy[i][j], "");
-                jump(i+(a+vza), j+(b+vzb), possibleMoves,p, fieldcopy);
-                p++;
-                }
-              }
-            }
-          }
-        }
-  }else{
-    for(int x = -1; x<2;x++){
-      for(int y = -1; y<2;y++){
-        if(!(x==0&&y==0) && abs(x)==abs(y)
-          && (i+x)>=0 && (j+y)>=0
-          && (i+x)<ROWS && (j+y)<COLUMNS
-          && isAlly(i+x,j+y,fieldcopy)==0 && isFieldEmpty(i+(2*x), j+(2*y),fieldcopy)
-          && (i+(2*x))>=0 && (j+(2*y))>=0
-          && (i+(2*x))<ROWS && (j+(2*y))<COLUMNS){
-            int lastrow = possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-4] - '0';         //lastrow-i positiv: nach oben; negativ nach unten
-            int lastcol = columntoint(possibleMoves->moves[p].move[strlen(possibleMoves->moves[p].move)-5]);  //lastcol-j positiv: nach links; negativ nach rechts (?)
-            printf("lastrow = %i\n", lastrow);
-            printf("i = %i\n", i);
-            printf("abs(lastrow-i)) = %i\n", abs(lastrow-i));
-            printf("(((abs(lastrow-i))/lastrow-i) = %i\n", (((abs(lastrow-i))/(lastrow-i))));
-            printf("(-1)*(abs(i-x))/i-x) = %i\n", (-1)*((abs(i-x))/i-x));
-            printf("(((abs(lastcol-j))/lastcol-j) = %i\n", (((abs(lastcol-j))/(lastcol-j))));
-            printf("(-1)*(abs(j-y))/j-y) = %i\n", (-1)*((abs(j-y))/j-y));
-
-            if(!(((abs(lastrow-i))/(lastrow-i))==(-1)*((abs(i-x))/(i-x)))&&(((abs(lastcol-j))/(lastcol-j))==(-1)*((abs(j-y))/(j-y)))){
-              printf("HIER GEHTS WEITER!\n");
-              char *onemore = calloc(BUFFERLENGTH_SMALL,sizeof(char));
-              memset(onemore, 0, strlen(onemore));
-              sprintf(onemore, ":%c%i",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
-              strcat(possibleMoves->moves[p].move, onemore);
-              possibleMoves->moves[p].weight += JUMP;
-              printf("Weiterer möglicher Sprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);
-              strcpy(fieldcopy[i+x][j+y], "");
-              strcpy(fieldcopy[i+(2*x)][j+(2*y)], fieldcopy[i][j]);
-              strcpy(fieldcopy[i][j], "");
-              if((serverinfo->clientplayernr==0&&(i+(2*x))==0)){
-                printf("Weiße QUEEN %c%i erstellt\n",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
-                fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)])-1]='W';
-              }else if((serverinfo->clientplayernr==1&&i+(2*x)==ROWS-1)){
-                printf("Schwarze QUEEN %c%i erstellt\n",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
-                fieldcopy[i+(2*x)][j+(2*y)][strlen(fieldcopy[i+(2*x)][j+(2*y)])-1]='B';
-            }
-            free(onemore);
-            jump(i+(2*x), j+(2*y), possibleMoves, p,fieldcopy);
-            p++;
-          }
-        }
-      }
-    }
-  }
-}
+   prevVZX = 0;
+   prevVZY = 0;
+   jump = 0;
+   possibleMoves->count = p;
+   return *possibleMoves;
+ }

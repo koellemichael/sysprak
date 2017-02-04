@@ -13,11 +13,6 @@
 #include "responseHandler.h"
 #include "field.h"
 
-//Variablen einbinden
-int p;
-int vza;                                                                        //Vorzeichen von a
-int vzb;                                                                        //Vorzeichen von b
-int obstacle;                                                                      //testet, ob Steine im Weg liegen
 //Externe Variablen
 extern int fd[2];
 extern struct serverinfo *serverinfo;                                           //Globales struct für die Serverinfos
@@ -36,11 +31,8 @@ typedef struct {
 //Funktionen deklarieren/Users/KatharinaWinter/Desktop/Systempraktikum/sysprak/think.h
 void think(int sig);
 move maxWeightMove(movearray moves);
-movearray calcPossibleMoves(int i, int j);
+movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH],movearray *possibleMoves, int p, int jump, int prevVZX, int prevVZY);
 move bestMoveAll(int playernr);
 move bestMove(int i, int j);
-void jump (int i, int j, movearray *possibleMoves, int p,char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH]);
-
-
 
 #endif
