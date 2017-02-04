@@ -129,7 +129,7 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
    for(int x = xStart; x<xEnd; x++){
      for(int y = yStart; y<yEnd; y++){
        if(!(x==0&&y==0) && abs(x)==abs(y) && (i+x)>=0 && (j+y)>=0 && (i+x)<ROWS && (j+y)<COLUMNS){
-         //printf("Prüfe Stein an der Stelle: %c:%i mit i: %i und x: %i\n", inttocolumn(j+y),COLUMNS-(i+x),i,x);
+
          //Spielfeld kopieren
          for(int m = 0; m<ROWS; m++){
            for(int n = 0; n<COLUMNS; n++){
@@ -141,6 +141,7 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
          switch (isAlly(i+x,j+y,fieldcopy)){
            case 0:  vzx = (int)(abs(x)/x);
                     vzy = (int)(abs(y)/y);
+                    //Schauen das es nicht zurückspringt
                     if(!(prevVZX==(-1*vzx) &&prevVZY==(-1*vzy))){
                       //Ist das daraufliegende Feld frei?
                       if(isFieldEmpty(i+x+vzx, j+y+vzy,fieldcopy) && (i+x+vzx)>=0 && (j+y+vzy)>=0 && (i+x+vzx)<ROWS && (j+y+vzy)<COLUMNS){
