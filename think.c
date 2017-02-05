@@ -111,7 +111,6 @@ move maxWeightMove(movearray moves){
  * @return Array mit allen mögichen Spielzügen und zugehörigen Gewichtungen
  */
 movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH],movearray *possibleMoves, int p, int jump, int prevVZX, int prevVZY){
-  printf("Calculate possible moves for piece(%c:%i)\n",inttocolumn(j),COLUMNS-i);
    //Variablen deklarieren/initialisieren
    char fieldcopy[ROWS][COLUMNS][BUFFERLENGTH]={{{0}}};
 
@@ -151,22 +150,16 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                       //Ist das daraufliegende Feld frei?
                       if(isFieldEmpty(i+x+vzx, j+y+vzy,fieldcopy)){
                         if(isQueen(i,j,fieldcopy)==1){
-                          printf("Dame Sprung zu %c:%i\n",inttocolumn(j+y+vzy),COLUMNS-(i+x+vzx));
                           int obstacle = 0;
                           //Alle zwischenliegende Steine prüfen
                           for(int a = 0; a<abs(y);a++){
-                            printf("Teste ob Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
                             //Schauen das das es in den Grenzen liegt
                             if((i+((a+1)*vzx))>=0 && (i+((a+1)*vzx))<ROWS && (j+((a+1)*vzy))>=0 && (j+((a+1)*vzy))<COLUMNS){
-                              printf("Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
                               //Ist das Feld leer?
                               if(!isFieldEmpty(i+((a+1)*vzx),j+((a+1)*vzy),fieldcopy)){
                                 //Wenn das Feld nicht leer ist, prüfen ob es der zu überspringende Stein ist
                                 if(i+((a+1)*vzx)!=i+x &&  j+((a+1)*vzy) != j+y){
-                                  printf("Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
                                   obstacle = 1;
-                                }else{
-                                  printf("Zu überspringender Stein bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
                                 }
                               }
                             }
@@ -183,8 +176,6 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                             strcat(possibleMoves->moves[p].move, destination);
                             possibleMoves->moves[p].weight += JUMP;
 
-                            printf("Möglicher Damesprung mit Gewicht %s %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight);
-
                             //Übersprungerner Stein löschen und eigenen Stein auf das Feld hinter dem Überprungen setzen
                             fieldcopy[i+x][j+y][strlen(fieldcopy[i+x][j+y])-1]='\0';
                             strcpy(fieldcopy[i+x+vzx][j+y+vzy], fieldcopy[i][j]);
@@ -196,7 +187,6 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                           }
                         }else{
                           //Werte im Move speichern
-                          printf("Normaler Sprung\n");
                           //Wenn noch nichts im Move steht dann Startposition hinzufügen
                           if(!strcmp(possibleMoves->moves[p].move, "")){
                             sprintf(possibleMoves->moves[p].move, "%c%i",inttocolumn(j),COLUMNS-i);
@@ -207,7 +197,6 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                           sprintf(destination, ":%c%i", inttocolumn(j+y+vzy),COLUMNS-(i+x+vzx));
                           strcat(possibleMoves->moves[p].move, destination);
                           possibleMoves->moves[p].weight += JUMP;
-                          printf("Möglicher Sprung mit Gewicht %s %i gespeichert in %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight,p);
 
                           //Übersprungerner Stein löschen und eigenen Stein auf das Feld hinter dem Überprungen setzen
                           fieldcopy[i+x][j+y][strlen(fieldcopy[i+x][j+y])-1]='\0';
@@ -216,10 +205,8 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
 
                           //Ist eine Dame beim Sprung entstanden?
                           if((serverinfo->clientplayernr==0&&(i+x+vzx)==0)){
-                            printf("Weiße Dame bei %c%i erstellt\n",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                             fieldcopy[i+x+vzx][j+y+vzy][strlen(fieldcopy[i+x+vzx][j+y+vzy])-1]='W';
                           }else if((serverinfo->clientplayernr==1&&i+x+vzx==ROWS-1)){
-                            printf("Schwarze Dame bei %c%i erstellt\n",inttocolumn(j+(2*y)),COLUMNS-(i+(2*x)));
                             fieldcopy[i+x+vzx][j+y+vzy][strlen(fieldcopy[i+x+vzx][j+y+vzy])-1]='B';
                           }
 
@@ -228,22 +215,16 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                           p++;
                         }
                       }
-                    }else{
-                      printf("FALSCHE RICHTUNG\n");
                     }
                     break;
            case -1: if(isQueen(i, j, fieldcopy)==1 && jump ==0){
-                      printf("Dame Zug zu %c:%i\n",inttocolumn(j+y),COLUMNS-(i+x));
                       int obstacle = 0;
                       //Alle zwischenliegende Steine anschauen
-                      printf("Zu prüfende Zwischensteine: %i\n",abs(y)-1);
                       for(int a = 0; a<abs(y)-1;a++){
                         //Grenzen beachten
                         if((i+((a+1)*vzx))>=0 && (i+((a+1)*vzx))<ROWS && (j+((a+1)*vzy))>=0 && (j+((a+1)*vzy))<COLUMNS){
-                          printf("Teste ob Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
                           //Prüfen ob Feld leer
                           if(!isFieldEmpty(i+((a+1)*vzx),j+((a+1)*vzy),fieldcopy)){
-                            printf("Stein im Weg bei %c:%i\n", inttocolumn(j+((a+1)*vzy)), COLUMNS-(i+((a+1)*vzx)));
                             obstacle = 1;
                           }
                         }
@@ -253,15 +234,12 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                         //Speichern des Zuges
                         sprintf(possibleMoves->moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
                         possibleMoves->moves[p].weight = MOVE;
-                        printf("Möglicher Damezug mit Gewicht %s %i gespeichert in %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight,p);
                         p++;
                       }
                     }else if(((i>(i+x) && serverinfo->clientplayernr == 0)||(i<(i+x) && serverinfo->clientplayernr == 1))&&jump==0){
-                      printf("Normaler Zug\n");
                       //Speichern des Zuges
                       sprintf(possibleMoves->moves[p].move, "%c%i:%c%i", inttocolumn(j),COLUMNS-i,inttocolumn(j+y),COLUMNS-(i+x));
                       possibleMoves->moves[p].weight = MOVE;
-                      printf("Möglicher Zug mit Gewicht %s %i gespeichert in %i\n",possibleMoves->moves[p].move, possibleMoves->moves[p].weight,p);
                       p++;
                     }
                     break;
