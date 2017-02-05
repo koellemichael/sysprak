@@ -21,7 +21,7 @@ bashni: ./$(EXECUTABLE)
 	-./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID)
 
 bashnivalgrind: ./$(EXECUTABLE)
-	-valgrind --track-origins=yes --leak-check=full --trace-children=yes --show-leak-kinds=all ./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID)
+	-valgrind --track-origins=yes --disable-gtk --leak-check=full --trace-children=yes --show-leak-kinds=all ./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID)
 
 .PHONY: clean
 clean:
