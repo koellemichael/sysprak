@@ -182,7 +182,6 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                             possibleMoves->moves[p].weight += JUMP;
 
                             //Übersprungerner Stein löschen und eigenen Stein auf das Feld hinter dem Überprungen setzen
-                            strcpy(fieldcopy[i+x][j+y], "");
                             strcpy(fieldcopy[i+x+vzx][j+y+vzy], fieldcopy[i][j]);
                             strcpy(fieldcopy[i][j], "");
 
@@ -204,7 +203,6 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                           possibleMoves->moves[p].weight += JUMP;
 
                           //Übersprungerner Stein löschen und eigenen Stein auf das Feld hinter dem Überprungen setzen
-                          strcpy(fieldcopy[i+x][j+y], "");
                           strcpy(fieldcopy[i+x+vzx][j+y+vzy], fieldcopy[i][j]);
                           strcpy(fieldcopy[i][j], "");
 
