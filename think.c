@@ -5,29 +5,24 @@ void think(int sig){
   if(serverinfo->startcalc == 1){
     printfield();
     move bestmove = {.move = {0},.weight=0};
-    time_t start = 0;
-    time_t stop = 0;
-    double calcTime = 0.0;
 
     printf("Calculating turn...");
-    time(&start);
     bestmove = bestMoveAll(serverinfo->clientplayernr);
-    printf("done\n");
-    time(&stop);
-    calcTime = difftime(stop, start);
-    printf("Calculation was finished in %g seconds\n",calcTime);
+    if(!(strcmp(bestmove.move, "")==0)){
+      printf("done!\n");
+      char space = ' ';
+      int moveSize = 0;                                                           //Größe von Short move
+      char* shortMove = NULL;
+      shortMove = strtok(bestmove.move, &space);
+      if(shortMove!=NULL)
+        moveSize = strlen(shortMove);
 
-    printf("Move: %s\n", bestmove.move);
-    char space = ' ';
-    int moveSize = 0;                                                           //Größe von Short move
-    char* shortMove = NULL;
-    shortMove = strtok(bestmove.move, &space);
-    if(shortMove!=NULL)
-      moveSize = strlen(shortMove);
-
-    if(write (fd[1], shortMove, moveSize) != moveSize){                         //schreibt in die Pipe; höchstens 12 sprünge möglich
-        perror("Error trying to write into the pipe");
-        exit (EXIT_FAILURE);
+      if(write (fd[1], shortMove, moveSize) != moveSize){                         //schreibt in die Pipe; höchstens 12 sprünge möglich
+          perror("Error trying to write into the pipe");
+          exit (EXIT_FAILURE);
+      }
+    }else{
+      printf("no turn avaliable!\n");
     }
 
     serverinfo->startcalc = 0;
@@ -182,7 +177,7 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                             possibleMoves->moves[p].weight += JUMP;
 
                             //Übersprungerner Stein löschen und eigenen Stein auf das Feld hinter dem Überprungen setzen
-                            fieldcopy[i+x][j+y][strlen(fieldcopy[i+x][j+y])-1]='\0';                                                         
+                            fieldcopy[i+x][j+y][strlen(fieldcopy[i+x][j+y])-1]='\0';
                             strcpy(fieldcopy[i+x+vzx][j+y+vzy], fieldcopy[i][j]);
                             strcpy(fieldcopy[i][j], "");
 
@@ -204,7 +199,7 @@ movearray calcPossibleMoves(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH
                           possibleMoves->moves[p].weight += JUMP;
 
                           //Übersprungerner Stein löschen und eigenen Stein auf das Feld hinter dem Überprungen setzen
-                          fieldcopy[i+x][j+y][strlen(fieldcopy[i+x][j+y])-1]='\0';          
+                          fieldcopy[i+x][j+y][strlen(fieldcopy[i+x][j+y])-1]='\0';
                           strcpy(fieldcopy[i+x+vzx][j+y+vzy], fieldcopy[i][j]);
                           strcpy(fieldcopy[i][j], "");
 
