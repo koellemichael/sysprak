@@ -3,6 +3,7 @@
 int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
 int command = 0;                                                                //Flag, das nach den verschiedenen Befehlen gesetzt wird
 int playercount = 0;
+int gameover = 0;
 
 /**
  *Die Funktion handle verarbeitet die Anfrage des Servers zur passenden
@@ -152,12 +153,21 @@ char *handle(char *request){
         memset(serverinfo->field[i][j],0,BUFFERLENGTH);
       }
     }
-    //Format
-    strcpy(out, "There are ");
-    char *pieces = substring(request, 11, strlen(request));
-    strcat(out, pieces);
-    strcat(out, " pieces on the field");
-    free(pieces);
+
+    if(!gameover){
+      //Format
+      strcpy(out, "There are ");
+      char *pieces = substring(request, 11, strlen(request));
+      strcat(out, pieces);
+      strcat(out, " pieces on the field");
+      free(pieces);
+    }else{
+      if(out!=NULL){
+        free(out);
+      }
+      out = NULL;
+    }
+
   }else if(match(request,".+@.+")){                                             //Wenn Anfrage des Servers übereinstimmt
     if(response!=NULL){
       free(response);
@@ -204,9 +214,17 @@ char *handle(char *request){
     rdy = 1;
     strcpy(out,"Make a move");
   }else if(match(request,"ENDPIECESLIST") && command == 1){                     //Wenn Anfrage des Servers übereinstimmt
-    strcpy(response,"THINKING");
-    serverinfo->startcalc = 1;
-    kill(serverinfo->pid_thinker, SIGUSR1);
+    if(!gameover){
+      strcpy(response,"THINKING");
+      serverinfo->startcalc = 1;
+      kill(serverinfo->pid_thinker, SIGUSR1);
+    }else{
+      printfield();
+      if(response!=NULL){
+        free(response);
+      }
+      response = NULL;
+    }
 
     if(out!=NULL){
       free(out);
@@ -247,19 +265,42 @@ char *handle(char *request){
     }
 
     free(wonone);
-  }else if (match(request, "QUIT")){                                            //Ausgabe Gewinner
+  }else if (match(request, "GAMEOVER")){
+    gameover = 1;
+    printf("\n///////////////////////////////////////////////\n");
+    printf("///////////////////////////////////////////////\n");
+    printf("///                GAME OVER                ///\n");
+    printf("///////////////////////////////////////////////\n");
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
     if(response!=NULL){
       free(response);
     }
     response = NULL;
 
+  }else if (match(request, "QUIT")){                                            //Ausgabe Gewinner
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
+
+      printf("///////////////////////////////////////////////\n");
     if(won0 && !won1){
-      strcpy(out, "Player 0 won the game!");                                    //Spieler 0 hat gewonnen
+      printf("///              Player 0 won!              ///\n");              //Spieler 0 hat gewonnen
+      printf("///////////////////////////////////////////////\n");
     } else if(!won0 && won1){
-      strcpy(out, "Player 1 won the game!");                                    //Spieler 1 hat gewonnen
+      printf("///              Player 1 won!              ///\n");              //Spieler 1 hat gewonnen
+      printf("///////////////////////////////////////////////\n");
     } else {
-      strcpy(out, "The game ended in a draw.");                                 //Unentschieden
-    }                                                                           //TODO Verbindung zum Server beenden!
+      printf("///         The Game ended in a draw        ///\n");              //Unentschieden
+      printf("///////////////////////////////////////////////\n");
+    }
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
       free(response);
