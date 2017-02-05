@@ -1,6 +1,99 @@
 ﻿#include "field.h"
 
 /**
+ *Prüft ob ein Stein an der Stelle (i,j) weiß ist.
+ *@param i Zeilenindex
+ *@param i Spaltenindex
+ *@return 1 wenn weiß, 0 wenn schwarz, -1 sonst
+ */
+int isWhite(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH]){
+  char piece = field[i][j][strlen(field[i][j])-1];
+  if(piece =='w' || piece =='W'){
+    return 1;
+  }else if(piece =='b' || piece =='B'){
+    return 0;
+  }else{
+    return -1;
+  }
+}
+
+/**
+ *Prüft ob ein Stein an der Stelle (i,j) schwarz ist.
+ *@param i Zeilenindex
+ *@param i Spaltenindex
+ *@return 0 wenn weiß, 1 wenn schwarz, -1 sonst
+ */
+int isBlack(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]){
+    char piece = field[i][j][strlen(field[i][j])-1];
+    if(piece =='w' || piece =='W'){
+      return 0;
+    }else if(piece =='b' || piece =='B'){
+      return 1;
+    }else{
+      return -1;
+    }
+}
+
+/**
+ *Prüft ob ein Stein an der Stelle (i,j) ist.
+ *@param i Zeilenindex
+ *@param i Spaltenindex
+ *@return 1 Feld frei, 0 wenn besetzt
+ */
+int isFieldEmpty(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]){
+  if(!strcmp(field[i][j],"")){
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+/**
+ *Prüft ob ein Stein an der Stelle (i,j) ist eine Dame ist.
+ *@param i Zeilenindex
+ *@param i Spaltenindex
+ *@return 1 wenn Dame, 0 wenn keine Dame, -1 sonst
+ */
+int isQueen(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]){
+  char piece = field[i][j][strlen(field[i][j])-1];
+    if(piece =='w' || piece =='b'){
+      return 0;
+    }else if(piece =='W' || piece =='B'){
+      return 1;
+    }else{
+      return -1;
+    }
+}
+
+/**
+ *Prüft ob ein Stein an der Stelle (i,j) ein gegnerischer Stein ist.
+ *@param i Zeilenindex
+ *@param i Spaltenindex
+ *@return 1 Gegner, 0 wenn eigener Stein, sonst -1
+ */
+int isEnemy(int i, int j,char field[ROWS][COLUMNS][BUFFERLENGTH]){
+  if(serverinfo->clientplayernr==0){
+    return isBlack(i, j,field);
+  } else {
+    return isWhite(i, j,field);
+  }
+}
+
+/**
+ *Prüft ob ein Stein an der Stelle (i,j) ein verbündeter Stein ist.
+ *@param i Zeilenindex
+ *@param i Spaltenindex
+ *@return 1 Verbündeter, 0 wenn gegnerischer Stein, sonst -1
+ */
+int isAlly(int i, int j, char field[ROWS][COLUMNS][BUFFERLENGTH]){
+  if(serverinfo->clientplayernr==0){
+    return isWhite(i, j,field);
+  } else {
+    return isBlack(i, j,field);
+  }
+}
+
+/**
  * Rechnet die A-H Indizes in Zahlen um.
  */
 int columntoint(char column){
@@ -38,17 +131,23 @@ char inttocolumn(int col){
  *Gibt das aktuelle Spielfeld mit Informationen aus dem Shared Memory aus.
  *Ein kompletter String um Unterbrechungen zu vermeiden.
  */
-
 void printfield(void){
-  char out[BUFFERLENGTH];
-  char buf[BUFFERLENGTH];
-
+  char *out = calloc(BUFFERLENGTH_FIELD,sizeof(char));
+  char *buf = calloc(BUFFERLENGTH_SMALL,sizeof(char));
+/*
   char w[] = " \u26C0";
   char W[] = " \u26C1";
   char b[] = " \u26C2";
   char B[] = " \u26C3";
   char bField[] = " \u25FC";
   char wField[] = " \u25FB";
+*/
+  char w[] = " w";
+  char W[] = " W";
+  char b[] = " b";
+  char B[] = " B";
+  char bField[] = " -";
+  char wField[] = " .";
 
   strcat(out, "\n");
   strcat(out,"    A B C D E F G H\n");                                                                //Spielfeld Beschriftung oben
@@ -62,7 +161,7 @@ void printfield(void){
       }else if((!strcmp(serverinfo->field[i][j],""))&&((i%2==1&&j%2==0)||(i%2==0&&j%2==1))){          //Spielfeld-Quadrate als Striche
         strcat(out,bField);
       }else{
-        if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='w'){                       //Weißer Stein wenn 'w' im Array
+        if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='w'){                         //Weißer Stein wenn 'w' im Array
           strcat(out, w);
         }else if(serverinfo->field[i][j][strlen(serverinfo->field[i][j])-1] =='W'){                   //Weiße Dame wenn 'W' im Array
           strcat(out, W);
@@ -107,4 +206,6 @@ void printfield(void){
 
   printf("%s",out);                                                                                 //Ausgabe des gesamten Strings
 
+  free(out);
+  free(buf);
 }

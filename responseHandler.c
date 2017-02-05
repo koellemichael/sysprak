@@ -3,6 +3,7 @@
 int prolog = 1;                                                                 //!Variable für den Fortschritt der Prologphase.
 int command = 0;                                                                //Flag, das nach den verschiedenen Befehlen gesetzt wird
 int playercount = 0;
+int gameover = 0;
 
 /**
  *Die Funktion handle verarbeitet die Anfrage des Servers zur passenden
@@ -152,12 +153,21 @@ char *handle(char *request){
         memset(serverinfo->field[i][j],0,BUFFERLENGTH);
       }
     }
-    //Format
-    strcpy(out, "There are ");
-    char *pieces = substring(request, 11, strlen(request));
-    strcat(out, pieces);
-    strcat(out, " pieces on the field");
-    free(pieces);
+
+    if(!gameover){
+      //Format
+      strcpy(out, "There are ");
+      char *pieces = substring(request, 11, strlen(request));
+      strcat(out, pieces);
+      strcat(out, " pieces on the field");
+      free(pieces);
+    }else{
+      if(out!=NULL){
+        free(out);
+      }
+      out = NULL;
+    }
+
   }else if(match(request,".+@.+")){                                             //Wenn Anfrage des Servers übereinstimmt
     if(response!=NULL){
       free(response);
@@ -186,7 +196,16 @@ char *handle(char *request){
       free(response);
     }
     response = NULL;
-    return response;
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
+  }else if(match(request,"MOVEOK")){                                         //Übereinstimmung mit MOVE
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;
+    strcpy(out, "Valid turn!");
   }else if(match(request,"OKTHINK")){
     if(response!=NULL){
       free(response);
@@ -195,38 +214,93 @@ char *handle(char *request){
     rdy = 1;
     strcpy(out,"Make a move");
   }else if(match(request,"ENDPIECESLIST") && command == 1){                     //Wenn Anfrage des Servers übereinstimmt
-    strcpy(response,"THINKING");
-    serverinfo->startcalc = 1;
-    kill(serverinfo->pid_thinker, SIGUSR1);
+    if(!gameover){
+      strcpy(response,"THINKING");
+      serverinfo->startcalc = 1;
+      kill(serverinfo->pid_thinker, SIGUSR1);
+    }else{
+      printfield();
+      if(response!=NULL){
+        free(response);
+      }
+      response = NULL;
+    }
 
     if(out!=NULL){
       free(out);
     }
     out = NULL;
   }else if(match(request,"PLAYER0WON .+")){                                     //Hat Spieler 0 gewonnen
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
     char *wonzero = substring(request, 11, strlen(request));
     if (!strcmp(wonzero, "Yes")){
-      *won0 = 1;
+      won0 = 1;
+    }else {
+      won0 = 0;
     }
-    else won0 = 0;
     free(wonzero);
-  }else if(match(request,"PLAYER0WON .+")){                                     //Hat Spieler 1 gewonnen
+  }else if(match(request,"PLAYER1WON .+")){                                     //Hat Spieler 1 gewonnen
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
+
     char *wonone = substring(request, 11, strlen(request));
+
     if (!strcmp(wonone, "Yes")){
-      *won1 = 1;
+      won1 = 1;
+    }else {
+      won1 = 0;
     }
-    else won1 = 0;
+
     free(wonone);
-  }else if (match(request, "QUIT")){                                            //Ausgabe Gewinner
-    if(*won0==1 && *won1==0){
-      strcpy(out, "Player 0 won the game!");                                    //Spieler 0 hat gewonnen
-    } else if(*won0==0 && *won1==1){
-      strcpy(out, "Player 1 won the game!");                                    //Spieler 1 hat gewonnen
-    } else {
-      strcpy(out, "The game ended in a draw.");                                 //Unentschieden
+  }else if (match(request, "GAMEOVER")){
+    gameover = 1;
+    printf("\n///////////////////////////////////////////////\n");
+    printf("///////////////////////////////////////////////\n");
+    printf("///                GAME OVER                ///\n");
+    printf("///////////////////////////////////////////////\n");
+    if(out!=NULL){
+      free(out);
     }
-    free(won0);
-    free(won1);                                                                 //TODO Verbindung zum Server beenden!
+    out = NULL;
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;
+
+  }else if (match(request, "QUIT")){                                            //Ausgabe Gewinner
+    if(response!=NULL){
+      free(response);
+    }
+    response = NULL;
+    if(out!=NULL){
+      free(out);
+    }
+    out = NULL;
+
+      printf("///////////////////////////////////////////////\n");
+    if(won0 && !won1){
+      printf("///              Player 0 won!              ///\n");              //Spieler 0 hat gewonnen
+      printf("///////////////////////////////////////////////\n");
+    } else if(!won0 && won1){
+      printf("///              Player 1 won!              ///\n");              //Spieler 1 hat gewonnen
+      printf("///////////////////////////////////////////////\n");
+    } else {
+      printf("///         The Game ended in a draw        ///\n");              //Unentschieden
+      printf("///////////////////////////////////////////////\n");
+    }
   }else{                                                                        //Ansonsten unbekannte Anfrage des Servers
     if(response!=NULL){
       free(response);

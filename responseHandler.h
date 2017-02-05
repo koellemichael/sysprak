@@ -23,8 +23,8 @@ extern char* player;                                                            
 extern int rdy;
 int prolog;                                                                     //!Variable für den Fortschritt der Prologphase
 int command;                                                                    //Flag für den Befehl MOVE
-int* won0;
-int* won1;
+int won0;
+int won1;
 
 //Funktionen deklarieren
 char *handle(char *request);

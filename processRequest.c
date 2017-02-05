@@ -34,9 +34,9 @@ char *substring(char *string, unsigned int from, unsigned int to){
   if(from>=to || to>strlen(string)){                                            //Unsinnige Eingaben abfangen
     return NULL;                                                                //NULL zurückgeben falls
   }else{                                                                        //Falls sinbvolle Eingabe
-    char *substring = malloc((to-from)*sizeof(char));                           //Speicher füresponse substring allokalisieren
+    char *substring = malloc((to-from)*sizeof(char)+1);                           //Speicher füresponse substring allokalisieren
     strncpy(substring,string+from,(to-from));                                   //Teilstring in substring speichern
-    substring[(to-from)]=0;                                                     //Teilstringende festlegen
+    substring[(to-from)]= '\0';                                                 //Teilstringende festlegen
     return substring;                                                           //Substring zurückgeben
   }
 }

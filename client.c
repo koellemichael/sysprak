@@ -52,9 +52,19 @@ int main (int argc, char **argv){
     }
 
     //Struct befüllen mit den Werten zur Verbindung mit dem Server
-    cp.hostName = readConfiguration(paramNameHost);
-    cp.portNumber = atoi(readConfiguration(paramNamePort));
-    cp.gameKindName = readConfiguration(paramNameGame);
+    char *bufHost = readConfiguration(paramNameHost);
+    strcpy(cp.hostName,bufHost);
+    free(bufHost);
+
+    char *bufGameKind = readConfiguration(paramNameGame);
+    strcpy(cp.gameKindName,bufGameKind);
+    free(bufGameKind);
+
+    char *bufPort = readConfiguration(paramNamePort);
+    char bufPort2[BUFFERLENGTH_PORT];
+    strcpy(bufPort2, bufPort);
+    free(bufPort);
+    cp.portNumber = atoi(bufPort2);
   }
 
   //Unnamed Pipe einrichten, die zwischen Connector und Thinker laufen soll
@@ -82,6 +92,7 @@ int main (int argc, char **argv){
       performConnection(sock);
 
       //Schliesst das Socket
+      close(fd[0]);
       close(sock);
   } else {                                                                      //Elternprozess: Prozess-ID > 0
     //THINKER
@@ -99,7 +110,7 @@ int main (int argc, char **argv){
       perror("Error while waiting for childprocess");
       exit(EXIT_FAILURE);
     }
-
+    close(fd[1]);
   }
   exit(EXIT_SUCCESS);
 }

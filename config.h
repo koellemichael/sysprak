@@ -12,9 +12,9 @@
 
 //Struct definieren
 typedef struct{
-    char *hostName;
+    char hostName[BUFFERLENGTH];
     int portNumber;
-    char *gameKindName;
+    char gameKindName[BUFFERLENGTH];
 }configparams;
 
 //Externe Variablen deklarieren
@@ -22,7 +22,7 @@ extern char *confile;
 
 //Funktionen definieren
 char* readConfiguration(char *paramName);
-char* findParamValue(char *string, char *delimiter, char **substring);
+char* findParamValue(char *string, char *delimiter);
 void createDefaultConfig(void);
 
 #endif

@@ -25,37 +25,34 @@ void performConnection(int sock){
       perror("select()");
       exit(EXIT_FAILURE);
     }else if(retval){
-      int pipeData = FD_ISSET(fd[0], &readfds);                                 //ISSET testet, ob an DIESER PIPE etwas ansteht
-      int socketData = FD_ISSET(sock, &readfds);
+      pipeData = FD_ISSET(fd[0], &readfds);                                     //ISSET testet, ob an DIESER PIPE etwas ansteht
+      socketData = FD_ISSET(sock, &readfds);
 
       if(socketData!=0){                                                        //Wenn etwas ansteht, dann..
-        char *buffer = malloc(BUFFERLENGTH*sizeof(char));                       //Speicher für Puffervariable allokalisieren
-        memset(buffer,0, BUFFERLENGTH);                                         //Puffer leeren
+        char *buffer = calloc(BUFFERLENGTH,sizeof(char));                       //Speicher für Puffervariable allokalisieren
         if((read(sock, buffer, BUFFERLENGTH)) < 0){                             //Lese nächsten Spielzug aus der Pipe
-          perror("Couldn't read from socket");                                  //Error, wenn aus der Pipe nicht gelesen werden konnte
+          perror("Host is not responding");                                     //Error, wenn aus der Pipe nicht gelesen werden konnte
         }
         processAndSendResponse(buffer, sock);
       }
 
       if(pipeData!=0&&rdy){                                                     //Wenn etwas ansteht, dann..Aus der Pipe lesen
-        char *move = malloc(sizeof(char)*BUFFERLENGTH_MOVE);
-        memset(move,0, BUFFERLENGTH_MOVE);
-        if((read(fd[0], move, sizeof(move))) < 0){                              //Lese nächsten Spielzug aus der Pipe
+        char *move = calloc(BUFFERLENGTH_MOVE,sizeof(char));
+        if((read(fd[0], move, BUFFERLENGTH_MOVE)) < 0){                         //Lese nächsten Spielzug aus der Pipe
           perror("Couldn't read from pipe");                                    //Error, wenn aus der Pipe nicht gelesen werden konnte
         }else {
           sendMove(move, sock);
           rdy = 0;
         }
       }
-
     }
 
   }while(end);                                                                  //Nehme solange Antworten vom Server entgegen bis Server "+ ENDPLAYERS" antwortet
 }
 
 void sendMove(char *move, int sock){
-  char *response = malloc((sizeof(char)*BUFFERLENGTH_MOVE)+sizeof(move));
-  memset(response, 0, sizeof(move));
+  char *response = calloc(BUFFERLENGTH_MOVE+strlen(move),sizeof(char));
+  //memset(response, 0, strlen(move));
   strcpy(response, "PLAY ");
   strcat(response,move);
   strcat(response,"\n");
@@ -64,7 +61,7 @@ void sendMove(char *move, int sock){
 }
 
 void processAndSendResponse(char *buffer, int sock){
-  char **requests = malloc(BUFFERLENGTH*sizeof(char*));                         //Speicher für das Array der einzelnen Serveranfragen allokalisieren
+  char **requests = calloc(BUFFERLENGTH,sizeof(char*));                         //Speicher für das Array der einzelnen Serveranfragen allokalisieren
   strtoken(buffer, "\n",requests);                                              //Wenn der Server mehrere Anfragen "Unknown requestaufeinmal schickt, werden sie hier in ein String Array eingelesen
 
   int x = 0;                                                                    //Laufvariable da mehrere Anfragen aufeinmal geschickt werden können
