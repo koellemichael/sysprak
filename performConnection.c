@@ -30,7 +30,6 @@ void performConnection(int sock){
 
       if(socketData!=0){                                                        //Wenn etwas ansteht, dann..
         char *buffer = calloc(BUFFERLENGTH,sizeof(char));                       //Speicher für Puffervariable allokalisieren
-        //memset(buffer,0, strlen(buffer));                                     //Puffer leeren
         if((read(sock, buffer, BUFFERLENGTH)) < 0){                             //Lese nächsten Spielzug aus der Pipe
           perror("Host is not responding");                                     //Error, wenn aus der Pipe nicht gelesen werden konnte
         }
@@ -39,11 +38,9 @@ void performConnection(int sock){
 
       if(pipeData!=0&&rdy){                                                     //Wenn etwas ansteht, dann..Aus der Pipe lesen
         char *move = calloc(BUFFERLENGTH_MOVE,sizeof(char));
-        //memset(move,0, sizeof(char)*BUFFERLENGTH_MOVE);
         if((read(fd[0], move, BUFFERLENGTH_MOVE)) < 0){                         //Lese nächsten Spielzug aus der Pipe
           perror("Couldn't read from pipe");                                    //Error, wenn aus der Pipe nicht gelesen werden konnte
         }else {
-          printf("MOVE: %s\n", move);
           sendMove(move, sock);
           rdy = 0;
         }
