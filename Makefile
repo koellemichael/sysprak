@@ -12,10 +12,10 @@ play: $(EXECUTABLE) clean bashni
 vplay: $(EXECUTABLE) clean bashnivalgrind
 
 .c.o:
-	-$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $< -o $@
 
 $(EXECUTABLE): $(OBJFILES)
-	-$(CC) $(LDFLAGS) $(OBJFILES) -o $@
+	$(CC) $(LDFLAGS) $(OBJFILES) -o $@
 
 bashni: ./$(EXECUTABLE)
 	-./$(EXECUTABLE) -p $(PLAYER) -f $(CONF_FL) $(GAME_ID)
