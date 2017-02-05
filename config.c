@@ -8,7 +8,7 @@
 char* readConfiguration(char* paramName){
    char *configFile = confile;
    FILE *file = NULL;                                                           //Die gewählte Konfig Datei vom Typ FILE
-   char *string = malloc(BUFFERLENGTH*sizeof(char));                            //TODO speicher freigeben. Zeilenweise Strings, die aus der Konfig Datei gelesen werden
+   char string[BUFFERLENGTH] = {0};                                             //Zeilenweise Strings, die aus der Konfig Datei gelesen werden
    char *delimiter = "= \n";                                                    //Tokens, die die Strings in verschiedene Abschnitte teilen
    char *substring = NULL;                                                      //Substrings, die wir rauslesen wollen
 
@@ -16,7 +16,7 @@ char* readConfiguration(char* paramName){
    if(file != NULL){                                                            //Abfrage, ob sich die Datei öffnen lässt
      while(fgets(string,BUFFERLENGTH,file)) {                                   //Einzelne zeilenweise Abfrage der Datei
        if(strstr(string, paramName) != NULL){                                   //Filtern nach der Zeile, die den "Hostname" enthält
-          substring = findParamValue(string, delimiter, &substring);            //Funktionsaufruf, der den zugehörigen ParameterWert zurückgibt
+          substring = findParamValue(string, delimiter);             //Funktionsaufruf, der den zugehörigen ParameterWert zurückgibt
           break;
         }
 
@@ -27,10 +27,9 @@ char* readConfiguration(char* paramName){
    }
 
    fclose (file);                                                               //Schliessen der Konfig Datei
-   char *value = malloc(sizeof(char)*BUFFERLENGTH);
-   strcpy(value, substring);
-   free(string);
-   return value;
+   char *res = calloc(BUFFERLENGTH, sizeof(char));
+   strcpy(res, substring);
+   return res;
 }
 
 /**
@@ -39,16 +38,15 @@ char* readConfiguration(char* paramName){
  *@Param delimiter als char* ist das Token, nachdem der String in Abschnitte geteilt wird
  *@Param substring als **char ist der Substring, der aus dem String gesucht wird
 */
-char* findParamValue(char *string, char *delimiter, char **substring){
-    char* ptr;                                                                  //Pointer
-
+char* findParamValue(char *string, char *delimiter){
+    char *ptr = NULL;                                                                  //Pointer
+    char *res = NULL;
     ptr = strtok(string, delimiter);                                            //Zeigt auf das erste Token
-        while(ptr != NULL){                                                     //Während der Pointer noch nicht am Ende ist
-            *substring = ptr;                                                   //Der Substring ist jeweils der nächste Abschnitt
-                                                                                //Bis er letztendlich der letzte Abschnitt ist
-            ptr = strtok(NULL, delimiter);                                      //Der Pointer geht eins weiter
-        }
-    return *substring;
+    while(ptr != NULL){                                                         //Während der Pointer noch nicht am Ende ist
+      res = ptr;
+      ptr = strtok(NULL, delimiter);                                            //Der Pointer geht eins weiter
+    }
+    return res;
 }
 
 /**

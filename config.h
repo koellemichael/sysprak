@@ -22,7 +22,7 @@ extern char *confile;
 
 //Funktionen definieren
 char* readConfiguration(char *paramName);
-char* findParamValue(char *string, char *delimiter, char **substring);
+char* findParamValue(char *string, char *delimiter);
 void createDefaultConfig(void);
 
 #endif
