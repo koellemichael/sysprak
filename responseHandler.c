@@ -190,7 +190,7 @@ char *handle(char *request){
       free(out);
     }
     out = NULL;
-  }else if(match(request,"MOVE .+")){                                           //Übereinstimmung mit MOVE
+  }else if(match(request,"MOVEOK")){                                         //Übereinstimmung mit MOVE
     if(response!=NULL){
       free(response);
     }
